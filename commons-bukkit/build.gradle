@@ -1,0 +1,20 @@
+repositories {
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+    jcenter()
+}
+
+dependencies {
+    compile project(':commons-core')
+    compile group: 'org.spigotmc', name: 'spigot-api', version: '1.8-R0.1-SNAPSHOT'
+    compile group: 'com.dumptruckman.minecraft.pluginbase', name: 'Serializable-Config-Bukkit', version: '0.1-SNAPSHOT'
+}
+
+shadowJar {
+    dependencies {
+        include(dependency(':commons-core'))
+        include(dependency('com.dumptruckman.minecraft.pluginbase:Serializable-Config-Bukkit:0.1-SNAPSHOT'))
+    }
+}
+
+build.dependsOn shadowJar
+

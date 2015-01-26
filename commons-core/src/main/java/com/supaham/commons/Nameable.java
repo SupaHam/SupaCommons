@@ -1,0 +1,21 @@
+package com.supaham.commons;
+
+/**
+ * Represents an interface for objects that can be named.
+ */
+public interface Nameable {
+
+  /**
+   * Gets the name of this {@link Nameable} object.
+   *
+   * @return name of this object
+   */
+  String getName();
+
+  /**
+   * Sets the name of this {@link Nameable} object.
+   *
+   * @param name name to set
+   */
+  void setName(String name) throws UnsupportedOperationException;
+}

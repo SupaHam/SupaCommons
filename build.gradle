@@ -1,0 +1,69 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+        jcenter()
+    }
+}
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "1.1.2"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.1'
+}
+
+println """
+*******************************************
+ You are building commons! 
+
+ If you encounter trouble:
+ 1) Read COMPILING.md if you haven't yet
+ 2) Try running 'build' in a separate Gradle run
+ 3) Use gradlew and not gradle
+
+ Output files will be in [module]/build/libs
+*******************************************
+"""
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    group = 'com.supaham.commons'
+    version = '0.1-SNAPSHOT'
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    
+    ext.internalVersion = version
+    
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: classes) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives jar
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    build.dependsOn sourcesJar, javadocJar
+
+    shadowJar {
+        classifier 'dist'
+    }
+}
