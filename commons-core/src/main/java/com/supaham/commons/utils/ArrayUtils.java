@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
  *
  * @since 0.1
  */
-public final class ArrayUtils {
+public final class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 
   private ArrayUtils() {
   }
