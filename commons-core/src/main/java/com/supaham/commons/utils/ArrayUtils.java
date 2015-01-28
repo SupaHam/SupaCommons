@@ -14,7 +14,7 @@ public final class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 
   private ArrayUtils() {
   }
-  
+
   /**
    * Removes empty (null or literally of length 0) {@link String}s from an array.
    *
@@ -25,6 +25,7 @@ public final class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
    * </pre>
    *
    * @param original original to use
+   *
    * @return a new {@link String} array with the results, or if the provided array is empty, itself
    * is returned.
    */
@@ -47,6 +48,7 @@ public final class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
    * @param original original to use
    * @param trim whether to trim each string when checking length, keep in mind this does not
    * actually modify the String itself in the returned array
+   *
    * @return a new {@link String} array with the results, or if the provided array is empty, itself
    * is returned.
    */
