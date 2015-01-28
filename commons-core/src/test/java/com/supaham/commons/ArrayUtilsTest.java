@@ -33,4 +33,16 @@ public class ArrayUtilsTest {
     String[] array = new String[]{"abc", " ", " def    "}; // 3, 0, 8
     assertEquals(11, ArrayUtils.getTotalStringsLength(array));
   }
+  
+  @Test
+  public void checkForNullElements() {
+    String[] array = new String[]{"abc", ""};
+    ArrayUtils.checkForNullElements(array);
+  }
+  
+  @Test(expected = NullPointerException.class)
+  public void checkForNullElements2() {
+    String[] array = new String[]{"abc", null};
+    ArrayUtils.checkForNullElements(array);
+  }
 }

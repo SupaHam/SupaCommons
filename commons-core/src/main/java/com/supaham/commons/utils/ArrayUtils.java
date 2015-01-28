@@ -85,4 +85,34 @@ public final class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
     }
     return length;
   }
+
+  /**
+   * Checks if an array contains a null object. If it does, a {@link NullPointerException} is
+   * thrown with the message 'array contains null element.'.
+   *
+   * @param array array to check
+   *
+   * @return the same {@code array} for chaining
+   */
+  public static Object[] checkForNullElements(Object[] array) {
+    return checkForNullElements(array, "array contains null element.");
+  }
+
+  /**
+   * Checks if an array contains a null object. If it does, a {@link NullPointerException} is
+   * thrown with the description specified.
+   *
+   * @param array array to check
+   * @param desc detailed message to pass along side the {@link NullPointerException}
+   *
+   * @return the same {@code array} for chaining
+   */
+  public static Object[] checkForNullElements(Object[] array, String desc) {
+    for (Object o : array) {
+      if (o == null) {
+        throw new NullPointerException(desc);
+      }
+    }
+    return array;
+  }
 }
