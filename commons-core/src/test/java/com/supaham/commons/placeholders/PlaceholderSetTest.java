@@ -1,6 +1,10 @@
-package com.supaham.commons;
+package com.supaham.commons.placeholders;
 
 import static org.junit.Assert.assertEquals;
+
+import com.supaham.commons.placeholders.Placeholder;
+import com.supaham.commons.placeholders.PlaceholderSet;
+import com.supaham.commons.placeholders.SimplePlaceholder;
 
 import org.junit.Test;
 
