@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
  * Contains {@link String} related utility methods.
  */
 public final class StringUtils {
-  
+
   private StringUtils() {
   }
 
@@ -105,5 +105,57 @@ public final class StringUtils {
       return null;
     }
     return str.replaceAll("[- ]*", "_").toLowerCase();
+  }
+
+  /**
+   * Checks if a String is null or empty, if it is, an exception is thrown.
+   * <p/>
+   * E.g.:
+   * <pre>
+   *   StringUtils.checkNotNullOrEmpty(null)    = {@link NullPointerException}
+   *   StringUtils.checkNotNullOrEmpty("")      = {@link IllegalArgumentException}
+   *   StringUtils.checkNotNullOrEmpty("Hello") = "Hello"
+   * </pre>
+   *
+   * @param string string to check
+   *
+   * @return the same exact {@code string} returned for chaining.
+   *
+   * @throws NullPointerException thrown if the {@code string} is null
+   * @throws IllegalArgumentException thrown if the {@code string} is empty
+   * @see #checkNotNullOrEmpty(String, String)
+   */
+  public static String checkNotNullOrEmpty(@Nullable String string) throws NullPointerException,
+                                                                           IllegalArgumentException {
+    return checkNotNullOrEmpty(string, null);
+  }
+
+  /**
+   * Checks if a String is null or empty, if it is, an exception is thrown.
+   * <p/>
+   * E.g.:
+   * <pre>
+   *   StringUtils.checkNotNullOrEmpty(null, "mystring")      = {@link NullPointerException}
+   *   StringUtils.checkNotNullOrEmpty("", "mystring")        = {@link IllegalArgumentException}
+   *   StringUtils.checkNotNullOrEmpty("Hello", "mystring")   = "Hello"
+   * </pre>
+   *
+   * @param string string to check
+   * @param desc name of the {@code string} used to detail the thrown exception. If null, it is
+   * then set to "String".
+   *
+   * @return the same exact {@code string} returned for chaining.
+   *
+   * @throws NullPointerException thrown if the {@code string} is null
+   * @throws IllegalArgumentException thrown if the {@code string} is empty
+   */
+  public static String checkNotNullOrEmpty(@Nullable String string, @Nullable String desc)
+      throws NullPointerException, IllegalArgumentException {
+    if (desc == null) {
+      desc = "string";
+    }
+    checkNotNull(string, desc + " cannot be null.");
+    checkArgument(!string.isEmpty(), desc + " cannot be empty.");
+    return string;
   }
 }

@@ -1,5 +1,6 @@
 package com.supaham.commons;
 
+import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -33,5 +34,20 @@ public class StringUtilsTest {
     assertEquals("test  test", StringUtils.formatWhitespace(10, "test", "test"));
     assertEquals("test      test", StringUtils.formatWhitespace(14, "test", "    ", "test"));
     assertEquals("test   t  test", StringUtils.formatWhitespace(14, "test", "  t ", "test"));
+  }
+
+  @Test
+  public void checkNotNullOrEmptyTest() {
+    checkNotNullOrEmpty("abc");
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void checkNotNullOrEmptyTest2() {
+    checkNotNullOrEmpty(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void checkNotNullOrEmptyTest3() {
+    checkNotNullOrEmpty("");
   }
 }
