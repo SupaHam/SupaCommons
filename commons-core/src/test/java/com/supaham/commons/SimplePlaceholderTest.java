@@ -18,23 +18,28 @@ import javax.annotation.Nullable;
  */
 public class SimplePlaceholderTest {
 
-  private SimplePlaceholder simplePlaceholder = new SimplePlaceholder("pname", "pdname", "world") {
+  private static final String PNAME = "SupaHam";
+  private static final String PDNAME = "[Admin] SupaHam";
+  private static final String WORLD = "That World";
+  private static final String NON_EXISTANT = "non-existent placeholder";
+
+  private Placeholder simplePlaceholder = new SimplePlaceholder("pname", "pdname", "world") {
 
     private List<String> matched = new ArrayList<>();
 
     @Nullable
     @Override
-    public String call(String placeholder) throws Exception {
+    public String apply(String placeholder) {
       String matched;
       switch (placeholder.toLowerCase()) {
         case "pname":
-          matched = "SupaHam";
+          matched = PNAME;
           break;
         case "pdname":
-          matched = "[Admin] SupaHam";
+          matched = PDNAME;
           break;
         case "world":
-          matched = "That World";
+          matched = WORLD;
           break;
         default:
           return null;
@@ -50,28 +55,28 @@ public class SimplePlaceholderTest {
   };
 
   @Test
-  public void calls() {
+  public void applies() {
     try {
-      assertEquals("SupaHam", simplePlaceholder.call("pname"));
-      assertEquals("[Admin] SupaHam", simplePlaceholder.call("pdname"));
-      assertEquals("That World", simplePlaceholder.call("world"));
+      assertEquals(PNAME, simplePlaceholder.apply("pname"));
+      assertEquals(PDNAME, simplePlaceholder.apply("pdname"));
+      assertEquals(WORLD, simplePlaceholder.apply("world"));
 
-      assertNotEquals("SupaHam", simplePlaceholder.call("pdname"));
+      assertNotEquals(PNAME, simplePlaceholder.apply("pdname"));
 
-      assertNull(simplePlaceholder.call("non-existent placeholder"));
+      assertNull(simplePlaceholder.apply(NON_EXISTANT));
     } catch (Exception e) {
       e.printStackTrace();
-    }   
+    }
   }
 
   @Test
-  public void callsOnComplete() {
+  public void appliesOnComplete() {
     try {
       String message = "";
       for (String s : "Hello, pname . Your display name is pdname ".split(" ")) {
-        String call = simplePlaceholder.call(s);
-        if (call != null) {
-          s = call;
+        String apply = simplePlaceholder.apply(s);
+        if (apply != null) {
+          s = apply;
         }
         message += s + " ";
       }
@@ -86,6 +91,6 @@ public class SimplePlaceholderTest {
     assertTrue(simplePlaceholder.isPlaceholder("pname"));
     assertTrue(simplePlaceholder.isPlaceholder("pdname"));
     assertTrue(simplePlaceholder.isPlaceholder("world"));
-    assertFalse(simplePlaceholder.isPlaceholder("non-existent placeholder"));
+    assertFalse(simplePlaceholder.isPlaceholder(NON_EXISTANT));
   }
 }

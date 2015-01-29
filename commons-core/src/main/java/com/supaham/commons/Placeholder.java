@@ -1,5 +1,7 @@
 package com.supaham.commons;
 
+import com.google.common.base.Function;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -9,24 +11,18 @@ import javax.annotation.Nullable;
 /**
  * Represents a placeholder {@link Callable} that returns a {@link String}.
  */
-public interface Placeholder {
+public interface Placeholder extends Function<String, String> {
 
   /**
-   * Computes a result, or throws an exception if unable to do so.
-   *
-   * @param placeholder the given placeholder to test
-   *
-   * @return computed result
-   *
-   * @throws Exception if unable to compute a result
+   * {@inheritDoc}
    */
   @Nullable
-  String call(String placeholder) throws Exception;
+  String apply(String input);
 
   /**
    * This method is called when this {@link Placeholder} has taken part in a placeholder replacing
-   * process during the {@link #call(String)} call. To clarify, this method is called after all
-   * {@link Placeholder}s' {@link #call(String)} methods have been invoked.
+   * process during the {@link #apply(String)} call. To clarify, this method is called after all
+   * {@link Placeholder}s' {@link #apply(String)} methods have been invoked.
    *
    * @param string the final string
    */
