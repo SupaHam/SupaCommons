@@ -14,7 +14,11 @@ import javax.annotation.Nullable;
 public interface Placeholder extends Function<String, String> {
 
   /**
-   * {@inheritDoc}
+   * This method is called with a {@link String} as a placeholder. This method specifies what should
+   * be replaced instead of the given placeholder using the return value. Please keep in mind that
+   * any fixes to the placeholder, such as braces ({}) or percent signs (%), are not provided.
+   *
+   * @return the string to replace the {@code input} with
    */
   @Nullable
   String apply(String input);
