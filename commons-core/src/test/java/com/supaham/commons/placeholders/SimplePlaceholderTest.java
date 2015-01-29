@@ -6,10 +6,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import com.supaham.commons.placeholders.Placeholder;
-import com.supaham.commons.placeholders.PlaceholderFunction;
-import com.supaham.commons.placeholders.SimplePlaceholder;
-
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -24,18 +20,19 @@ import javax.annotation.Nullable;
  */
 public class SimplePlaceholderTest {
 
-  private static final String PNAME = "SupaHam";
-  private static final String PDNAME = "[Admin] SupaHam";
-  private static final String WORLD = "That World";
-  private static final String NON_EXISTANT = "non-existent placeholder";
+  protected static final String PNAME = "SupaHam";
+  protected static final String PDNAME = "[Admin] SupaHam";
+  protected static final String WORLD = "That World";
+  protected static final String NON_EXISTANT = "non-existent placeholder";
 
-  private Placeholder simplePlaceholder = new SimplePlaceholder("pname", "pdname", "world") {
-
+  protected static final Placeholder SIMPLE_PLACEHOLDER = new SimplePlaceholder("pname", "pdname",
+                                                                                "world") {
     private List<String> matched = new ArrayList<>();
 
     @Nullable
     @Override
-    public String apply(String placeholder) {
+    public String apply(PlaceholderData data) {
+      String placeholder = data.getPlaceholder();
       String matched;
       switch (placeholder.toLowerCase()) {
         case "pname":
@@ -63,13 +60,13 @@ public class SimplePlaceholderTest {
   @Test
   public void applies() {
     try {
-      assertEquals(PNAME, simplePlaceholder.apply("pname"));
-      assertEquals(PDNAME, simplePlaceholder.apply("pdname"));
-      assertEquals(WORLD, simplePlaceholder.apply("world"));
+      assertEquals(PNAME, SIMPLE_PLACEHOLDER.apply(PlaceholderData.create("pname")));
+      assertEquals(PDNAME, SIMPLE_PLACEHOLDER.apply(PlaceholderData.create("pdname")));
+      assertEquals(WORLD, SIMPLE_PLACEHOLDER.apply(PlaceholderData.create("world")));
 
-      assertNotEquals(PNAME, simplePlaceholder.apply("pdname"));
+      assertNotEquals(PNAME, SIMPLE_PLACEHOLDER.apply(PlaceholderData.create("pdname")));
 
-      assertNull(simplePlaceholder.apply(NON_EXISTANT));
+      assertNull(SIMPLE_PLACEHOLDER.apply(PlaceholderData.create(NON_EXISTANT)));
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -80,13 +77,13 @@ public class SimplePlaceholderTest {
     try {
       String message = "";
       for (String s : "Hello, pname . Your display name is pdname ".split(" ")) {
-        String apply = simplePlaceholder.apply(s);
+        String apply = SIMPLE_PLACEHOLDER.apply(PlaceholderData.create(s));
         if (apply != null) {
           s = apply;
         }
         message += s + " ";
       }
-      simplePlaceholder.onComplete(message);
+      SIMPLE_PLACEHOLDER.onComplete(message);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -94,10 +91,10 @@ public class SimplePlaceholderTest {
 
   @Test
   public void isPlaceHolder() {
-    assertTrue(simplePlaceholder.isPlaceholder("pname"));
-    assertTrue(simplePlaceholder.isPlaceholder("pdname"));
-    assertTrue(simplePlaceholder.isPlaceholder("world"));
-    assertFalse(simplePlaceholder.isPlaceholder(NON_EXISTANT));
+    assertTrue(SIMPLE_PLACEHOLDER.isPlaceholder("pname"));
+    assertTrue(SIMPLE_PLACEHOLDER.isPlaceholder("pdname"));
+    assertTrue(SIMPLE_PLACEHOLDER.isPlaceholder("world"));
+    assertFalse(SIMPLE_PLACEHOLDER.isPlaceholder(NON_EXISTANT));
   }
 
   @Test
@@ -105,7 +102,7 @@ public class SimplePlaceholderTest {
     PlaceholderFunction function = new PlaceholderFunction() {
       @Override
       Collection<Placeholder> getPlaceholders() {
-        return Arrays.asList(simplePlaceholder);
+        return Arrays.asList(SIMPLE_PLACEHOLDER);
       }
     };
     String input = "Hi, my IGN is {pname}. However, my display name is {pdname} {asd}.";

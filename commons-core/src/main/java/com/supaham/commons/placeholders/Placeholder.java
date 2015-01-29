@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 /**
  * Represents a placeholder {@link Callable} that returns a {@link String}.
  */
-public interface Placeholder extends Function<String, String> {
+public interface Placeholder extends Function<PlaceholderData, String> {
 
   /**
    * This method is called with a {@link String} as a placeholder. This method specifies what should
@@ -21,12 +21,13 @@ public interface Placeholder extends Function<String, String> {
    * @return the string to replace the {@code input} with
    */
   @Nullable
-  String apply(String input);
+  @Override
+  String apply(PlaceholderData input);
 
   /**
    * This method is called when this {@link Placeholder} has taken part in a placeholder replacing
-   * process during the {@link #apply(String)} call. To clarify, this method is called after all
-   * {@link Placeholder}s' {@link #apply(String)} methods have been invoked.
+   * process during the {@link #apply(PlaceholderData)} call. To clarify, this method is called after all
+   * {@link Placeholder}s' {@link #apply(PlaceholderData)} methods have been invoked.
    *
    * @param string the final string
    */

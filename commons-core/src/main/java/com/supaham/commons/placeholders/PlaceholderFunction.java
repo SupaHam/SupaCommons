@@ -31,10 +31,10 @@ public abstract class PlaceholderFunction implements Function<String, String> {
   abstract Collection<? extends Placeholder> getPlaceholders();
 
   /**
-   * Performs a placeholder replacing task. This method utilizes {@link #getPlaceholders()} for 
-   * passing the matched placeholders to them. This method uses the {@link #PH_PATTERN} for 
-   * matching placeholders. Please keep in mind that the {@link Placeholder#apply(String)} will not 
-   * receive the braces, e.g. <em>{abc}</em> is given as <em>abc</em> 
+   * Performs a placeholder replacing task. This method utilizes {@link #getPlaceholders()} for
+   * passing the matched placeholders to them. This method uses the {@link #PH_PATTERN} for matching
+   * placeholders. Please keep in mind that the {@link Placeholder#apply(PlaceholderData)} will not 
+   * receive the braces, e.g. <em>{abc}</em> is given as <em>abc</em>
    *
    * @param input input to search for placeholders in
    *
@@ -44,42 +44,55 @@ public abstract class PlaceholderFunction implements Function<String, String> {
   @Override
   public String apply(String input) {
     Collection<? extends Placeholder> placeholders = getPlaceholders();
-    String result = "";
     int index = 0;
+    PlaceholderData data = createData(input);
 
     Matcher matcher = PH_PATTERN.matcher(input);
     // Every matched placeholder
     while (matcher.find()) {
       String origPhStr = matcher.group();
       // Remove the braces.
-      String phStr = origPhStr.substring(1, origPhStr.length() - 1);
-      
+      data.setPlaceholder(origPhStr.substring(1, origPhStr.length() - 1));
+
       boolean found = false;
       // Ask each Placeholder to handle the matched placeholder string until one Placeholder has.
       for (Placeholder placeholder : placeholders) {
-        String match = placeholder.apply(phStr);
+        String match = placeholder.apply(data);
         // Match is null when the placeholder has not applied anything to it.
         if (match != null) {
-          phStr = match;
+          data.setPlaceholder(match);
           found = true;
           break;
         }
       }
       // Append since the last index till the current matched starting index, then append the
       // placeholder string. Finally, update the index to the end of the matched placeholder string.
-      result += input.substring(index, matcher.start()) + (found ? phStr : origPhStr);
+      data.append(input.substring(index, matcher.start())
+                  + (found ? data.getPlaceholder() : origPhStr));
       index = matcher.end();
     }
 
     // If there's still input after the last matched, append it all to result.
     if (index < input.length()) {
-      result += input.substring(index, input.length());
+      data.append(input.substring(index, input.length()));
     }
 
     // Let's notify the placeholders that we're done
     for (Placeholder placeholder : placeholders) {
-      placeholder.onComplete(result);
+      placeholder.onComplete(data.getString());
     }
-    return result;
+    return data.getString();
+  }
+
+  /**
+   * Creates a new {@link PlaceholderData} out of an original input for {@link #apply(String)} to
+   * use.
+   *
+   * @param input original input to create the data object with
+   *
+   * @return new {@link PlaceholderData} with the string set as {@code input}
+   */
+  public PlaceholderData createData(@Nonnull String input) {
+    return new PlaceholderData(input);
   }
 }
