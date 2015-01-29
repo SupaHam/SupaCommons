@@ -9,6 +9,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -92,5 +94,18 @@ public class SimplePlaceholderTest {
     assertTrue(simplePlaceholder.isPlaceholder("pdname"));
     assertTrue(simplePlaceholder.isPlaceholder("world"));
     assertFalse(simplePlaceholder.isPlaceholder(NON_EXISTANT));
+  }
+
+  @Test
+  public void testPlaceholderFunction() {
+    PlaceholderFunction function = new PlaceholderFunction() {
+      @Override
+      Collection<Placeholder> getPlaceholders() {
+        return Arrays.asList(simplePlaceholder);
+      }
+    };
+    String input = "Hi, my IGN is {pname}. However, my display name is {pdname} {asd}.";
+    String expected = input.replace("{pname}", PNAME).replace("{pdname}", PDNAME);
+    assertEquals(expected, function.apply(input));
   }
 }
