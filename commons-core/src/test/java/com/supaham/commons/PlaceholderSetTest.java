@@ -52,7 +52,7 @@ public class PlaceholderSetTest {
 
   @Test
   public void testPlaceholderFunction() {
-    PlaceholderSet set = new PlaceholderSet();
+    PlaceholderSet<Placeholder> set = new PlaceholderSet<>();
     set.add(simplePlaceholder);
     String input = "Hi, my IGN is {pname}. However, my display name is {pdname}.";
     String expected = input.replace("{pname}", PNAME).replace("{pdname}", PDNAME);

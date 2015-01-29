@@ -28,7 +28,7 @@ public abstract class PlaceholderFunction implements Function<String, String> {
    *
    * @return collection of placeholders
    */
-  abstract Collection<Placeholder> getPlaceholders();
+  abstract Collection<? extends Placeholder> getPlaceholders();
 
   /**
    * Performs a placeholder replacing task. This method utilizes {@link #getPlaceholders()} for 
@@ -43,7 +43,7 @@ public abstract class PlaceholderFunction implements Function<String, String> {
   @Nonnull
   @Override
   public String apply(String input) {
-    Collection<Placeholder> placeholders = getPlaceholders();
+    Collection<? extends Placeholder> placeholders = getPlaceholders();
     String result = "";
     int index = 0;
 

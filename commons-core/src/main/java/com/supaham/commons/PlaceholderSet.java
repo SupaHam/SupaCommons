@@ -11,11 +11,11 @@ import javax.annotation.Nonnull;
  * Represents a {@link HashSet} of {@link Placeholder}s. This class also provides {@link
  * #apply(String)} which performs the placeholder strings replacing task.
  */
-public class PlaceholderSet extends HashSet<Placeholder> {
+public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
 
   private PlaceholderFunction placeholderFunction = new PlaceholderFunction() {
     @Override
-    Collection<Placeholder> getPlaceholders() {
+    Collection<T> getPlaceholders() {
       return PlaceholderSet.this;
     }
   };
@@ -29,7 +29,7 @@ public class PlaceholderSet extends HashSet<Placeholder> {
   /**
    * {@inheritDoc}
    */
-  public PlaceholderSet(Collection<? extends Placeholder> c) {
+  public PlaceholderSet(Collection<T> c) {
     super(c);
   }
 
