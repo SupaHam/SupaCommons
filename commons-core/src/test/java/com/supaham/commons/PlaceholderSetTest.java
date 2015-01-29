@@ -2,6 +2,10 @@ package com.supaham.commons;
 
 import static org.junit.Assert.assertEquals;
 
+import com.supaham.commons.placeholders.Placeholder;
+import com.supaham.commons.placeholders.PlaceholderSet;
+import com.supaham.commons.placeholders.SimplePlaceholder;
+
 import org.junit.Test;
 
 import java.util.ArrayList;

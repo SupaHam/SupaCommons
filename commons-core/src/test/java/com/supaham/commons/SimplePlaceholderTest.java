@@ -6,6 +6,10 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.supaham.commons.placeholders.Placeholder;
+import com.supaham.commons.placeholders.PlaceholderFunction;
+import com.supaham.commons.placeholders.SimplePlaceholder;
+
 import org.junit.Test;
 
 import java.util.ArrayList;

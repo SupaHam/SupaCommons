@@ -1,4 +1,4 @@
-package com.supaham.commons;
+package com.supaham.commons.placeholders;
 
 import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 
