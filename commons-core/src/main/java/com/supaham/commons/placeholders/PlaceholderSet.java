@@ -61,7 +61,8 @@ public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
 
   /**
    * @param function function to handle placeholders. If null, the default is used instead
-   * @see #PlaceholderSet(int, float) 
+   *
+   * @see #PlaceholderSet(int, float)
    */
   public PlaceholderSet(int initialCapacity, float loadFactor,
                         @Nullable PlaceholderFunction function) {
@@ -80,6 +81,7 @@ public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
 
   /**
    * @param function function to handle placeholders. If null, the default is used instead
+   *
    * @see #PlaceholderSet(int)
    */
   public PlaceholderSet(int initialCapacity, @Nullable PlaceholderFunction function) {
