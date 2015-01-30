@@ -1,5 +1,7 @@
 package com.supaham.commons.placeholders;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.base.Function;
 
 import java.util.Collection;
@@ -11,7 +13,7 @@ import javax.annotation.Nonnull;
 /**
  * Represents a {@link Function} implementation for placeholder strings replacement task.
  */
-public abstract class PlaceholderFunction implements Function<String, String> {
+public abstract class PlaceholderFunction implements Function<PlaceholderData, String> {
 
   /**
    * This represents the pattern <b>{@code ([{]+.[^{}]+[}]+)}</b>. The following String is an
@@ -24,29 +26,31 @@ public abstract class PlaceholderFunction implements Function<String, String> {
   public final static Pattern PH_PATTERN = Pattern.compile("([{]+.[^{}]+[}]+)");
 
   /**
-   * Gets a {@link Collection} of {@link Placeholder}s to use when calling {@link #apply(String)}.
+   * Gets a {@link Collection} of {@link Placeholder}s to use when calling 
+   * {@link #apply(PlaceholderData)}.
    *
    * @return collection of placeholders
    */
-  abstract Collection<? extends Placeholder> getPlaceholders();
+  public abstract Collection<? extends Placeholder> getPlaceholders();
 
   /**
    * Performs a placeholder replacing task. This method utilizes {@link #getPlaceholders()} for
    * passing the matched placeholders to them. This method uses the {@link #PH_PATTERN} for matching
-   * placeholders. Please keep in mind that the {@link Placeholder#apply(PlaceholderData)} will not 
+   * placeholders. Please keep in mind that {@link Placeholder#apply(PlaceholderData)} will not 
    * receive the braces, e.g. <em>{abc}</em> is given as <em>abc</em>
    *
-   * @param input input to search for placeholders in
+   * @param data data to apply this function to
    *
    * @return the placeholder replaced string
    */
   @Nonnull
   @Override
-  public String apply(String input) {
+  public String apply(PlaceholderData data) {
+    checkNotNull(data, "data cannot be null.");
     Collection<? extends Placeholder> placeholders = getPlaceholders();
     int index = 0;
-    PlaceholderData data = createData(input);
-
+    String input = data.getOriginal();
+    
     Matcher matcher = PH_PATTERN.matcher(input);
     // Every matched placeholder
     while (matcher.find()) {
@@ -82,17 +86,5 @@ public abstract class PlaceholderFunction implements Function<String, String> {
       placeholder.onComplete(data.getString());
     }
     return data.getString();
-  }
-
-  /**
-   * Creates a new {@link PlaceholderData} out of an original input for {@link #apply(String)} to
-   * use.
-   *
-   * @param input original input to create the data object with
-   *
-   * @return new {@link PlaceholderData} with the string set as {@code input}
-   */
-  public PlaceholderData createData(@Nonnull String input) {
-    return new PlaceholderData(input);
   }
 }

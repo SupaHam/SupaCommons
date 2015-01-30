@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -56,17 +57,23 @@ public class SimplePlaceholderTest {
       System.out.println("We've successfully replaced " + this.matched + " in, \"" + string + "\"");
     }
   };
+  
+  protected static PlaceholderData create(@Nonnull String string) {
+    PlaceholderData data = PlaceholderData.builder().input(string).build();
+    data.setPlaceholder(string);
+    return data;
+  }
 
   @Test
   public void applies() {
     try {
-      assertEquals(PNAME, SIMPLE_PLACEHOLDER.apply(PlaceholderData.create("pname")));
-      assertEquals(PDNAME, SIMPLE_PLACEHOLDER.apply(PlaceholderData.create("pdname")));
-      assertEquals(WORLD, SIMPLE_PLACEHOLDER.apply(PlaceholderData.create("world")));
+      assertEquals(PNAME, SIMPLE_PLACEHOLDER.apply(create("pname")));
+      assertEquals(PDNAME, SIMPLE_PLACEHOLDER.apply(create("pdname")));
+      assertEquals(WORLD, SIMPLE_PLACEHOLDER.apply(create("world")));
 
-      assertNotEquals(PNAME, SIMPLE_PLACEHOLDER.apply(PlaceholderData.create("pdname")));
+      assertNotEquals(PNAME, SIMPLE_PLACEHOLDER.apply(create("pdname")));
 
-      assertNull(SIMPLE_PLACEHOLDER.apply(PlaceholderData.create(NON_EXISTANT)));
+      assertNull(SIMPLE_PLACEHOLDER.apply(create(NON_EXISTANT)));
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -77,7 +84,7 @@ public class SimplePlaceholderTest {
     try {
       String message = "";
       for (String s : "Hello, pname . Your display name is pdname ".split(" ")) {
-        String apply = SIMPLE_PLACEHOLDER.apply(PlaceholderData.create(s));
+        String apply = SIMPLE_PLACEHOLDER.apply(create(s));
         if (apply != null) {
           s = apply;
         }
@@ -101,12 +108,13 @@ public class SimplePlaceholderTest {
   public void testPlaceholderFunction() {
     PlaceholderFunction function = new PlaceholderFunction() {
       @Override
-      Collection<Placeholder> getPlaceholders() {
+      public Collection<Placeholder> getPlaceholders() {
         return Arrays.asList(SIMPLE_PLACEHOLDER);
       }
     };
     String input = "Hi, my IGN is {pname}. However, my display name is {pdname} {asd}.";
     String expected = input.replace("{pname}", PNAME).replace("{pdname}", PDNAME);
-    assertEquals(expected, function.apply(input));
+    PlaceholderData data = PlaceholderData.builder().input(input).build();
+    assertEquals(expected, function.apply(data));
   }
 }

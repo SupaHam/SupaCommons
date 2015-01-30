@@ -9,28 +9,33 @@ import javax.annotation.Nonnull;
 
 /**
  * Represents a data class used for {@link Placeholder}'s {@link Placeholder#apply(PlaceholderData)}.
- * This class provides the ability to add local objects using a Map<Object, Object>. This is useful
- * for adding any extra objects that you'd like {@link Placeholder} to have access to.
+ * <br /> This class provides a Builder class; accessible through {@link #builder()}. <br />
+ * This class provides the ability to add local objects using a {@literal Map<Object, Object>}. This
+ * is useful for adding any extra objects that you'd like {@link Placeholder} to have access to.
  */
 public class PlaceholderData {
 
   private final String original;
   private String string = "";
   private String placeholder;
-  private final Map<Object, Object> locals = new HashMap<>();
-
-  public PlaceholderData(@Nonnull String string) {
-    checkNotNullOrEmpty(string);
-    this.original = string;
-  }
+  private final Map<Object, Object> locals;
 
   /**
-   * Used for testing.
+   * Creates a new {@link Builder} for constructing a {@link PlaceholderData} instance.
+   * @return {@link Builder} instance
    */
-  protected static PlaceholderData create(@Nonnull String string) {
-    PlaceholderData data = new PlaceholderData(string);
-    data.setPlaceholder(string);
-    return data;
+  public static Builder builder() {
+    return new Builder();
+  }
+  
+  private PlaceholderData(@Nonnull String string) {
+    this(string, new HashMap<>());
+  }
+  
+  private PlaceholderData(@Nonnull String string, @Nonnull Map<Object, Object> locals) {
+    checkNotNullOrEmpty(string);
+    this.original = string;
+    this.locals = locals;
   }
 
   /**
@@ -114,5 +119,30 @@ public class PlaceholderData {
    */
   public Object put(Object key, Object value) {
     return this.locals.put(key, value);
+  }
+  
+  public static final class Builder {
+    private String input;
+    private final Map<Object, Object> locals = new HashMap<>();
+    
+    public Builder input(String input) {
+      checkNotNullOrEmpty(input);
+      this.input = input;
+      return this;
+    }
+    
+    public Builder put(Object local) {
+      put(local.getClass(), local);
+      return this;
+    }
+    
+    public Builder put(Object key, Object value) {
+      this.locals.put(key, value);
+      return this;
+    }
+    
+    public PlaceholderData build() {
+      return new PlaceholderData(this.input, this.locals);
+    }
   }
 }

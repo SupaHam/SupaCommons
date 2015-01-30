@@ -102,11 +102,29 @@ public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
    *
    * @return the placeholder replaced string
    *
-   * @see PlaceholderFunction#apply(String)
+   * @see #apply(PlaceholderData)
+   * @deprecated Not sure whether this method is necessary, it could almost be considered useless.
    */
   @Nonnull
+  @Deprecated
   public String apply(String input) {
-    return placeholderFunction.apply(checkNotNullOrEmpty(input));
+    checkNotNullOrEmpty(input);
+    return apply(PlaceholderData.builder().input(input).build());
+  }
+
+  /**
+   * Performs a placeholder replacing task using all the {@link Placeholder}s in this {@link
+   * PlaceholderSet}.
+   *
+   * @param data placeholder data to perform the placeholder function with
+   *
+   * @return the placeholder replaced string
+   *
+   * @see PlaceholderFunction#apply(PlaceholderData)
+   */
+  @Nonnull
+  public String apply(PlaceholderData data) {
+    return placeholderFunction.apply(data);
   }
 
   /**
