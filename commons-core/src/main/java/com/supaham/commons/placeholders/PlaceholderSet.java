@@ -15,12 +15,7 @@ import javax.annotation.Nullable;
  */
 public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
 
-  private PlaceholderFunction placeholderFunction = new PlaceholderFunction() {
-    @Override
-    Collection<T> getPlaceholders() {
-      return PlaceholderSet.this;
-    }
-  };
+  private PlaceholderFunction placeholderFunction = new CommonPlaceholderFunction(this);
 
   /**
    * {@inheritDoc}
