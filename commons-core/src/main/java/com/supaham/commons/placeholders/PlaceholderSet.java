@@ -90,6 +90,28 @@ public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
   }
 
   /**
+   * Checks if this {@link PlaceholderSet} has a {@link Placeholder} with a given {@link String} as
+   * a valid placeholder.
+   *
+   * @param placeholder placeholder string to check
+   *
+   * @return true if the given {@code placeholder} string belongs to one of the {@link Placeholder}s
+   * registered to this {@link PlaceholderSet}
+   *
+   * @see Placeholder#isPlaceholder(String)
+   */
+  public boolean hasPlaceholder(@Nonnull String placeholder) {
+    if (placeholder != null && !placeholder.isEmpty()) {
+      for (Placeholder placeholder1 : this) {
+        if (placeholder1.isPlaceholder(placeholder)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
    * Performs a placeholder replacing task using all the {@link Placeholder}s in this {@link
    * PlaceholderSet}.
    *
