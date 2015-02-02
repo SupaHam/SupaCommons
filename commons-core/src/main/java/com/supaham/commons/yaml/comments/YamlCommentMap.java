@@ -5,20 +5,22 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package com.supaham.commons.yaml.comments;
 
-import org.jetbrains.annotations.NotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Nonnull;
 
 public class YamlCommentMap {
 
     static final String COMMENT_LINE_START = "# ";
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-    @NotNull private final String indentLengthString;
+    @Nonnull private final String indentLengthString;
     private final char pathSeparatorChar;
-    @NotNull private final Map<String, String> commentMap = new ConcurrentHashMap<String, String>();
-    @NotNull private final ThreadLocal<String> leadingWhitespace = new ThreadLocal<String>();
+    @Nonnull private final Map<String, String> commentMap = new ConcurrentHashMap<String, String>();
+    @Nonnull private final ThreadLocal<String> leadingWhitespace = new ThreadLocal<String>();
 
     public static YamlCommentMap getYamlCommentMap(final int indentLength, final char pathSeparatorChar) {
         return new YamlCommentMap(indentLength, pathSeparatorChar);
@@ -45,7 +47,9 @@ public class YamlCommentMap {
      * @param path Configuration path to add comment.  Must use the path separator character specified with {@link YamlCommentMap#getYamlCommentMap(int, char)}
      * @param comments Comments to add.  One String per line.
      */
-    public void setCommentsForPath(@NotNull final String path, @NotNull final String... comments) {
+    public void setCommentsForPath(@Nonnull final String path, @Nonnull final String... comments) {
+        checkNotNull(path, "path cannot be null.");
+        checkNotNull(comments, "comments cannot be null.");
         leadingWhitespace.set(getLeadingWhitespaceForPathDepth(path));
         String mergedComments = mergeArrayIntoSingleMultiLineIndentedString(comments);
 
@@ -109,8 +113,9 @@ public class YamlCommentMap {
      * <p/>
      * This will return a single String which will be properly formatted for a yaml file and the given path.
      */
-    @NotNull
-    public String getCommentsForPath(@NotNull final String path) {
+    @Nonnull
+    public String getCommentsForPath(@Nonnull final String path) {
+        checkNotNull(path, "path cannot be null.");
         String commentsForPath = commentMap.get(path);
         if (commentsForPath == null) {
             commentsForPath = "";

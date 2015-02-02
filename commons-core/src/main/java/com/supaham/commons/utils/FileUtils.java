@@ -5,7 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package com.supaham.commons.utils;
 
-import org.jetbrains.annotations.NotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,6 +18,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+
+import javax.annotation.Nonnull;
 
 /**
  * Utility methods for working with {@link File} instances. This class contains methods such as
@@ -39,8 +41,10 @@ public class FileUtils {
    * @throws IOException If the file does not exist <br />If the file cannot be read <br />If the
    * file is a directory
    */
-  @NotNull
-  public static String getFileContentsAsString(@NotNull final File file) throws IOException {
+  @Nonnull
+  public static String getFileContentsAsString(@Nonnull final File file) throws IOException {
+    checkNotNull(file, "file cannot be null.");
+    
     if (!file.exists()) {
       throw new IOException("File " + file + " does not exist");
     }
@@ -73,8 +77,11 @@ public class FileUtils {
    *
    * @throws IOException If an I/O error occurs
    */
-  public static void writeStringToFile(@NotNull String string,
-                                       @NotNull final File file) throws IOException {
+  public static void writeStringToFile(@Nonnull String string,
+                                       @Nonnull final File file) throws IOException {
+    checkNotNull(string, "string cannot be null.");
+    checkNotNull(file, "file cannot be null.");
+    
     try (OutputStreamWriter out =
              new OutputStreamWriter(new FileOutputStream(file), "UTF-8")) {
       string = string.replaceAll("\n", System.getProperty("line.separator"));

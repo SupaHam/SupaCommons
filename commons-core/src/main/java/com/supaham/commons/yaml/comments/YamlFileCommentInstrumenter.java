@@ -5,12 +5,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 package com.supaham.commons.yaml.comments;
 
-import com.supaham.commons.utils.FileUtils;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.jetbrains.annotations.NotNull;
+import com.supaham.commons.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+
+import javax.annotation.Nonnull;
 
 /**
  * A utility for adding in comments to a YAML file.
@@ -44,7 +46,8 @@ public class YamlFileCommentInstrumenter {
         return new YamlFileCommentInstrumenter(YamlCommentMap.getYamlCommentMap(indentLength, PATH_SEPARATOR_CHAR), indentLength);
     }
 
-    YamlFileCommentInstrumenter(@NotNull final YamlCommentMap commentMap, final int indentLength) {
+    YamlFileCommentInstrumenter(@Nonnull final YamlCommentMap commentMap, final int indentLength) {
+        checkNotNull(commentMap, "commentMap cannot be null.");
         this.commentMap = commentMap;
         this.indentLength = indentLength;
     }
@@ -57,7 +60,7 @@ public class YamlFileCommentInstrumenter {
      * @param path Configuration path to add comment.  Separate nodes in a path with a '.' (period).
      * @param comments Comments to add.  One String per line.
      */
-    public void setCommentsForPath(@NotNull final String path, @NotNull final String... comments) {
+    public void setCommentsForPath(@Nonnull final String path, @Nonnull final String... comments) {
         commentMap.setCommentsForPath(path, comments);
     }
 
@@ -66,7 +69,8 @@ public class YamlFileCommentInstrumenter {
      *
      * @throws IOException if the file does not exist, is a directory or cannot be read/written for some reason.
      */
-    public void saveCommentsToFile(@NotNull final File yamlFile) throws IOException {
+    public void saveCommentsToFile(@Nonnull final File yamlFile) throws IOException {
+        checkNotNull(yamlFile, "yamlFile cannot be null.");
         if (commentMap.hasComments()) {
             String fileAsString = FileUtils.getFileContentsAsString(yamlFile);
             String instrumentedContents = addCommentsToYamlString(fileAsString);
@@ -74,7 +78,8 @@ public class YamlFileCommentInstrumenter {
         }
     }
 
-    public String addCommentsToYamlString(@NotNull final String yamlString) {
+    public String addCommentsToYamlString(@Nonnull final String yamlString) {
+        checkNotNull(yamlString, "yamlString cannot be null.");
         finalFileContents = new StringBuilder();
         lastYamlPath = new StringBuilder();
         lastNodeDepth = 0;

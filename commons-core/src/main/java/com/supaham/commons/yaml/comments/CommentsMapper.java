@@ -1,10 +1,13 @@
 package com.supaham.commons.yaml.comments;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
+
 import com.supaham.commons.yaml.YAMLProcessor;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 import pluginbase.config.SerializationRegistrar;
 import pluginbase.config.field.Field;
@@ -13,27 +16,34 @@ import pluginbase.config.field.FieldMapper;
 
 public class CommentsMapper {
 
-    @NotNull
+    @Nonnull
     private String currentPath;
     private Map<?, ?> configMap = null;
     private FieldMap fieldMap = null;
-    @NotNull
+    @Nonnull
     private YamlFileCommentInstrumenter commentInstrumenter;
 
-    public static YamlFileCommentInstrumenter getCommentInstrumenter(@NotNull YAMLProcessor config) {
+    public static YamlFileCommentInstrumenter getCommentInstrumenter(@Nonnull YAMLProcessor config) {
+        checkNotNull(config, "config cannot be null.");
         return new CommentsMapper("", config.getMap(), YamlFileCommentInstrumenter
             .createCommentInstrumenter(config.getOptions().getIndent())).getCommentInstrumenter();
     }
 
-    private CommentsMapper(@NotNull String currentPath, @NotNull Map<?, ?> configMap,
-                           @NotNull YamlFileCommentInstrumenter commentInstrumenter) {
+    private CommentsMapper(@Nonnull String currentPath, @Nonnull Map<?, ?> configMap,
+                           @Nonnull YamlFileCommentInstrumenter commentInstrumenter) {
+        checkNotNullOrEmpty(currentPath, "currentPath");
+        checkNotNull(configMap, "configMap cannot be null.");
+        checkNotNull(commentInstrumenter, "commentInstrumenter cannot be null.");
         this.currentPath = currentPath;
         this.configMap = configMap;
         this.commentInstrumenter = commentInstrumenter;
     }
-
-    private CommentsMapper(@NotNull String currentPath, @NotNull FieldMap fieldMap,
-                           @NotNull YamlFileCommentInstrumenter commentInstrumenter) {
+  
+    private CommentsMapper(@Nonnull String currentPath, @Nonnull FieldMap fieldMap,
+                           @Nonnull YamlFileCommentInstrumenter commentInstrumenter) {
+        checkNotNullOrEmpty(currentPath, "currentPath");
+        checkNotNull(fieldMap, "fieldMap cannot be null.");
+        checkNotNull(commentInstrumenter, "commentInstrumenter cannot be null.");
         this.currentPath = currentPath;
         this.fieldMap = fieldMap;
         this.commentInstrumenter = commentInstrumenter;
