@@ -1,11 +1,13 @@
 repositories {
     maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+    maven { url "http://maven.sk89q.com/repo/" }
     jcenter()
 }
 
 dependencies {
     compile project(':commons-core')
     compile group: 'org.spigotmc', name: 'spigot-api', version: '1.8-R0.1-SNAPSHOT'
+    compile group: 'com.sk89q', name: 'squirrelid', version: '0.1.0'
     compile group: 'com.dumptruckman.minecraft.pluginbase', name: 'Serializable-Config-Bukkit', version: '0.1-SNAPSHOT'
 }
 
@@ -13,6 +15,7 @@ shadowJar {
     dependencies {
         include(dependency(':commons-core'))
         include(dependency('com.dumptruckman.minecraft.pluginbase:Serializable-Config-Bukkit:0.1-SNAPSHOT'))
+        include(dependency('com.sk89q:squirrelid:0.1.0'))
     }
 }
 
