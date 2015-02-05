@@ -6,11 +6,13 @@ repositories {
 dependencies {
     compile project(':commons-core')
     compile group: 'com.jolbox', name: 'bonecp', version: '0.8.0-rc3'
+    compile group: 'org.springframework', name: 'spring-jdbc', version: '3.2.4.RELEASE'
 }
 
 shadowJar {
     dependencies {
         include(dependency('com.jolbox:bonecp:0.8.0-rc3'))
+        include(dependency('org.springframework:spring-jdbc:3.2.4.RELEASE'))
     }
 }
 
