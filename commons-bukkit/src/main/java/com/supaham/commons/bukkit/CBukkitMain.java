@@ -1,5 +1,7 @@
 package com.supaham.commons.bukkit;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.supaham.commons.CMain;
 
 import org.bukkit.plugin.Plugin;
@@ -8,13 +10,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.Getter;
-import lombok.NonNull;
+import javax.annotation.Nonnull;
 
 /**
  * Commons main bukkit class.
  */
-@Getter
 public class CBukkitMain {
 
   private static CBukkitMain instance = null;
@@ -33,7 +33,8 @@ public class CBukkitMain {
     return CBukkitMain.instance;
   }
 
-  public static void hook(@NonNull Plugin plugin) {
+  public static void hook(@Nonnull Plugin plugin) {
+    checkNotNull(plugin, "plugin cannot be null.");
     if (CMain.get() == null) {
       CMain.main(plugin.getLogger());
     }
@@ -46,7 +47,8 @@ public class CBukkitMain {
     plugin.getLogger().fine("Hooked into commons-bukkit.");
   }
 
-  public static boolean unhook(@NonNull Plugin plugin) {
+  public static boolean unhook(@Nonnull Plugin plugin) {
+    checkNotNull(plugin, "plugin cannot be null.");
     return CBukkitMain.instance != null 
            && instance.hookedPlugins.remove(plugin.getName()) != null;
   }
