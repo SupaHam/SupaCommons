@@ -30,10 +30,16 @@ import javax.annotation.Nonnull;
  */
 public class MySQLCache extends AbstractProfileCache {
 
+  public static final String TABLE_NAME = "uuid_cache";
+  
   private final JDBCAgent agent;
   private final String tableName;
   private final String queryString;
 
+  public MySQLCache(@Nonnull JDBCAgent jdbcAgent) throws SQLException {
+    this(jdbcAgent, TABLE_NAME);
+  }
+  
   public MySQLCache(@Nonnull JDBCAgent jdbcAgent, @Nonnull String tableName) throws SQLException {
     checkNotNull(jdbcAgent);
 //    checkNotNullOrEmpty(tableName, "tableName");
