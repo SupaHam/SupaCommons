@@ -98,9 +98,10 @@ public class MySQLCache extends AbstractProfileCache {
     }
 
     StringBuilder builder = new StringBuilder();
-    builder.append("SELECT name, uuid FROM uuid_cache WHERE uuid IN ('");
+    // SELECT ... WHERE ... IN ('abc', 'def', 'ghi');
+    builder.append("SELECT name, uuid FROM `").append(this.tableName).append("` WHERE uuid IN ('");
     Joiner.on("', '").skipNulls().appendTo(builder, uuids);
-    builder.append("')");
+    builder.append("');");
 
     synchronized (this) {
       try (Connection conn = getConnection();
