@@ -7,6 +7,7 @@ dependencies {
     compile project(':commons-core')
     compile group: 'com.jolbox', name: 'bonecp', version: '0.8.0-rc3'
     compile group: 'org.springframework', name: 'spring-jdbc', version: '3.2.4.RELEASE'
+    compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
 }
 
 shadowJar {
