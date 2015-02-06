@@ -226,7 +226,7 @@ public class SQLDatabase {
   }
 
   /**
-   * @see TableMap#getTableIdByName(String) 
+   * @see TableMap#getTableIdByName(String)
    */
   @Nullable
   public String getTableIdByName(@Nullable String tableName) {
@@ -265,14 +265,14 @@ public class SQLDatabase {
   }
 
   /**
-   * @see TableMap#removeTable(Table) 
+   * @see TableMap#removeTable(Table)
    */
   public boolean removeTable(@Nonnull Table table) {
     return tableMap.removeTable(table);
   }
 
   /**
-   * @see TableMap#removeTable(String) 
+   * @see TableMap#removeTable(String)
    */
   @Nullable
   public Table removeTable(@Nonnull String id) {
