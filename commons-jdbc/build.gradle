@@ -8,6 +8,7 @@ dependencies {
     compile group: 'com.jolbox', name: 'bonecp', version: '0.8.0-rc3'
     compile group: 'org.springframework', name: 'spring-jdbc', version: '3.2.4.RELEASE'
     compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.32'
 }
 
 shadowJar {
