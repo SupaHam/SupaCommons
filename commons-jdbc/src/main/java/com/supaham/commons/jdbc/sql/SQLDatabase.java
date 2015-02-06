@@ -2,8 +2,11 @@ package com.supaham.commons.jdbc.sql;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 
 import com.supaham.commons.jdbc.utils.SQLUtils;
+import com.supaham.commons.placeholders.PlaceholderData;
+import com.supaham.commons.placeholders.PlaceholderSet;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -40,24 +43,147 @@ public class SQLDatabase {
   }
 
   /**
+   * Checks whether a table (by id) exists in this {@link SQLDatabase}. If it does not exist it is
+   * created using its {@link Table} schema. This method is equivalent to calling {@code
+   * checkTable(Table)}, where the {@link Table} instance is retrieved via 
+   * {@link #getTable(String)}.
+   *
+   * @param tableId table id to check out
+   *
+   * @return true if the table did not exist and was created, otherwise null if {@code tableId} is
+   * not a valid tableId in this {@link SQLDatabase}
+   *
+   * @see #checkTable(JdbcTemplate, Table)
+   */
+  @Nullable
+  protected Boolean checkTable(@Nonnull String tableId) {
+    checkNotNullOrEmpty(tableId, "tableId");
+    Table table = getTable(tableId);
+    return table != null ? checkTable(table) : null;
+  }
+
+  /**
+   * Checks whether a {@link Table} exists in this {@link SQLDatabase}. If it does not exist it is
+   * created using its own schema. This method is equivalent to calling {@code
+   * checkTable&#040;SpringJDBCAgent.createJdbcTemplate&#040;&#041;, Table&#041;}.
+   *
+   * @param table table to check out
+   *
+   * @return true if the table did not exist and was created
+   *
+   * @see #checkTable(JdbcTemplate, Table)
+   */
+  protected boolean checkTable(@Nonnull Table table) {
+    return checkTable(this.jdbcAgent.createJdbcTemplate(), table);
+  }
+
+  /**
+   * Checks whether a table (by id) exists in this {@link SQLDatabase}. If it does not exist it is
+   * created using its {@link Table} schema. This method is equivalent to calling {@code
+   * checkTable(JdbcTemplate, Table)}, where the {@link Table} instance is retrieved via 
+   * {@link #getTable(String)}. 
+   *
+   * @param tableId table id to check out
+   *
+   * @return true if the table did not exist and was created, otherwise null if {@code tableId} is
+   * not a valid tableId in this {@link SQLDatabase}
+   *
+   * @see #checkTable(JdbcTemplate, Table)
+   */
+  @Nullable
+  protected Boolean checkTable(@Nonnull JdbcTemplate template, @Nonnull String tableId) {
+    checkNotNullOrEmpty(tableId, "tableId");
+    Table table = getTable(tableId);
+    return table != null ? checkTable(template, table) : null;
+  }
+
+  /**
+   * Checks whether a {@link Table} exists in this {@link SQLDatabase}. If it does not exist it is
+   * created using its own schema. This method is equivalent to calling {@code
+   * checkTable(JdbcTemplate, Table, null)}.
+   *
+   * @param template template to use for checking the table, in case it needs to be created
+   * @param table table to check out
+   *
+   * @return true if the table did not exist and was created
+   *
+   * @see #checkTable(JdbcTemplate, Table, PlaceholderSet)
+   */
+  protected boolean checkTable(@Nonnull JdbcTemplate template, @Nonnull Table table) {
+    return checkTable(template, table, null);
+  }
+
+  /**
+   * Checks whether a table (by id) exists in this {@link SQLDatabase}. If it does not exist it is
+   * created using its {@link Table} schema. This method is equivalent to calling {@link
+   * #checkTable(Table, PlaceholderSet)}, where the {@link Table} instance is retrieved via 
+   * {@link #getTable(String)}. 
+   *
+   * @param tableId table id to check out
+   *
+   * @return true if the table did not exist and was created, otherwise null if {@code tableId} is
+   * not a valid tableId in this {@link SQLDatabase}
+   *
+   * @see #checkTable(JdbcTemplate, Table)
+   */
+  @Nullable
+  protected Boolean checkTable(@Nonnull String tableId,
+                               @Nullable PlaceholderSet placeholders) {
+    checkNotNullOrEmpty(tableId, "tableId");
+    Table table = getTable(tableId);
+    return table != null ? checkTable(table, placeholders) : null;
+  }
+
+  /**
+   * Checks whether a {@link Table} exists in this {@link SQLDatabase}. If it does not exist it is
+   * created using its own schema. This method is equivalent to calling {@code
+   * checkTable&#040;SpringJDBCAgent.createJdbcTemplate&#040;&#041;, Table, PlaceholderSet&#041;}
+   *
+   * @param table table to check out
+   * @param placeholders {@link PlaceholderSet} to use on the schema
+   *
+   * @return true if the table did not exist and was created
+   *
+   * @see #checkTable(JdbcTemplate, Table, PlaceholderSet)
+   */
+  protected boolean checkTable(@Nonnull Table table,
+                               @Nullable PlaceholderSet placeholders) {
+    return checkTable(this.jdbcAgent.createJdbcTemplate(), table, placeholders);
+  }
+
+  /**
    * Checks whether a {@link Table} exists in this {@link SQLDatabase}. If it does not exist it is
    * created using its own schema.
    *
    * @param template template to use for checking the table, in case it needs to be created
    * @param table table to check out
+   * @param placeholders {@link PlaceholderSet} to use on the schema
+   * 
+   * @return true if the table did not exist and was created
    */
-  protected void checkTable(@Nonnull JdbcTemplate template, @Nonnull Table table) {
+  protected boolean checkTable(@Nonnull JdbcTemplate template, @Nonnull Table table,
+                            @Nullable PlaceholderSet placeholders) {
     checkNotNull(template, "template cannot be null.");
     checkNotNull(table, "table cannot be null.");
     checkArgument(this.tableMap.hasTable(table), "table doesn't belong to this database.");
-    
+
     String name = table.getName();
     this.logger.fine("Checking table '" + name + "'.");
     if (!SQLUtils.hasTable(this.jdbcAgent.getDataSource(), name)) {
       this.logger.fine("'" + name + "' table doesn't exist, creating it...");
-      template.execute(table.getSchema());
+      String schema = table.getSchema();
+      if (placeholders != null && !placeholders.isEmpty()) {
+        PlaceholderData data = PlaceholderData.builder()
+            .input(schema)
+            .put(table)
+            .put(template).build();
+        schema = placeholders.apply(data);
+      }
+      template.execute(schema);
+      return true;
     } else {
       this.logger.finer("table '" + name + "' already exists");
+      return false;
     }
   }
 
@@ -86,7 +212,7 @@ public class SQLDatabase {
   }
 
   /**
-   * @see TableMap#hasTable(Table) 
+   * @see TableMap#hasTable(Table)
    */
   public boolean hasTable(@Nonnull Table table) {
     return tableMap.hasTable(table);
