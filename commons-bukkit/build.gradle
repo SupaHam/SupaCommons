@@ -10,6 +10,7 @@ dependencies {
     compile group: 'com.sk89q', name: 'squirrelid', version: '0.1.0'
 //    compile group: 'com.dumptruckman.minecraft.pluginbase', name: 'Serializable-Config-Bukkit', version: '0.1-SNAPSHOT'
     compile group: 'com.dumptruckman.minecraft.pluginbase', name: 'Plugin-Bukkit', version: '1.5-SNAPSHOT'
+    compile group: 'com.wimbli.WorldBorder', name: 'WorldBorder', version: '1.8.1'
 }
 
 shadowJar {
