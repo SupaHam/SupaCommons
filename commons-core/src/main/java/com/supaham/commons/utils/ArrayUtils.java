@@ -115,4 +115,15 @@ public final class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
     }
     return array;
   }
+
+  /**
+   * Gets a random element in an array.
+   *
+   * @param array array to use
+   *
+   * @return the random element
+   */
+  public static <T> T getRandomElement(T[] array) {
+    return array[NumberUtils.getRandom().nextInt(array.length)];
+  }
 }
