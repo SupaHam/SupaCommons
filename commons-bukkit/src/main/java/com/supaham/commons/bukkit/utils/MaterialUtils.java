@@ -128,8 +128,8 @@ public final class MaterialUtils {
    * @return whether the {@code material} is a sign
    */
   public static boolean isSign(Material material) {
-    return material == Material.SIGN 
-           || material == Material.SIGN_POST 
+    return material == Material.SIGN
+           || material == Material.SIGN_POST
            || material == Material.WALL_SIGN;
   }
 
@@ -149,8 +149,8 @@ public final class MaterialUtils {
 
   /**
    * Checks whether an {@link ItemStack} is the same as a {@link MaterialData}. If either the
-   * ItemStack or the MaterialData have a data (damage/durability) value of -1, only the
-   * {@link Material} is tested.
+   * ItemStack or the MaterialData have a data (damage/durability) value of -1, only the {@link
+   * Material} is tested.
    *
    * @param item item to check
    * @param materialData {@link MaterialData} to test against
@@ -163,8 +163,8 @@ public final class MaterialUtils {
 
   /**
    * Checks whether a {@link Material} and data value (byte) is the same as a {@link MaterialData}.
-   * This simply constructs a {@link MaterialData} out of the given data and calls
-   * {@link #same(MaterialData, MaterialData)}. If either the Block or the MaterialData have a data
+   * This simply constructs a {@link MaterialData} out of the given data and calls {@link
+   * #same(MaterialData, MaterialData)}. If either the Block or the MaterialData have a data
    * (damage/durability) value of -1, only the {@link Material} is tested.
    *
    * @param type type to check
@@ -178,8 +178,8 @@ public final class MaterialUtils {
   }
 
   /**
-   * Checks whether a {@link MaterialData} is the same as another {@link MaterialData}. If either
-   * of the MaterialDatas have a data (damage/durability) value of -1, only the {@link Material} is
+   * Checks whether a {@link MaterialData} is the same as another {@link MaterialData}. If either of
+   * the MaterialDatas have a data (damage/durability) value of -1, only the {@link Material} is
    * tested.
    *
    * @param data1 first {@link MaterialData} to test

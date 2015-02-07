@@ -5,8 +5,8 @@ import java.util.Arrays;
 import javax.annotation.Nonnull;
 
 /**
- * Utility methods for working with arrays. This class contains methods such as
- * {@link #removeEmptyStrings(String[])}, {@link #getTotalStringsLength(String[])}, and more.
+ * Utility methods for working with arrays. This class contains methods such as {@link
+ * #removeEmptyStrings(String[])}, {@link #getTotalStringsLength(String[])}, and more.
  *
  * @since 0.1
  */
@@ -87,8 +87,8 @@ public final class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
   }
 
   /**
-   * Checks if an array contains a null object. If it does, a {@link NullPointerException} is
-   * thrown with the message 'array contains null element.'.
+   * Checks if an array contains a null object. If it does, a {@link NullPointerException} is thrown
+   * with the message 'array contains null element.'.
    *
    * @param array array to check
    *
@@ -99,8 +99,8 @@ public final class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
   }
 
   /**
-   * Checks if an array contains a null object. If it does, a {@link NullPointerException} is
-   * thrown with the description specified.
+   * Checks if an array contains a null object. If it does, a {@link NullPointerException} is thrown
+   * with the description specified.
    *
    * @param array array to check
    * @param desc detailed message to pass along side the {@link NullPointerException}
