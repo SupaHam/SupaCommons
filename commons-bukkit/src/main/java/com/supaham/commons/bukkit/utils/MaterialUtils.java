@@ -1,5 +1,7 @@
 package com.supaham.commons.bukkit.utils;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -7,6 +9,8 @@ import org.bukkit.material.MaterialData;
 
 import java.util.EnumSet;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 /**
  * Utility methods for working with {@link Material} instances. This class contains methods such as
@@ -192,5 +196,25 @@ public final class MaterialUtils {
     return data1.getItemType().equals(data2.getItemType())
            && ((data1.getData() == -1 || data2.getData() == -1)
                || data1.getData() == data2.getData());
+  }
+
+  /**
+   * Checks whether a {@link Material} is a gold tool.
+   *
+   * @param material material to check
+   *
+   * @return true if the {@code material} is a gold tool
+   */
+  public static boolean isGoldTool(@Nonnull Material material) {
+    checkNotNull(material, "material cannot be null.");
+    switch (material) {
+      case GOLD_AXE:
+      case GOLD_SPADE:
+      case GOLD_SWORD:
+      case GOLD_PICKAXE:
+        return true;
+      default:
+        return false;
+    }
   }
 }
