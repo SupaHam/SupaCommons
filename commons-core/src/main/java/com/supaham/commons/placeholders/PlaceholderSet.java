@@ -1,7 +1,6 @@
 package com.supaham.commons.placeholders;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 
 import java.util.ArrayList;
 import java.util.Collection;

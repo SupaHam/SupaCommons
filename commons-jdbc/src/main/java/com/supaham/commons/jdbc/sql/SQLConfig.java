@@ -12,14 +12,15 @@ import pluginbase.config.properties.PropertiesWrapper;
  */
 @Name("SQLConfig")
 public class SQLConfig extends PropertiesWrapper {
+
   private String file;
   private Map<String, String> tables;
-  
+
   public SQLConfig(@Nonnull String file, @Nonnull Map<String, String> tables) {
     this.file = file;
     this.tables = tables;
   }
-  
+
   public String getFile() {
     return file;
   }

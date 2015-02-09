@@ -11,9 +11,9 @@ import javax.annotation.Nonnull;
 
 /**
  * Represents a data class used for {@link Placeholder}'s {@link Placeholder#apply(PlaceholderData)}.
- * <br /> This class provides a Builder class; accessible through {@link #builder()}. <br />
- * This class provides the ability to add local objects using a {@literal Map<Object, Object>}. This
- * is useful for adding any extra objects that you'd like {@link Placeholder} to have access to.
+ * <br /> This class provides a Builder class; accessible through {@link #builder()}. <br /> This
+ * class provides the ability to add local objects using a {@literal Map<Object, Object>}. This is
+ * useful for adding any extra objects that you'd like {@link Placeholder} to have access to.
  */
 public class PlaceholderData {
 
@@ -44,11 +44,11 @@ public class PlaceholderData {
   public static Builder builder() {
     return new Builder();
   }
-  
+
   private PlaceholderData(@Nonnull String string) {
     this(string, new HashMap<>());
   }
-  
+
   private PlaceholderData(@Nonnull String string, @Nonnull Map<Object, Object> locals) {
     checkNotNullOrEmpty(string);
     this.original = string;
@@ -132,13 +132,14 @@ public class PlaceholderData {
   }
 
   /**
-   * @see Map#put(Object, Object) 
+   * @see Map#put(Object, Object)
    */
   public Object put(Object key, Object value) {
     return this.locals.put(key, value);
   }
-  
+
   public static final class Builder {
+
     private String input;
     private final Map<Object, Object> locals = new HashMap<>();
 
