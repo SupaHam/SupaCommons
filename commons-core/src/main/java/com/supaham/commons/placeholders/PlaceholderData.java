@@ -5,6 +5,7 @@ import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Nonnull;
 
@@ -149,6 +150,14 @@ public class PlaceholderData {
 
     public Builder put(@Nonnull Object local) {
       put(local.getClass(), local);
+      return this;
+    }
+
+    public Builder put(@Nonnull Map<Object, Object> map) {
+      checkNotNull(map, "map cannot be null.");
+      for (Entry<Object, Object> entry : map.entrySet()) {
+        put(entry.getKey(), entry.getValue());
+      }
       return this;
     }
 
