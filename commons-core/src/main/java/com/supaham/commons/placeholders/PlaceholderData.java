@@ -1,5 +1,6 @@
 package com.supaham.commons.placeholders;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 
 import java.util.HashMap;
@@ -139,19 +140,21 @@ public class PlaceholderData {
   public static final class Builder {
     private String input;
     private final Map<Object, Object> locals = new HashMap<>();
-    
-    public Builder input(String input) {
+
+    public Builder input(@Nonnull String input) {
       checkNotNullOrEmpty(input);
       this.input = input;
       return this;
     }
-    
-    public Builder put(Object local) {
+
+    public Builder put(@Nonnull Object local) {
       put(local.getClass(), local);
       return this;
     }
-    
-    public Builder put(Object key, Object value) {
+
+    public Builder put(@Nonnull Object key, @Nonnull Object value) {
+      checkNotNull(key, "key cannot be null");
+      checkNotNull(value, key + "'s value cannot be null.");
       this.locals.put(key, value);
       return this;
     }
