@@ -122,13 +122,10 @@ public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
    * @return the placeholder replaced string
    *
    * @see #apply(PlaceholderData)
-   * @deprecated Not sure whether this method is necessary, it could almost be considered useless.
    */
   @Nonnull
-  @Deprecated
-  public String apply(String input) {
-    checkNotNullOrEmpty(input);
-    return apply(PlaceholderData.builder().input(input).build());
+  public String apply(@Nonnull String input) {
+    return apply(PlaceholderData.build(input));
   }
 
   /**
