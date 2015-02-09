@@ -3,8 +3,10 @@ package com.supaham.commons.placeholders;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -126,6 +128,24 @@ public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
   @Nonnull
   public String apply(@Nonnull String input) {
     return apply(PlaceholderData.build(input));
+  }
+
+  /**
+   * Performs a placeholder replacing task using all the {@link Placeholder}s in this {@link
+   * PlaceholderSet} on an {@link ArrayList}.
+   *
+   * @param list list input to search for and replace placeholders in
+   *
+   * @return the same {@code list} instance provided, but with its elements replaced
+   *
+   * @see #apply(PlaceholderData)
+   */
+  public List<String> apply(@Nonnull List<String> list) {
+    for (int i = 0; i < list.size(); i++) {
+      // Use get and set instead of add and remove in case the list does not support remove(). 
+      list.set(i, apply(list.get(i)));
+    }
+    return list;
   }
 
   /**
