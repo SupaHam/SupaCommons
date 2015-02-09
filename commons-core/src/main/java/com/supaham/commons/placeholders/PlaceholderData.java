@@ -140,8 +140,13 @@ public class PlaceholderData {
       this.locals.put(key, value);
       return this;
     }
-    
+
     public PlaceholderData build() {
+      checkNotNullOrEmpty(this.input);
+
+      for (Entry<Object, Object> entry : this.locals.entrySet()) {
+        checkNotNull(entry.getValue(), entry.getKey() + "'s value cannot be null.");
+      }
       return new PlaceholderData(this.input, this.locals);
     }
   }
