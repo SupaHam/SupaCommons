@@ -18,6 +18,10 @@ public class MySQLConfig extends SQLConfig {
   private String password;
   private String database;
   
+  public MySQLConfig() {
+    super();
+  }
+  
   public MySQLConfig(@Nonnull String ip, int port, @Nonnull String username,
                      @Nonnull String password, @Nonnull String database,
                      @Nonnull Map<String, String> tables) {
