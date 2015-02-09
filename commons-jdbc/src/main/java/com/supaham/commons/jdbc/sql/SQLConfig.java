@@ -16,6 +16,8 @@ public class SQLConfig extends PropertiesWrapper {
   private String file;
   private Map<String, String> tables;
 
+  public SQLConfig() {}
+
   public SQLConfig(@Nonnull String file, @Nonnull Map<String, String> tables) {
     this.file = file;
     this.tables = tables;
