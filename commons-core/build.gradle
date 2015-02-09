@@ -17,7 +17,7 @@ dependencies {
 
 shadowJar {
     dependencies {
-        include(dependency('com.google.guava:guava:18.0'))
+        include(dependency('com.google.guava:guava'))
         include(dependency('org.apache.sis.core:sis-referencing:0.4'))
     }
 }
