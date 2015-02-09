@@ -21,7 +21,22 @@ public class PlaceholderData {
   private final Map<Object, Object> locals;
 
   /**
+   * Creates a new {@link PlaceholderData} using only a {@link String}. This method would be
+   * equivalent to calling {@code builder&#040;&#041;.input&#040;myInput&#041;.build&#040;&#041;;}
+   *
+   * @param input input to pass to the {@link Builder}.
+   *
+   * @return newly constructed {@link PlaceholderData}
+   *
+   * @see #builder()
+   */
+  public static PlaceholderData build(@Nonnull String input) {
+    return builder().input(input).build();
+  }
+
+  /**
    * Creates a new {@link Builder} for constructing a {@link PlaceholderData} instance.
+   *
    * @return {@link Builder} instance
    */
   public static Builder builder() {
