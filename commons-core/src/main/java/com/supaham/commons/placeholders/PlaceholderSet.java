@@ -139,7 +139,7 @@ public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
    * @see PlaceholderFunction#apply(PlaceholderData)
    */
   @Nonnull
-  public String apply(PlaceholderData data) {
+  public String apply(@Nonnull PlaceholderData data) {
     return placeholderFunction.apply(data);
   }
 
