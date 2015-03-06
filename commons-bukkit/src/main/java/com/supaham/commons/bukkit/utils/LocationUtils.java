@@ -198,4 +198,39 @@ public class LocationUtils {
                                 RandomUtils.nextInt(min.getBlockZ(), max.getBlockZ()));
     return !highestBlock ? loc : loc.getWorld().getHighestBlockAt(loc).getLocation();
   }
+
+  /**
+   * Returns a new {@link Location} where at least the specified required amount of space is
+   * available above it. This method works its way from bottom to top, starting from the given
+   * location's y coordinate and all the way to the location's world's max height value.
+   *
+   * @param location location to start from
+   * @param required required amount of space
+   *
+   * @return a location with the required free space
+   */
+  public static Location getFreeLocation(@Nonnull Location location, double required) {
+    checkNotNull(location, "location cannot be null.");
+    checkArgument(required > 0, "required space must be larger than 0.");
+    location = location.clone();
+    if (location.getBlockY() >= location.getWorld().getMaxHeight()) {
+      return location;
+    }
+    World world = location.getWorld();
+    int y = location.getBlockY();
+    int free = 0;
+    while (y < world.getMaxHeight()) {
+      if (!world.getBlockAt(location.getBlockX(), y, location.getBlockZ()).getType().isSolid()) {
+        free++;
+      } else {
+        free = 0;
+      }
+      if (free >= required) {
+        break;
+      }
+      y++;
+    }
+    location.setY((double) y - required);
+    return location;
+  }
 }
