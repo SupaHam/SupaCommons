@@ -36,9 +36,16 @@ public class SQLDatabase {
    * Checks whether tables exist.
    */
   public void checkTables() {
+    checkTables(null);
+  }
+
+  /**
+   * Checks whether tables exist.
+   */
+  public void checkTables(@Nullable PlaceholderSet placeholderSet) {
     JdbcTemplate jdbcTemplate = this.jdbcAgent.createJdbcTemplate();
     for (Table table : this.tableMap.values()) {
-      checkTable(jdbcTemplate, table);
+      checkTable(jdbcTemplate, table, placeholderSet);
     }
   }
 
@@ -175,6 +182,7 @@ public class SQLDatabase {
     String name = table.getName();
     this.logger.fine("Checking table '" + name + "'.");
     if (!SQLUtils.hasTable(this.jdbcAgent.getDataSource(), name)) {
+
       this.logger.fine("'" + name + "' table doesn't exist, creating it...");
       String schema = table.getSchema();
       if (placeholders != null && !placeholders.isEmpty()) {
