@@ -72,13 +72,13 @@ public class LocationUtils {
    * Serializes a {@link Location} in the form of 'world x y z yaw pitch'. The x, y, and z
    * coordinates are rounded to <em>two</em> decimal places. The yaw and the pitch are rounded to
    * <em>three</em> decimal places. If the yaw and/or pitch are true but their values are ZERO, they
-   * will be set to false, removing it from the serialized string that is returned.
-   * <p/>
+   * will be set to false, removing it from the serialized string that is returned. <p/>
    * <b>NOTE</b>: This is equivalent to calling {@code serialize(Location, true)}
    *
    * @param location location to serialize
    *
    * @return serialized {@code location}
+   *
    * @see #serialize(Location, boolean)
    */
   public static String serialize(Location location) {
@@ -89,14 +89,14 @@ public class LocationUtils {
    * Serializes a {@link Location} in the form of 'world x y z yaw pitch'. The x, y, and z
    * coordinates are rounded to <em>two</em> decimal places. The yaw and the pitch are rounded to
    * <em>three</em> decimal places. If the yaw and/or pitch are true but their values are ZERO, they
-   * will be set to false, removing it from the serialized string that is returned.
-   * <p/>
+   * will be set to false, removing it from the serialized string that is returned. <p/>
    * <b>NOTE</b>: This is equivalent to calling {@code serialize(Location, direction, direction)}
    *
    * @param location location to serialize
    * @param direction whether to store the direction (yaw and pitch)
    *
    * @return serialized {@code location}
+   *
    * @see #serialize(Location, boolean, boolean)
    */
   public static String serialize(Location location, boolean direction) {
@@ -151,6 +151,7 @@ public class LocationUtils {
    * attach the pseudorandom location to ground
    *
    * @return a pseudorandom location
+   *
    * @see #getRandomLocationWithin(Random, Location, Location, boolean)
    */
   public static Location getRandomLocationWithin(@Nonnull Location min, @Nonnull Location max,
@@ -168,7 +169,8 @@ public class LocationUtils {
    * @param max maximum location of a cuboid region
    *
    * @return a pseudorandom location
-   * @see #getRandomLocationWithin(Random, Location, Location, boolean) 
+   *
+   * @see #getRandomLocationWithin(Random, Location, Location, boolean)
    */
   public static Location getRandomLocationWithin(@Nonnull Random random, @Nonnull Location min,
                                                  @Nonnull Location max) {
