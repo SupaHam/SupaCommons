@@ -16,6 +16,7 @@ import org.bukkit.util.Vector;
 import java.util.Random;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Utility methods for working with {@link Location} instances. This class contains methods such as
@@ -232,5 +233,21 @@ public class LocationUtils {
     }
     location.setY((double) y - required);
     return location;
+  }
+
+  /**
+   * Checks if two {@link Vector} instances are within the same block. If both of them are null,
+   * true is returned.
+   *
+   * @param l1 first location to match with {@code l2}
+   * @param l2 second location to match with {@code l1}
+   *
+   * @return whether both locations are within the same block
+   *
+   * @see VectorUtils#isSameBlock(Vector, Vector)
+   */
+  public static boolean isSameBlock(@Nullable Location l1, @Nullable Location l2) {
+    return VectorUtils.isSameBlock(l1 != null ? l1.toVector() : null,
+                                   l2 != null ? l2.toVector() : null);
   }
 }
