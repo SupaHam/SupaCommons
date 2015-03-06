@@ -6,9 +6,14 @@ import static com.supaham.commons.utils.NumberUtils.roundExact;
 import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 import static java.lang.Double.parseDouble;
 
+import com.supaham.commons.utils.RandomUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
+
+import java.util.Random;
 
 import javax.annotation.Nonnull;
 
@@ -117,5 +122,80 @@ public class LocationUtils {
            + VectorUtils.serialize(location.toVector()) // x y z
            + (yaw ? " " + roundExact(3, location.getYaw()) : "")
            + (pitch ? " " + roundExact(3, location.getPitch()) : "");
+  }
+
+  /**
+   * Returns a new random {@link Location} that is within two given Locations. This is equivalent to
+   * calling #getRandomLocationWithin(Location, Location, boolean) with the boolean as false.
+   *
+   * @param min minimum location of a cuboid region
+   * @param max maximum location of a cuboid region
+   *
+   * @return a pseudorandom location
+   *
+   * @see #getRandomLocationWithin(Location, Location, boolean)
+   */
+  public static Location getRandomLocationWithin(Location min, Location max) {
+    return getRandomLocationWithin(min, max, false);
+  }
+
+  /**
+   * Returns a new random {@link Location} that is within two given Locations. This is equivalent to
+   * calling #getRandomLocationWithin(Random, Location, Location, boolean) using {@link
+   * RandomUtils#getRandom()} and the boolean as false.
+   *
+   * @param min minimum location of a cuboid region
+   * @param max maximum location of a cuboid region
+   * @param highestBlock whether to immediately call {@link World#getHighestBlockAt(Location)} to
+   * attach the pseudorandom location to ground
+   *
+   * @return a pseudorandom location
+   * @see #getRandomLocationWithin(Random, Location, Location, boolean)
+   */
+  public static Location getRandomLocationWithin(@Nonnull Location min, @Nonnull Location max,
+                                                 boolean highestBlock) {
+    return getRandomLocationWithin(RandomUtils.getRandom(), min, max, highestBlock);
+  }
+
+  /**
+   * Returns a new random {@link Location} that is within two given Locations. This is equivalent to
+   * calling #getRandomLocationWithin(Random, Location, Location, boolean) with the boolean as
+   * false.
+   *
+   * @param random random instance to use
+   * @param min minimum location of a cuboid region
+   * @param max maximum location of a cuboid region
+   *
+   * @return a pseudorandom location
+   * @see #getRandomLocationWithin(Random, Location, Location, boolean) 
+   */
+  public static Location getRandomLocationWithin(@Nonnull Random random, @Nonnull Location min,
+                                                 @Nonnull Location max) {
+    return getRandomLocationWithin(random, min, max, false);
+  }
+
+  /**
+   * Returns a new random {@link Location} that is within two given Locations.
+   *
+   * @param random random instance to use
+   * @param min minimum location of a cuboid region
+   * @param max maximum location of a cuboid region
+   * @param highestBlock whether to immediately call {@link World#getHighestBlockAt(Location)} to
+   * attach the pseudorandom location to ground
+   *
+   * @return a pseudorandom location
+   */
+  public static Location getRandomLocationWithin(@Nonnull Random random, @Nonnull Location min,
+                                                 @Nonnull Location max, boolean highestBlock) {
+    checkNotNull(random, "random cannot be null.");
+    checkNotNull(min, "min cannot be null.");
+    checkNotNull(max, "max cannot be null.");
+
+    checkArgument(min.getWorld().equals(max.getWorld()), "min and max worlds don't match.");
+    Location loc = new Location(min.getWorld(),
+                                RandomUtils.nextInt(min.getBlockX(), max.getBlockX()),
+                                RandomUtils.nextInt(min.getBlockY(), max.getBlockY()),
+                                RandomUtils.nextInt(min.getBlockZ(), max.getBlockZ()));
+    return !highestBlock ? loc : loc.getWorld().getHighestBlockAt(loc).getLocation();
   }
 }
