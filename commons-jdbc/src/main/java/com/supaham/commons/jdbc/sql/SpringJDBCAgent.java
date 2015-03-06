@@ -57,26 +57,66 @@ public class SpringJDBCAgent implements JDBCAgent {
    * @throws SQLException thrown if the {@code config} data fails to connect to a mysql database
    */
   public static SpringJDBCAgent createAgent(@Nonnull SQLConfig config,
-                                            @Nullable ClassLoader classLoader)
+                                            @Nonnull ClassLoader classLoader)
+      throws ClassNotFoundException, SQLException {
+    return createAgent(config, classLoader, null);
+  }
+
+  /**
+   * Creates a new {@link SpringJDBCAgent}. This method takes a {@link ClassLoader} as a parameter
+   * which is used to look for the MySQL Driver class.
+   *
+   * @param config mysql configuration used to connect to the database
+   * @param classLoader the {@link ClassLoader} that will load the the database Driver class
+   *
+   * @return a new instance of {@link SpringJDBCAgent}
+   *
+   * @throws ClassNotFoundException thrown if the mysql driver is not found.
+   * @throws SQLException thrown if the {@code config} data fails to connect to a mysql database
+   */
+  public static SpringJDBCAgent createAgent(@Nonnull SQLConfig config,
+                                            @Nonnull BoneCPConfig boneCPConfig)
+      throws ClassNotFoundException, SQLException {
+    return createAgent(config, Thread.currentThread().getContextClassLoader(), boneCPConfig);
+  }
+
+  /**
+   * Creates a new {@link SpringJDBCAgent}. This method takes a {@link ClassLoader} as a parameter
+   * which is used to look for the MySQL Driver class.
+   *
+   * @param config mysql configuration used to connect to the database
+   * @param classLoader the {@link ClassLoader} that will load the the database Driver class
+   * @param boneCPConfig {@link BoneCPConfig}
+   *
+   * @return a new instance of {@link SpringJDBCAgent}
+   *
+   * @throws ClassNotFoundException thrown if the mysql driver is not found.
+   * @throws SQLException thrown if the {@code config} data fails to connect to a mysql database
+   */
+  public static SpringJDBCAgent createAgent(@Nonnull SQLConfig config,
+                                            @Nullable ClassLoader classLoader,
+                                            @Nullable BoneCPConfig boneCPConfig)
       throws ClassNotFoundException, SQLException {
     checkNotNull(classLoader, "class loader cannot be null.");
 
     ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(classLoader);
 
-    BoneCPConfig cfg = new BoneCPConfig();
+    if (boneCPConfig == null) {
+      boneCPConfig = new BoneCPConfig();
+    }
     if (config instanceof MySQLConfig) {
       Class.forName("com.mysql.jdbc.Driver");
       MySQLConfig mysql = (MySQLConfig) config;
-      cfg.setJdbcUrl("jdbc:mysql://" + mysql.getIp() + ":" + mysql.getPort() + "/"
-                     + mysql.getDatabase());
-      cfg.setUser(mysql.getUsername());
-      cfg.setPassword(mysql.getPassword());
+      boneCPConfig.setJdbcUrl("jdbc:mysql://" + mysql.getIp() + ":" + mysql.getPort() + "/"
+                              + mysql.getDatabase());
+      boneCPConfig.setUser(mysql.getUsername());
+      boneCPConfig.setPassword(mysql.getPassword());
     } else {
       Class.forName("org.sqlite.JDBC");
-      cfg.setJdbcUrl("jdbc:sqlite:" + new File(config.getFile()).getAbsolutePath());
+      boneCPConfig.setJdbcUrl("jdbc:sqlite:" + new File(config.getFile()).getAbsolutePath());
     }
-    CDataSource dataSource = new CDataSource(new BoneCP(cfg));
+    CDataSource dataSource = new CDataSource(new BoneCP(boneCPConfig));
     Thread.currentThread().setContextClassLoader(previousClassLoader);
     return new SpringJDBCAgent(config, dataSource);
   }
