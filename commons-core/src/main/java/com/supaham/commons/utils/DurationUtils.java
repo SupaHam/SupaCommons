@@ -9,14 +9,15 @@ import com.supaham.commons.exceptions.DurationParseException;
 
 import org.joda.time.Duration;
 
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
 /**
- * Utility methods for working with {@link Duration} instances. This class contains methods such 
- * as {@link #parseDuration(CharSequence)}, {@link #toString(Duration, boolean)} and more.
+ * Utility methods for working with {@link Duration} instances. This class contains methods such as
+ * {@link #parseDuration(CharSequence)}, {@link #toString(Duration, boolean)} and more.
  *
  * @since 0.1
  */
@@ -131,6 +132,37 @@ public class DurationUtils {
       buf.append(secs).append(simple ? "s" : " second" + (secs != 1 ? "s" : ""));
     }
     return buf.toString();
+  }
+
+  /**
+   * Returns a random duration between two given {@link Duration} instances.
+   *
+   * @param d1 first duration
+   * @param d2 second duration
+   *
+   * @return a pseudorandom duration
+   *
+   * @see #randomDuration(Random, Duration, Duration)
+   */
+  public static Duration randomDuration(@Nonnull Duration d1, @Nonnull Duration d2) {
+    return randomDuration(RandomUtils.getRandom(), d1, d2);
+  }
+
+  /**
+   * Returns a random duration between two given {@link Duration} instances.
+   *
+   * @param random random instance to use
+   * @param d1 first duration
+   * @param d2 second duration
+   *
+   * @return a pseudorandom duration
+   */
+  public static Duration randomDuration(@Nonnull Random random, @Nonnull Duration d1,
+                                        @Nonnull Duration d2) {
+    checkNotNull(d1, "first duration cannot be null");
+    checkNotNull(d2, "second duration cannot be null");
+    long diff = Math.abs(d1.getMillis() - d2.getMillis());
+    return new Duration(RandomUtils.nextLong(random, diff));
   }
 
   private DurationUtils() {}
