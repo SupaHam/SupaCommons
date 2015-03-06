@@ -22,7 +22,7 @@ public final class CollectionUtils {
    * @return the random element
    */
   public static <T> T getRandomElement(List<T> list) {
-    return list.get(NumberUtils.getRandom().nextInt(list.size()));
+    return list.get(RandomUtils.nextInt(list.size()));
   }
 
   /**

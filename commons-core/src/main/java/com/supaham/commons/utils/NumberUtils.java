@@ -2,53 +2,16 @@ package com.supaham.commons.utils;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.Random;
-
-import lombok.Getter;
 
 /**
  * Utility methods for working with {@link Number} instances. This class contains methods such as
- * {@link #nextInt(int)}, {@link #roundExact(double)}, and more.
+ * {@link #roundExact(double)}, and more.
  *
  * @since 0.1
  */
 public final class NumberUtils {
   
   private NumberUtils() {
-  }
-
-  @Getter
-  private static Random random = new Random();
-
-  /**
-   * @see Random#nextInt(int)
-   */
-  public static int nextInt(int bound) {
-    return random.nextInt(bound);
-  }
-
-  /**
-   * Returns a pseudo-random int between min and max, inclusive.
-   *
-   * @param min min range
-   * @param max max range
-   *
-   * @return random int in the given range.
-   */
-  public static int nextInt(int min, int max) {
-    return random.nextInt((max - min) + 1) + min;
-  }
-
-  /**
-   * Returns a pseudo-random double between min and max, inclusive.
-   *
-   * @param min min range
-   * @param max max range
-   *
-   * @return random double in the given range.
-   */
-  public static double getRandomDouble(double min, double max) {
-    return min + (max - min) * random.nextDouble();
   }
 
   /**
@@ -91,7 +54,7 @@ public final class NumberUtils {
    *   NumberUtils.roundExact(2, 1.234D)                = 1.23D
    *   NumberUtils.roundExact(3, 1.234D)                = 1.234D
    * </pre>
-   * 
+   *
    * @param decimalPlaces decimal places to round to
    * @param value double value to round
    *
@@ -111,7 +74,7 @@ public final class NumberUtils {
    *   NumberUtils.roundExact(2, 1.234F)                = 1.23F
    *   NumberUtils.roundExact(3, 1.234F)                = 1.234F
    * </pre>
-   * 
+   *
    * @param decimalPlaces decimal places to round to
    * @param value float value to round
    *
@@ -130,7 +93,7 @@ public final class NumberUtils {
    *   NumberUtils.roundExact("#.##", 1.234D)             = 1.23D
    *   NumberUtils.roundExact("#.###", 1.234D)            = 1.234D
    * </pre>
-   * 
+   *
    * @param format format to display {@code value} in, see {@link DecimalFormat}
    * @param value double value to round
    *
@@ -151,7 +114,7 @@ public final class NumberUtils {
    *   NumberUtils.roundExact("#.##", 1.234F)             = 1.23F
    *   NumberUtils.roundExact("#.###", 1.234F)            = 1.234F
    * </pre>
-   * 
+   *
    * @param format format to display {@code value} in, see {@link DecimalFormat}
    * @param value float value to round
    *

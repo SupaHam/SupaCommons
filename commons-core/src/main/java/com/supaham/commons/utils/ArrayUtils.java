@@ -124,6 +124,6 @@ public final class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
    * @return the random element
    */
   public static <T> T getRandomElement(T[] array) {
-    return array[NumberUtils.getRandom().nextInt(array.length)];
+    return array[RandomUtils.nextInt(array.length)];
   }
 }
