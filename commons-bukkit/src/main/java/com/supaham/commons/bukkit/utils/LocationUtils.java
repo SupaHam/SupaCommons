@@ -114,9 +114,7 @@ public class LocationUtils {
     pitch = pitch && location.getPitch() > 0;
     yaw = pitch || (yaw && location.getYaw() > 0);
     return location.getWorld().getName() + " "
-           + roundExact(2, location.getX()) + " "
-           + roundExact(2, location.getY()) + " "
-           + roundExact(2, location.getZ()) + ""
+           + VectorUtils.serialize(location.toVector()) // x y z
            + (yaw ? " " + roundExact(3, location.getYaw()) : "")
            + (pitch ? " " + roundExact(3, location.getPitch()) : "");
   }
