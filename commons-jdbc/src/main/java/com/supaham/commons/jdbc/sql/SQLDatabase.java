@@ -45,8 +45,8 @@ public class SQLDatabase {
   /**
    * Checks whether a table (by id) exists in this {@link SQLDatabase}. If it does not exist it is
    * created using its {@link Table} schema. This method is equivalent to calling {@code
-   * checkTable(Table)}, where the {@link Table} instance is retrieved via 
-   * {@link #getTable(String)}.
+   * checkTable(Table)}, where the {@link Table} instance is retrieved via {@link
+   * #getTable(String)}.
    *
    * @param tableId table id to check out
    *
@@ -56,7 +56,7 @@ public class SQLDatabase {
    * @see #checkTable(JdbcTemplate, Table)
    */
   @Nullable
-  protected Boolean checkTable(@Nonnull String tableId) {
+  public Boolean checkTable(@Nonnull String tableId) {
     checkNotNullOrEmpty(tableId, "tableId");
     Table table = getTable(tableId);
     return table != null ? checkTable(table) : null;
@@ -73,15 +73,15 @@ public class SQLDatabase {
    *
    * @see #checkTable(JdbcTemplate, Table)
    */
-  protected boolean checkTable(@Nonnull Table table) {
+  public boolean checkTable(@Nonnull Table table) {
     return checkTable(this.jdbcAgent.createJdbcTemplate(), table);
   }
 
   /**
    * Checks whether a table (by id) exists in this {@link SQLDatabase}. If it does not exist it is
    * created using its {@link Table} schema. This method is equivalent to calling {@code
-   * checkTable(JdbcTemplate, Table)}, where the {@link Table} instance is retrieved via 
-   * {@link #getTable(String)}. 
+   * checkTable(JdbcTemplate, Table)}, where the {@link Table} instance is retrieved via {@link
+   * #getTable(String)}.
    *
    * @param tableId table id to check out
    *
@@ -91,7 +91,7 @@ public class SQLDatabase {
    * @see #checkTable(JdbcTemplate, Table)
    */
   @Nullable
-  protected Boolean checkTable(@Nonnull JdbcTemplate template, @Nonnull String tableId) {
+  public Boolean checkTable(@Nonnull JdbcTemplate template, @Nonnull String tableId) {
     checkNotNullOrEmpty(tableId, "tableId");
     Table table = getTable(tableId);
     return table != null ? checkTable(template, table) : null;
@@ -109,15 +109,15 @@ public class SQLDatabase {
    *
    * @see #checkTable(JdbcTemplate, Table, PlaceholderSet)
    */
-  protected boolean checkTable(@Nonnull JdbcTemplate template, @Nonnull Table table) {
+  public boolean checkTable(@Nonnull JdbcTemplate template, @Nonnull Table table) {
     return checkTable(template, table, null);
   }
 
   /**
    * Checks whether a table (by id) exists in this {@link SQLDatabase}. If it does not exist it is
    * created using its {@link Table} schema. This method is equivalent to calling {@link
-   * #checkTable(Table, PlaceholderSet)}, where the {@link Table} instance is retrieved via 
-   * {@link #getTable(String)}. 
+   * #checkTable(Table, PlaceholderSet)}, where the {@link Table} instance is retrieved via {@link
+   * #getTable(String)}.
    *
    * @param tableId table id to check out
    *
@@ -127,8 +127,8 @@ public class SQLDatabase {
    * @see #checkTable(JdbcTemplate, Table)
    */
   @Nullable
-  protected Boolean checkTable(@Nonnull String tableId,
-                               @Nullable PlaceholderSet placeholders) {
+  public Boolean checkTable(@Nonnull String tableId,
+                            @Nullable PlaceholderSet placeholders) {
     checkNotNullOrEmpty(tableId, "tableId");
     Table table = getTable(tableId);
     return table != null ? checkTable(table, placeholders) : null;
@@ -146,8 +146,8 @@ public class SQLDatabase {
    *
    * @see #checkTable(JdbcTemplate, Table, PlaceholderSet)
    */
-  protected boolean checkTable(@Nonnull Table table,
-                               @Nullable PlaceholderSet placeholders) {
+  public boolean checkTable(@Nonnull Table table,
+                            @Nullable PlaceholderSet placeholders) {
     return checkTable(this.jdbcAgent.createJdbcTemplate(), table, placeholders);
   }
 
@@ -158,10 +158,10 @@ public class SQLDatabase {
    * @param template template to use for checking the table, in case it needs to be created
    * @param table table to check out
    * @param placeholders {@link PlaceholderSet} to use on the schema
-   * 
+   *
    * @return true if the table did not exist and was created
    */
-  protected boolean checkTable(@Nonnull JdbcTemplate template, @Nonnull Table table,
+  public boolean checkTable(@Nonnull JdbcTemplate template, @Nonnull Table table,
                             @Nullable PlaceholderSet placeholders) {
     checkNotNull(template, "template cannot be null.");
     checkNotNull(table, "table cannot be null.");
