@@ -11,6 +11,8 @@ import javax.annotation.Nonnull;
 
 /**
  * Represents a single sound with a volume and pitch.
+ *
+ * @since 0.1
  */
 public class SingleSound extends Sound {
 

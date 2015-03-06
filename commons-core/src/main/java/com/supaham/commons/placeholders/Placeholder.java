@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 
 /**
  * Represents a placeholder {@link Callable} that returns a {@link String}.
+ *
+ * @since 0.1
  */
 public interface Placeholder extends Function<PlaceholderData, String> {
 

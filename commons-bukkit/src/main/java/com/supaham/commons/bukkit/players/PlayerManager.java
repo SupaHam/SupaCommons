@@ -29,6 +29,8 @@ import javax.annotation.Nullable;
  * the {@link CPlayer} instances, such as when a player joins or leaves the server.
  *
  * @param <T> a class that extends {@link CPlayer}
+ *
+ * @since 0.1
  */
 public class PlayerManager<T extends CPlayer> {
 

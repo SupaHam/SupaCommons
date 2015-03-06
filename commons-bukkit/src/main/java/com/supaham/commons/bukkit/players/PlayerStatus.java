@@ -11,6 +11,8 @@ package com.supaham.commons.bukkit.players;
  *   <li><b>ONLINE</b></li>
  *   <li><b>DISCONNECTING</b></li>
  * </ol>
+ * 
+ * @since 0.1
  */
 public enum PlayerStatus {
   /**

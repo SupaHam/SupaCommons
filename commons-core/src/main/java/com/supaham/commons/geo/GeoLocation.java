@@ -4,6 +4,8 @@ import lombok.Getter;
 
 /**
  * Represents a Geographical location.
+ *
+ * @since 0.1
  */
 @Getter
 public class GeoLocation {

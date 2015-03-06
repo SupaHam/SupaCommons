@@ -13,6 +13,8 @@ import javax.annotation.Nullable;
 /**
  * Represents a {@link HashSet} of {@link Placeholder}s. This class also provides {@link
  * #apply(String)} which performs the placeholder strings replacing task.
+ *
+ * @since 0.1
  */
 public class PlaceholderSet<T extends Placeholder> extends HashSet<T> {
 

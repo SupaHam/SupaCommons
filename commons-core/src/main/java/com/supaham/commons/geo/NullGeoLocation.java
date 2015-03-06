@@ -2,6 +2,8 @@ package com.supaham.commons.geo;
 
 /**
  * Represents a safe null implementation of {@link GeoLocation}.
+ *
+ * @since 0.1
  */
 public class NullGeoLocation extends GeoLocation {
 

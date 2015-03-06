@@ -19,6 +19,8 @@ import lombok.NonNull;
 /**
  * Represents a message ({@link String}) represented by a node ({@link String}) that supports
  * multiple {@link Locale}s.
+ *
+ * @since 0.1
  */
 public class Message {
 

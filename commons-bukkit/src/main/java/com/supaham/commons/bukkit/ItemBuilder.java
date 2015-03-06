@@ -36,6 +36,8 @@ import javax.annotation.Nullable;
  * <p />
  * Methods that are <b>UNSAFE</b> are mentioned as a suffix to the
  * method's documentation. An example of an unsafe method is {@link #bookTitle(String)}.
+ *
+ * @since 0.1
  */
 public class ItemBuilder {
 

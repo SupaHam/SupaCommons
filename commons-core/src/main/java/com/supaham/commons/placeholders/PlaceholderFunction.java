@@ -12,6 +12,8 @@ import javax.annotation.Nonnull;
 
 /**
  * Represents a {@link Function} implementation for placeholder strings replacement task.
+ *
+ * @since 0.1
  */
 public abstract class PlaceholderFunction implements Function<PlaceholderData, String> {
 

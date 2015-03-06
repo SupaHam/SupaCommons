@@ -2,6 +2,8 @@ package com.supaham.commons;
 
 /**
  * Represents a commons library exception that can be thrown at any time.
+ * 
+ * @since 0.1
  */
 public class CommonException extends Exception {
 

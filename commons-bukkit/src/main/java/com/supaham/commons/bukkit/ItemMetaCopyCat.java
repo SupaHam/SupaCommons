@@ -20,6 +20,8 @@ import javax.annotation.Nullable;
  * A class that adds the possibility to create an {@link ItemMeta} from an old {@link ItemMeta} for
  * a specific {@link Material}. This class reflects the {@code org.bukkit.craftbukkit} {@link
  * ItemFactory} which contains the implementation of said feature.
+ *
+ * @since 0.1
  */
 public class ItemMetaCopyCat {
 
@@ -38,9 +40,9 @@ public class ItemMetaCopyCat {
 
   /**
    * Creates an {@link ItemMeta} from an old {@link ItemMeta} for a specific {@link Material}. If
-   * the new type does not support some of the old item meta, it will be ignored. 
+   * the new type does not support some of the old item meta, it will be ignored.
    * <p />
-   * A case where item meta would not be supported is if the given item meta is of type 
+   * A case where item meta would not be supported is if the given item meta is of type
    * {@link BookMeta} but the given {@link Material} is something other than a book, such as a dirt
    * block. Everything but the {@link BookMeta} would be copied.
    *

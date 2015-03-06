@@ -11,7 +11,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * Contains {@link String} related utility methods.
+ * Utility methods for working with {@link String} instances. This class contains methods such as
+ * {@link #isASCII(String)}, {@link #checkNotNullOrEmpty(String)}, and more.
+ *
+ * @since 0.1
  */
 public final class StringUtils {
 

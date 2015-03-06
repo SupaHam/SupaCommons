@@ -18,6 +18,8 @@ import lombok.NonNull;
 
 /**
  * Represents a common player.
+ *
+ * @since 0.1
  */
 public class CPlayer {
 

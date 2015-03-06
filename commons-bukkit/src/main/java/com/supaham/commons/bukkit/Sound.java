@@ -12,6 +12,8 @@ import javax.annotation.Nonnull;
 
 /**
  * Represents a sound that is playable to a {@link World} or {@link Player}s.
+ *
+ * @since 0.1
  */
 public abstract class Sound {
 
@@ -19,6 +21,7 @@ public abstract class Sound {
    * Plays this sound in a {@link World} at each players' location.
    *
    * @param world world to play this sound in
+   *
    * @see #play(Collection)
    */
   public void play(@Nonnull World world) {

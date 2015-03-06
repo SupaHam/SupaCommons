@@ -11,6 +11,8 @@ import pluginbase.config.serializers.Serializer;
  * A {@link Range} {@link Serializer} that serializes as "x" or "x y", where x is the lowerEndPoint
  * and y is the upperEndPoint. This serializer also forces whole number doubles to be converted to
  * integers for convenience.
+ *
+ * @since 0.1
  */
 public class RangeSerializer implements Serializer<Range> {
 

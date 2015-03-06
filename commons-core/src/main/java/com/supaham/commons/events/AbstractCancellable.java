@@ -22,6 +22,8 @@ package com.supaham.commons.events;
 /**
  * Represents an abstract implementation of {@link Cancellable} that has all
  * of {@link Cancellable}'s methods implemented.
+ *
+ * @since 0.1
  */
 public abstract class AbstractCancellable extends Event implements Cancellable {
 

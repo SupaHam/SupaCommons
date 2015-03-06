@@ -14,6 +14,8 @@ import javax.annotation.Nonnull;
  * <br /> This class provides a Builder class; accessible through {@link #builder()}. <br /> This
  * class provides the ability to add local objects using a {@literal Map<Object, Object>}. This is
  * useful for adding any extra objects that you'd like {@link Placeholder} to have access to.
+ *
+ * @since 0.1
  */
 public class PlaceholderData {
 

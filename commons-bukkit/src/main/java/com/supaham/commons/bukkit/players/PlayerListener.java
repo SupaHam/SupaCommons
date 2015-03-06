@@ -6,6 +6,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/**
+ * @since 0.1
+ */
 class PlayerListener implements Listener {
 
   private final PlayerManager manager;

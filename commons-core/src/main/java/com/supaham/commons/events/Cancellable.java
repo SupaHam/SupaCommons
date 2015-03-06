@@ -20,8 +20,10 @@
 package com.supaham.commons.events;
 
 /**
- * Represents an {@link Event} that has a cancellable state. The meaning of cancellation depends on 
+ * Represents an {@link Event} that has a cancellable state. The meaning of cancellation depends on
  * the event.
+ *
+ * @since 0.1
  */
 public interface Cancellable {
 

@@ -9,6 +9,8 @@ import pluginbase.config.serializers.Serializer;
 /**
  * A {@link String} {@link Serializer} that specifically serializes minecraft color codes as
  * ampersand (&) rather than section sign (&sect;).
+ *
+ * @since 0.1
  */
 public class ColorStringSerializer implements Serializer<String> {
 

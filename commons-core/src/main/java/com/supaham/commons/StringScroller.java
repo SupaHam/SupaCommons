@@ -156,7 +156,8 @@ public class StringScroller implements Runnable, Cloneable {
   }
 
   /**
-   * This method is called after the next string has been generated, which is passed to this method.
+   * This method is called after the next string has been generated, which is passed to this
+   * method.
    * Use this method to modify the final string. By default, the string that is passed is returned
    * directly, causing absolutely no change.
    *

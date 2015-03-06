@@ -13,7 +13,9 @@ import pluginbase.config.serializers.Serializers;
  * Represents an abstract {@link Serializer} that takes a {@link List} of a specific type, used to
  * ease the process of storing types into lists.
  *
- * @param <T>
+ * @param <T> type to serialize
+ *
+ * @since 0.1
  */
 public abstract class ListSerializer<T> implements Serializer<List<T>> {
 

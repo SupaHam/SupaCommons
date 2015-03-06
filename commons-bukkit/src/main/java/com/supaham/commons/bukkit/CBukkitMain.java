@@ -14,6 +14,8 @@ import javax.annotation.Nonnull;
 
 /**
  * Commons main bukkit class.
+ *
+ * @since 0.1
  */
 public class CBukkitMain {
 

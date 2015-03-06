@@ -9,6 +9,8 @@ import pluginbase.messages.LocalizablePlugin;
 
 /**
  * Simple interface that represents a common plugin. This is used from within the whole commons library.
+ *
+ * @since 0.1
  */
 public interface CommonPlugin extends LocalizablePlugin, Plugin {
   

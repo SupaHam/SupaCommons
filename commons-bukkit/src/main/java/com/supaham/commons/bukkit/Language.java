@@ -6,6 +6,9 @@ import com.supaham.commons.bukkit.language.Theme;
 
 import org.bukkit.ChatColor;
 
+/**
+ * @since 0.1
+ */
 public class Language {
 
   protected static MessageManager manager;

@@ -20,6 +20,8 @@ import javax.annotation.Nonnull;
 /**
  * Represents a customizable {@link TickerTask} that's main purpose is tracking entities. The
  * entities are supplied to this task using a {@link Supplier}.
+ *
+ * @since 0.1
  */
 public abstract class LocationChecker<T extends Entity> extends TickerTask {
 

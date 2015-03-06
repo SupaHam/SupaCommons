@@ -9,6 +9,8 @@ import lombok.NonNull;
 
 /**
  * Commons main class.
+ * 
+ * @since 0.1
  */
 public class CMain {
   

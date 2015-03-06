@@ -15,6 +15,8 @@ import lombok.Getter;
 
 /**
  * Represents a {@link Message} manager.
+ *
+ * @since 0.1
  */
 public class MessageManager {
 

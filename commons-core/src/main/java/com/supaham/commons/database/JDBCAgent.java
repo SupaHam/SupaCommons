@@ -5,6 +5,8 @@ import javax.sql.DataSource;
 
 /**
  * Represents a JDBC agent that can provide a {@link DataSource}.
+ *
+ * @since 0.1
  */
 public interface JDBCAgent {
 

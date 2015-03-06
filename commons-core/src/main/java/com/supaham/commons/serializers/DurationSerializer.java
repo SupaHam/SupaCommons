@@ -11,6 +11,8 @@ import pluginbase.config.serializers.Serializer;
 /**
  * A {@link Duration} serializer that simply calls {@link DurationUtils#toString(Duration,
  * boolean)}, with boolean as true, in return.
+ * 
+ * @since 0.1
  */
 public class DurationSerializer implements Serializer<Duration> {
 

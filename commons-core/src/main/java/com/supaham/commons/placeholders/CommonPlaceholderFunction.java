@@ -8,6 +8,8 @@ import javax.annotation.Nonnull;
  * Represents a simple extension of {@link PlaceholderFunction} that provides 
  * {@link CommonPlaceholderFunction#CommonPlaceholderFunction(Collection)} and implements the 
  * {@link PlaceholderFunction#getPlaceholders()} method.
+ *
+ * @since 0.1
  */
 public class CommonPlaceholderFunction extends PlaceholderFunction {
   

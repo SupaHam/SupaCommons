@@ -7,6 +7,8 @@ import javax.annotation.Nonnull;
 
 /**
  * Represents a commons bukkit library exception that can be thrown at any time.
+ *
+ * @since 0.1
  */
 public class CommonBukkitException extends CommonException {
 

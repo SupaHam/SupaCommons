@@ -14,7 +14,9 @@ import javax.annotation.Nullable;
 
 /**
  * Represents an abstract simple {@link Placeholder} implementation that provides a constructor
- * that takes an array of {@link String}s that is placeholders that this 
+ * that takes an array of {@link String}s that is placeholders that this.
+ * 
+ * @since 0.1
  */
 public abstract class SimplePlaceholder implements Placeholder {
 

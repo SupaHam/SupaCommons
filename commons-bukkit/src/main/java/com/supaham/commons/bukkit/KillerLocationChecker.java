@@ -25,6 +25,8 @@ import javax.annotation.Nonnull;
  * #reachedMaxWarnings(Player)}.
  * <p />
  * <b>This task runs every 20 minecraft ticks (every second).</b>
+ *
+ * @since 0.1
  */
 public class KillerLocationChecker extends LocationChecker<Player> {
 
