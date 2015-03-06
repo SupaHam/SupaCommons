@@ -105,7 +105,7 @@ public class DurationUtils {
 
     long seconds = duration.getStandardSeconds();
     long days = seconds / TimeUtils.SECONDS_PER_DAY;
-    long hours = seconds / TimeUtils.SECONDS_PER_HOUR;
+    long hours = (seconds % TimeUtils.SECONDS_PER_DAY) / TimeUtils.SECONDS_PER_HOUR;
     int minutes = (int) ((seconds % TimeUtils.SECONDS_PER_HOUR) / TimeUtils.SECONDS_PER_MINUTE);
     int secs = (int) (seconds % TimeUtils.SECONDS_PER_MINUTE);
     StringBuilder buf = new StringBuilder(24);
