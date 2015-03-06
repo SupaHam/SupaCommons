@@ -10,9 +10,6 @@ import java.text.DecimalFormat;
  * @since 0.1
  */
 public final class NumberUtils {
-  
-  private NumberUtils() {
-  }
 
   /**
    * Rounds a double value to the exact value to one decimal point.
@@ -124,5 +121,8 @@ public final class NumberUtils {
     DecimalFormat df = new DecimalFormat(format);
     df.setRoundingMode(RoundingMode.DOWN);
     return df.format(value);
+  }
+
+  private NumberUtils() {
   }
 }

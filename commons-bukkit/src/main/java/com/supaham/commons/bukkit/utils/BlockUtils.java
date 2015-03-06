@@ -14,8 +14,6 @@ import org.bukkit.material.TrapDoor;
  * @since 0.1
  */
 public final class BlockUtils {
-
-  private BlockUtils() {}
   
   /**
    * Checks whether a {@link Block} is a door.
@@ -176,4 +174,6 @@ public final class BlockUtils {
     }
     return false;
   }
+
+  private BlockUtils() {}
 }
