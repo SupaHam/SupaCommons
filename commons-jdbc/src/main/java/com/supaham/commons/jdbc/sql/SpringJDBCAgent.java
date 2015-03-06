@@ -104,6 +104,10 @@ public class SpringJDBCAgent implements JDBCAgent {
 
     if (boneCPConfig == null) {
       boneCPConfig = new BoneCPConfig();
+      boneCPConfig.setMinConnectionsPerPartition(3);
+      boneCPConfig.setMaxConnectionsPerPartition(20);
+      boneCPConfig.setPartitionCount(2);
+      boneCPConfig.setConnectionTestStatement("SELECT 1");
     }
     if (config instanceof MySQLConfig) {
       Class.forName("com.mysql.jdbc.Driver");
