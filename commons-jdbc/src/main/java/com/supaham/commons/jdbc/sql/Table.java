@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 */
 public class Table {
 
+  public static final String NO_SCHEMA = "NO_SCHEMA_PROVIDED";
   private final String name;
   private final String schema;
 

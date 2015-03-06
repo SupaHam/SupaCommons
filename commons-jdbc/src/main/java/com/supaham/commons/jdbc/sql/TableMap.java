@@ -134,10 +134,10 @@ public class TableMap {
    * @param name
    * @param schema
    */
-  public void addTable(@Nonnull String id, @Nonnull String name, @Nonnull String schema)
+  public void addTable(@Nonnull String id, @Nonnull String name, @Nullable String schema)
       throws IllegalArgumentException {
     checkNotNullOrEmpty(id, "id");
-    Table table = new Table(name, schema);
+    Table table = new Table(name, schema == null ? Table.NO_SCHEMA : schema);
     addTable(id, table);
   }
 

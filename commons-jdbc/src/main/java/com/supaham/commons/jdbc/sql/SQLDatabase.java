@@ -167,6 +167,11 @@ public class SQLDatabase {
     checkNotNull(table, "table cannot be null.");
     checkArgument(this.tableMap.hasTable(table), "table doesn't belong to this database.");
 
+    // Don't attempt to create the table if it's schema is NO_SCHEMA
+    if (table.getSchema().equals(Table.NO_SCHEMA)) {
+      return true;
+    }
+
     String name = table.getName();
     this.logger.fine("Checking table '" + name + "'.");
     if (!SQLUtils.hasTable(this.jdbcAgent.getDataSource(), name)) {
@@ -250,9 +255,22 @@ public class SQLDatabase {
   }
 
   /**
+   * Creates and adds a new {@link Table} with the schema as {@link Table#NO_SCHEMA} which
+   * specifies
+   * that when checking the table, don't bother creating if it doesn't exist. This is equivalent to
+   * calling {@code TableMap.addTable(String, String, null)}.
+   *
    * @see TableMap#addTable(String, String, String)
    */
-  public void addTable(@Nonnull String id, @Nonnull String name, @Nonnull String schema)
+  public void addTable(@Nonnull String id, @Nonnull String name)
+      throws IllegalArgumentException {
+    tableMap.addTable(id, name, null);
+  }
+
+  /**
+   * @see TableMap#addTable(String, String, String)
+   */
+  public void addTable(@Nonnull String id, @Nonnull String name, @Nullable String schema)
       throws IllegalArgumentException {
     tableMap.addTable(id, name, schema);
   }
