@@ -98,9 +98,9 @@ public final class StringUtils {
    * <li><b>space</b> ' '</li>
    * </ul>
    *
-   * @param str
+   * @param str String to normalize
    *
-   * @return
+   * @return the normalized string
    */
   @Contract("null -> null")
   public static String normalizeString(@Nullable String str) {
