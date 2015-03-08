@@ -3,6 +3,7 @@ package com.supaham.commons.bukkit.utils;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.bukkit.Material;
+import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
@@ -178,7 +179,8 @@ public final class MaterialUtils {
   }
 
   /**
-   * Checks whether a {@link MaterialData} is the same as another {@link MaterialData}. If either of
+   * Checks whether a {@link MaterialData} is the same as another {@link MaterialData}. If either
+   * of
    * the MaterialDatas have a data (damage/durability) value of -1, only the {@link Material} is
    * tested.
    *
@@ -216,5 +218,169 @@ public final class MaterialUtils {
       default:
         return false;
     }
+  }
+
+  /**
+   * Returns a {@link MaterialData} with the type as the dropped item of the given material data.
+   *
+   * @param materialData material data to convert to item. This is returned if the type is not an
+   * item
+   *
+   * @return material data
+   */
+  public static MaterialData toItem(@Nonnull MaterialData materialData) {
+    Material material = materialData.getItemType();
+    if (!material.isBlock()) {
+      return materialData;
+    }
+    byte data = 0;
+    byte mdata = materialData.getData();
+    switch (material) {
+      case STONE:
+        material = Material.COBBLESTONE;
+        break;
+      case GRASS:
+      case SOIL:
+      case MYCEL:
+        material = Material.DIRT;
+        break;
+      case GRAVEL:
+        material = Material.FLINT;
+        break;
+      case GOLD_ORE:
+        material = Material.GOLD_INGOT;
+        break;
+      case IRON_ORE:
+        material = Material.IRON_INGOT;
+        break;
+      case COAL_ORE:
+        material = Material.COAL;
+        break;
+      case LOG:
+      case LOG_2:
+        data = TreeSpecies.getByData((byte) (mdata & 0x3)).getData();
+        material = Material.WOOD;
+        break;
+      case LEAVES:
+      case LEAVES_2:
+        material = Material.SAPLING;
+        data = TreeSpecies.getByData((byte) (mdata & 0x3)).getData();
+        break;
+      case LAPIS_ORE:
+        material = Material.INK_SACK;
+        data = 4;
+        break;
+      case BED:
+        material = Material.BED;
+        break;
+      case PISTON_EXTENSION:
+      case PISTON_MOVING_PIECE:
+        material = Material.PISTON_BASE;
+        break;
+      case BOOKSHELF:
+        material = Material.BOOK;
+        break;
+      case REDSTONE_WIRE:
+      case REDSTONE_ORE:
+      case GLOWING_REDSTONE_ORE:
+        material = Material.REDSTONE;
+        break;
+      case DIAMOND_ORE:
+        material = Material.DIAMOND;
+        break;
+      case CROPS:
+        material = Material.SEEDS;
+        break;
+      case BURNING_FURNACE:
+        material = Material.FURNACE;
+        break;
+      case SIGN_POST:
+      case WALL_SIGN:
+        material = Material.SIGN;
+        break;
+      case WOODEN_DOOR:
+        material = Material.WOOD_DOOR;
+        break;
+      case REDSTONE_TORCH_ON:
+        material = Material.REDSTONE_TORCH_OFF;
+        break;
+      case CLAY:
+        material = Material.CLAY_BALL;
+        break;
+      case DIODE_BLOCK_ON:
+        material = Material.DIODE;
+        break;
+      case HUGE_MUSHROOM_1:
+        material = Material.RED_MUSHROOM;
+        break;
+      case HUGE_MUSHROOM_2:
+        material = Material.BROWN_MUSHROOM;
+        break;
+      case IRON_FENCE:
+        break;
+      case PUMPKIN_STEM:
+        material = Material.PUMPKIN_SEEDS;
+        break;
+      case MELON_STEM:
+        material = Material.MELON_SEEDS;
+        data = 0;
+        break;
+      case BREWING_STAND:
+        material = Material.BREWING_STAND_ITEM;
+        break;
+      case CAULDRON:
+        material = Material.CAULDRON_ITEM;
+        break;
+      case DRAGON_EGG:
+        break;
+      case REDSTONE_LAMP_ON:
+        material = Material.REDSTONE_LAMP_OFF;
+        break;
+      case WOOD_DOUBLE_STEP:
+        material = Material.WOOD_STEP;
+        break;
+      case COCOA:
+        material = Material.INK_SACK;
+        data = 3;
+        break;
+      case EMERALD_ORE:
+        material = Material.EMERALD;
+        break;
+      case TRIPWIRE_HOOK:
+        material = Material.EMERALD;
+        break;
+      case TRIPWIRE:
+        material = Material.STRING;
+        break;
+      case CARROT:
+        material = Material.CARROT_ITEM;
+        break;
+      case POTATO:
+        material = Material.POTATO_ITEM;
+        break;
+      case REDSTONE_COMPARATOR_ON:
+        material = Material.REDSTONE_COMPARATOR_OFF;
+        break;
+      case DAYLIGHT_DETECTOR_INVERTED:
+        material = Material.DAYLIGHT_DETECTOR;
+        break;
+      case QUARTZ_ORE:
+        material = Material.QUARTZ;
+        break;
+      case CARPET:
+      case DOUBLE_PLANT:
+        data = mdata;
+        break;
+
+      case STANDING_BANNER:
+      case WALL_BANNER:
+        material = Material.BANNER;
+        break;
+      case DOUBLE_STONE_SLAB2:
+        material = Material.STONE_SLAB2;
+        data = mdata;
+        break;
+    }
+    return new MaterialData(material, data);
   }
 }
