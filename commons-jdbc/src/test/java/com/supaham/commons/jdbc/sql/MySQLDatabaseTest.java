@@ -8,6 +8,7 @@ import com.supaham.commons.placeholders.PlaceholderSet;
 import com.supaham.commons.placeholders.SimplePlaceholder;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +24,7 @@ import javax.annotation.Nullable;
 /**
  * Created by Ali on 02/02/2015.
  */
+@Ignore
 public class MySQLDatabaseTest {
 
   private SQLDatabase database;
