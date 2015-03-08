@@ -1,6 +1,7 @@
 repositories {
     maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url "http://maven.sk89q.com/repo/" }
+    maven { url "http://repo.onarandombox.com/content/repositories/thirdparty-dev/"}
     jcenter()
 }
 
