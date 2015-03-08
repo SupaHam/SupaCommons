@@ -6,7 +6,6 @@ dependency-reduced-pom.xml
 /bin
 /build
 /target
-/gradle
 .gradle
 /out
 /*/build
