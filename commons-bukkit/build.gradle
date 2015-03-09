@@ -7,7 +7,7 @@ repositories {
 
 dependencies {
     compile project(':commons-core')
-    compile group: 'org.spigotmc', name: 'spigot-api', version: '1.8-R0.1-SNAPSHOT'
+    compile group: 'org.spigotmc', name: 'spigot-api', version: '1.8.3-R0.1-SNAPSHOT'
     compile group: 'com.sk89q', name: 'squirrelid', version: '0.1.0'
 //    compile group: 'com.dumptruckman.minecraft.pluginbase', name: 'Serializable-Config-Bukkit', version: '0.1-SNAPSHOT'
     compile group: 'com.dumptruckman.minecraft.pluginbase', name: 'Plugin-Bukkit', version: '1.5-SNAPSHOT'
