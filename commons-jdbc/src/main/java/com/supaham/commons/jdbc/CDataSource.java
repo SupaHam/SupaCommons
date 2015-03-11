@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 /**
- * Represents a {@link DataSource} implementation.
+ * Represents a {@link DataSource} implementation for {@link BoneCP}.
  */
 public class CDataSource implements DataSource {
     

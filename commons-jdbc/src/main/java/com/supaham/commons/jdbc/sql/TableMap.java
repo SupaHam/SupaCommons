@@ -130,9 +130,9 @@ public class TableMap {
   /**
    * Adds a table to this display name
    *
-   * @param id
-   * @param name
-   * @param schema
+   * @param id id of the table to add
+   * @param name name of the table to add
+   * @param schema the schema of the table to add, nullable
    */
   public void addTable(@Nonnull String id, @Nonnull String name, @Nullable String schema)
       throws IllegalArgumentException {
