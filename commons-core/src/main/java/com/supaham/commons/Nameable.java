@@ -16,6 +16,8 @@ public interface Nameable {
    * Sets the name of this {@link Nameable} object.
    *
    * @param name name to set
+   *
+   * @throws UnsupportedOperationException thrown if this object cannot be renamed
    */
   void setName(String name) throws UnsupportedOperationException;
 }
