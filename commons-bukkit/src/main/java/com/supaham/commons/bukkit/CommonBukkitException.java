@@ -1,6 +1,6 @@
 package com.supaham.commons.bukkit;
 
-import com.supaham.commons.CommonException;
+import com.supaham.commons.exceptions.CommonException;
 import com.supaham.commons.bukkit.language.Message;
 
 import javax.annotation.Nonnull;

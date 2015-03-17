@@ -4,7 +4,7 @@ import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.util.command.parametric.ExceptionConverterHelper;
 import com.sk89q.worldedit.util.command.parametric.ExceptionMatch;
-import com.supaham.commons.CommonException;
+import com.supaham.commons.exceptions.CommonException;
 import com.supaham.commons.bukkit.CommonPlugin;
 
 import java.util.regex.Matcher;

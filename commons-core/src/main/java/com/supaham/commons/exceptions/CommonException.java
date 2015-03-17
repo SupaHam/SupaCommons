@@ -1,4 +1,4 @@
-package com.supaham.commons;
+package com.supaham.commons.exceptions;
 
 /**
  * Represents a commons library exception that can be thrown at any time.
