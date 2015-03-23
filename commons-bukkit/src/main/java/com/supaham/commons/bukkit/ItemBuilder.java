@@ -319,14 +319,14 @@ public class ItemBuilder {
   /**
    * Adds an {@link Enchantment} to this item with level set to 1. This won't override the existing
    * enchantment, if it does exist, if it's got a higher level. This is equivalent to calling
-   * {@link #enchant(Enchantment, int, boolean)} with the int as 1 and the boolean as false.
+   * {@link #enchant(Enchantment, int, boolean)} with the int as 1 and the boolean as true.
    *
    * @param enchantment enchantment to add
    *
    * @return this item builder instance, for chaining
    */
   public ItemBuilder enchant(@Nonnull Enchantment enchantment) {
-    return enchant(enchantment, 1, false);
+    return enchant(enchantment, 1, true);
   }
 
   /**
