@@ -33,6 +33,7 @@ public class ItemMetaCopyCat {
       Class<?> clazz = PackageType.CRAFTBUKKIT.getClass("inventory.CraftMetaItem");
       getItemMetaMethod = itemFactory.getClass().getDeclaredMethod("getItemMeta",
                                                                    Material.class, clazz);
+      getItemMetaMethod.setAccessible(true);
     } catch (ClassNotFoundException | NoSuchMethodException e) {
       e.printStackTrace();
     }
