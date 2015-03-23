@@ -24,6 +24,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -216,6 +217,18 @@ public class ItemBuilder {
    * @return this item builder instance, for chaining
    */
   public ItemBuilder lore(@Nonnull String... lore) {
+    lore(Arrays.asList(lore));
+    return this;
+  }
+
+  /**
+   * Adds lore to this item.
+   *
+   * @param lore lore to add
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder lore(@Nonnull Collection<String> lore) {
     if (lore == null) {
       if (!this.failSilently) {
         throw new IllegalArgumentException("lore cannot be null.");
@@ -224,14 +237,41 @@ public class ItemBuilder {
     }
 
     try {
-      if (lore.length != 0) {
+      if (lore.size() != 0) {
         List<String> loreList = this.itemMeta.getLore();
         if (loreList == null) {
-          loreList = new ArrayList<>(lore.length);
+          loreList = new ArrayList<>(lore.size());
         }
-        loreList.addAll(Arrays.asList(lore));
+        loreList.addAll(lore);
         this.itemMeta.setLore(loreList);
       }
+    } catch (Exception e) {
+      if (!this.failSilently) {
+        e.printStackTrace();
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Sets this item's lore. This method effectively clears the already existing lore and adds the 
+   * given lore.
+   *
+   * @param lore lore to set
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder setLore(@Nonnull Collection<String> lore) {
+    if (lore == null) {
+      if (!this.failSilently) {
+        throw new IllegalArgumentException("lore cannot be null.");
+      }
+      return this;
+    }
+
+    try {
+      this.itemMeta.setLore(!(lore instanceof List) ? new ArrayList<>(lore)
+                                                    : ((List<String>) lore));
     } catch (Exception e) {
       if (!this.failSilently) {
         e.printStackTrace();
