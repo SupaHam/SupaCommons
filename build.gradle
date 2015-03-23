@@ -7,7 +7,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "1.1.2"
+    id "com.github.johnrengelman.shadow" version "1.2.0"
 }
 
 task wrapper(type: Wrapper) {
