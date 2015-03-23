@@ -2,6 +2,8 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url = "http://repo.supaham.com/nexus/content/repositories/releases/" }
+        maven { url = "http://repo.supaham.com/nexus/content/repositories/snapshots/" }
         jcenter()
     }
 }
@@ -34,6 +36,13 @@ subprojects {
 
     group = 'com.supaham.commons'
     version = '0.1-SNAPSHOT'
+    def nexusRepoUrl
+    
+    if (!version.endsWith("-SNAPSHOT")) {
+        nexusRepoUrl = "http://repo.supaham.com/nexus/content/repositories/releases/"
+    } else {
+        nexusRepoUrl = "http://repo.supaham.com/nexus/content/repositories/snapshots/"
+    }
 
     repositories {
         mavenLocal()
@@ -65,5 +74,40 @@ subprojects {
 
     shadowJar {
         classifier 'dist'
+    }
+    
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: nexusRepoUrl) {
+                    authentication(userName: supahamNexusUser, password: supahamNexusPass)
+                }
+                
+                pom.project {
+                    packaging 'jar'
+                    
+                    scm {
+                        url 'git@github.com:SupaHam/SupaCommons.git'
+                        connection 'scm:git:git@github.com:SupaHam/SupaCommons.git'
+                        developerConnection 'scm:git:git@github.com:SupaHam/SupaCommons.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'GNU GENERAL PUBLIC LICENSE Version 3'
+                            url 'https://www.gnu.org/licenses/gpl.html'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'SupaHam'
+                            name 'Ali Moghnieh'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
