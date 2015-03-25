@@ -33,6 +33,8 @@ import org.bukkit.ChatColor;
  *   Colors._yellow().bold().italic() = ChatColor.YELLOW.toString() + ChatColor.BOLD +
  *   ChatColor.ITALIC
  * </p>
+ *
+ * @since 0.1
  */
 public class Colors {
 

@@ -2,6 +2,8 @@ package com.supaham.commons;
 
 /**
  * Represents a class that is versioned.
+ * 
+ * @since 0.1
  */
 public interface Version {
 

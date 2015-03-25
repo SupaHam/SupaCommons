@@ -9,6 +9,8 @@ import javax.annotation.Nonnull;
 
 /**
  * Represents an {@link Enchantment} with a level, meant to represent an enchantment on an item.
+ * 
+ * @since 0.1
  */
 public class ItemEnchantment {
 

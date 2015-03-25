@@ -2,6 +2,8 @@ package com.supaham.commons;
 
 /**
  * Represents a class that is identifiable by a {@link String}.
+ *
+ * @since 0.1
  */
 public interface IdentifiableByString extends Identifiable<String> {
 

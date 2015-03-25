@@ -36,7 +36,7 @@ import pluginbase.config.serializers.Serializers;
  * <th>Applicable Type(s)</th>
  * </tr>
  * </thead>
- * 
+ *
  * <tr>
  * <td>name</td>
  * <td>String</td>
@@ -93,6 +93,7 @@ import pluginbase.config.serializers.Serializers;
  *
  * @see #deserialize(ItemStack, Map)
  * @see #deserialize(ItemBuilder, Map)
+ * @since 0.1
  */
 public class ItemMetaSerializer {
 
