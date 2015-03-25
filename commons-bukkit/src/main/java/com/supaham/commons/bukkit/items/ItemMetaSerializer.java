@@ -22,6 +22,74 @@ import pluginbase.config.serializers.Serializers;
 /**
  * This is not an actual {@link Serializer}, merely a deserializer for {@link ItemMeta} with
  * additional parameters.
+ * <p />
+ * The deserialization basically checks for keys with {@link ItemBuilder}'s method names, such as
+ * {@link ItemBuilder#name(String)}, {@link ItemBuilder#lore(String...)}, {@link
+ * ItemBuilder#bookTitle(String)}, etc.
+ * <p />
+ * The following table describes what properties can be of what type: <br />
+ *
+ * <table>
+ * <thead>
+ * <tr>
+ * <th>Property</th>
+ * <th>Applicable Type(s)</th>
+ * </tr>
+ * </thead>
+ * 
+ * <tr>
+ * <td>name</td>
+ * <td>String</td>
+ * </tr>
+ * <tr>
+ * <td>lore</td>
+ * <td>String<br>List&lt;String&gt;</td>
+ * </tr>
+ * <tr>
+ * <td>enchant<br>enchants</td>
+ * <td>String<br>List&lt;String&gt;<br>See: {@link ItemEnchantmentSerializer}</td>
+ * </tr>
+ * <tr>
+ * <td>repairCost</td>
+ * <td>int</td>
+ * </tr>
+ * <tr>
+ * <td>bookTitle</td>
+ * <td>String</td>
+ * </tr>
+ * <tr>
+ * <td>bookAuthor</td>
+ * <td>String</td>
+ * </tr>
+ * <tr>
+ * <td>bookPage<br>bookPages</td>
+ * <td>String<br>List&lt;String&gt;</td>
+ * </tr>
+ * <tr>
+ * <td>fw</td>
+ * <td>not implemented yet.</td>
+ * </tr>
+ * <tr>
+ * <td>color</td>
+ * <td>String<br>int</td>
+ * </tr>
+ * <tr>
+ * <td>mapScale</td>
+ * <td>boolean</td>
+ * </tr>
+ * <tr>
+ * <td>potion</td>
+ * <td>not implemented yet.</td>
+ * </tr>
+ * <tr>
+ * <td>skull</td>
+ * <td>String</td>
+ * </tr>
+ * <tr>
+ * <td>banner</td>
+ * <td>not implemented yet.</td>
+ * </tr>
+ * </table>
  *
  * @see #deserialize(ItemStack, Map)
  * @see #deserialize(ItemBuilder, Map)
