@@ -24,6 +24,8 @@ import org.bukkit.material.MaterialData;
 
 import javax.annotation.Nonnull;
 
+import pluginbase.config.serializers.Serializers;
+
 /**
  * @since 0.1
  */
@@ -99,7 +101,8 @@ public class CBinding extends BindingHelper {
       consumedCount = 1)
   public MaterialData getMaterialData(ArgumentStack context) throws ParameterException {
     String input = _checkNotNull(context.next(), "Please specify a material data.");
-    return _checkNotNull(new MaterialDataSerializer().deserialize(input, MaterialData.class),
+    MaterialDataSerializer serializer = Serializers.getSerializer(MaterialDataSerializer.class);
+    return _checkNotNull(serializer.deserialize(input, MaterialData.class),
                          "'" + input + "' is not a valid arena.");
   }
 
