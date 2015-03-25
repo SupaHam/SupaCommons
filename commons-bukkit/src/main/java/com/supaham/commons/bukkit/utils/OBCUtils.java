@@ -1,11 +1,13 @@
 package com.supaham.commons.bukkit.utils;
 
+import com.supaham.commons.CMain;
 import com.supaham.commons.bukkit.utils.ReflectionUtils.PackageType;
 
 import org.bukkit.Sound;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
 
 /**
  * Utility methods for working with {@code org.bukkit.craftbukkit}. This class contains methods such
@@ -21,8 +23,10 @@ public class OBCUtils {
     try {
       Class<?> clazz = PackageType.CRAFTBUKKIT.getClass("CraftSound");
       getSoundMethod = clazz.getDeclaredMethod("getSound", Sound.class);
-    } catch (ClassNotFoundException | NoSuchMethodException e) {
-      e.printStackTrace();
+      getSoundMethod.setAccessible(true);
+    } catch (Exception e) {
+      CMain.getLogger().log(Level.SEVERE,
+                            "Error occurred whilst getting CraftSound.getSound method", e);
     }
   }
 
