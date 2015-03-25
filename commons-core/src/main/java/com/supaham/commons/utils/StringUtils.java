@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  *
  * @since 0.1
  */
-public final class StringUtils {
+public final class StringUtils extends org.apache.commons.lang3.StringUtils {
 
   private StringUtils() {
   }
