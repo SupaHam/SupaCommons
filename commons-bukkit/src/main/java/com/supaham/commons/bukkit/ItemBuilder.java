@@ -2,6 +2,8 @@ package com.supaham.commons.bukkit;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.bukkit.items.ItemEnchantment;
+
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -114,7 +116,7 @@ public class ItemBuilder {
    */
   public ItemStack build() {
     this.itemStack.setItemMeta(this.itemMeta);
-    return this.itemStack.clone(); // Hang on to the ite
+    return this.itemStack.clone(); // Hang on to the item
   }
 
   /**
@@ -254,7 +256,7 @@ public class ItemBuilder {
   }
 
   /**
-   * Sets this item's lore. This method effectively clears the already existing lore and adds the 
+   * Sets this item's lore. This method effectively clears the already existing lore and adds the
    * given lore.
    *
    * @param lore lore to set
@@ -317,9 +319,42 @@ public class ItemBuilder {
   }
 
   /**
-   * Adds an {@link Enchantment} to this item with level set to 1. This won't override the existing
-   * enchantment, if it does exist, if it's got a higher level. This is equivalent to calling
-   * {@link #enchant(Enchantment, int, boolean)} with the int as 1 and the boolean as true.
+   * Adds an {@link ItemEnchantment} to this item. This WILL overwrite the existing
+   * enchantment, if it does exist. This is equivalent to calling {@link #enchant(ItemEnchantment,
+   * boolean)} with the boolean as true.
+   *
+   * @param enchantment enchantment to add
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder enchant(@Nonnull ItemEnchantment enchantment) {
+    return enchant(enchantment, true);
+  }
+
+  /**
+   * Adds an {@link ItemEnchantment} to this item. This is equivalent to calling {@link
+   * #enchant(Enchantment, int, boolean)}.
+   *
+   * @param enchantment enchantment to add
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder enchant(@Nonnull ItemEnchantment enchantment, boolean overwrite) {
+    try {
+      return enchant(enchantment.getEnchantment(), enchantment.getLevel(), overwrite);
+    } catch (Exception e) {
+      if (!this.failSilently) {
+        e.printStackTrace();
+      }
+      return this;
+    }
+  }
+
+  /**
+   * Adds an {@link Enchantment} to this item with level set to 1. This WILL overwrite the existing
+   * enchantment, if it does exist. This is equivalent to calling {@link #enchant(Enchantment, int,
+   * boolean)} with the
+   * int as 1 and the boolean as true.
    *
    * @param enchantment enchantment to add
    *
