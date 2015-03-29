@@ -104,6 +104,9 @@ subprojects {
                         developer {
                             id 'SupaHam'
                             name 'Ali Moghnieh'
+                            email 'me@supa.me'
+                            url 'http://supaham.com'
+                            timezone 'Europe/London'
                         }
                     }
                 }
