@@ -9,10 +9,13 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 
@@ -89,6 +92,30 @@ public class EntityUtils {
    */
   public static EntitiesSupplier worldEntities(@Nonnull World world) {
     return new WorldEntitiesSupplier(world);
+  }
+
+  /**
+   * Clears all potions effects on a {@link LivingEntity}.
+   *
+   * @param entity entity to remove effects from
+   *
+   * @return the removed {@link PotionEffect}s, if any, otherwise empty
+   */
+  public static Collection<PotionEffect> clearPotionEffects(@Nonnull LivingEntity entity,
+                                                            @Nonnull PotionEffectType... ignore) {
+    checkNotNull(entity, "entity cannot be null.");
+    Collection<PotionEffect> effects = entity.getActivePotionEffects();
+    Iterator<PotionEffect> it = effects.iterator();
+    while (it.hasNext()) {
+      PotionEffect potionEffect = it.next();
+      for (PotionEffectType type : ignore) {
+        if (potionEffect.getType().equals(type)) {
+          it.remove();
+        }
+      }
+      entity.removePotionEffect(potionEffect.getType());
+    }
+    return effects;
   }
 
   public static interface EntitySupplier extends Supplier<Entity> {}
