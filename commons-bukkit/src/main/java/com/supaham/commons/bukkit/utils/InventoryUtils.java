@@ -21,13 +21,13 @@ public class InventoryUtils {
    *
    * @param inv inventory to deduct from
    * @param type material to remove
-   * @param singleItem whether to stop at one item or keep going
+   * @param singleStack whether to stop at one itemstack or keep going
    * @param amount amount of the material to deduct
    *
    * @return true if anything was deducted
    */
   public static boolean removeMaterial(@Nonnull Inventory inv, @Nonnull Material type,
-                                       boolean singleItem, int amount) {
+                                       boolean singleStack, int amount) {
     checkNotNull(inv, "inventory cannot be null.");
     checkNotNull(type, "material cannot be null.");
     if (amount <= 0) {
@@ -45,7 +45,7 @@ public class InventoryUtils {
           inv.remove(is);
           amount -= newAmount;
           // check if we should keep removing items.
-          if (singleItem || amount <= 0) {
+          if (singleStack || amount <= 0) {
             break;
           }
         }
