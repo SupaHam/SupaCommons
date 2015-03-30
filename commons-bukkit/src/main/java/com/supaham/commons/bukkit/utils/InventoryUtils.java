@@ -9,12 +9,27 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 
 /**
- * Utility methods for working with {@link Inventory} instances. This class contains methods such as
+ * Utility methods for working with {@link Inventory} instances. This class contains methods such
+ * as
  * {@link #removeMaterial(Inventory, Material, boolean, int)}, and more.
  *
  * @since 0.1
  */
 public class InventoryUtils {
+
+  /**
+   * Deducts a specific amount of {@link Material} from an {@link Inventory}. This is equivalent to
+   * calling {@link #removeMaterial(Inventory, Material, boolean, int)} with the boolean as false.
+   *
+   * @param inv inventory to deduct from
+   * @param type material to remove
+   * @param amount amount of the material to deduct
+   *
+   * @return true if anything was deducted
+   */
+  public static boolean removeMaterial(@Nonnull Inventory inv, @Nonnull Material type, int amount) {
+    return removeMaterial(inv, type, false ,amount);
+  }
 
   /**
    * Deducts a specific amount of {@link Material} from an {@link Inventory}.
