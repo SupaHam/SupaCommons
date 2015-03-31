@@ -172,6 +172,16 @@ public class Colors {
     append(string);
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof Colors && this.builder.equals(((Colors) obj).builder);
+  }
+
+  @Override
+  public String toString() {
+    return this.builder.toString();
+  }
+
   /** @see ChatColor#BLACK */
   public Colors black() {
     return append(BLACK);
