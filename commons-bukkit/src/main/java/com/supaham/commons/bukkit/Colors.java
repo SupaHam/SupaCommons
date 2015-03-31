@@ -25,247 +25,277 @@ import static org.bukkit.ChatColor.YELLOW;
 
 import org.bukkit.ChatColor;
 
+import javax.annotation.Nullable;
+
 /**
  * Represents a {@link ChatColor} helper class. All static access to this class starts with an
  * underscore (_). Anything after that is just the {@link ChatColor} enum to camelCase.
  * <p>
- *   <b>Example usage:</b><br />
- *   Colors._yellow().bold().italic() = ChatColor.YELLOW.toString() + ChatColor.BOLD +
- *   ChatColor.ITALIC
+ * <b>Example usage:</b><br />
+ * Colors._yellow().bold().italic() = ChatColor.YELLOW.toString() + ChatColor.BOLD +
+ * ChatColor.ITALIC
  * </p>
  *
  * @since 0.1
  */
 public class Colors {
 
-  private String string = "";
-
-  private Colors(ChatColor color) {
-    append(color);
-  }
+  private final StringBuilder builder;
 
   /** @see ChatColor#BLACK */
-  private static Colors _black() {
+  public static Colors _black() {
     return new Colors(BLACK);
   }
 
   /** @see ChatColor#DARK_BLUE */
-  private static Colors _darkBlue() {
+  public static Colors _darkBlue() {
     return new Colors(DARK_BLUE);
   }
 
   /** @see ChatColor#DARK_GREEN */
-  private static Colors _darkGreen() {
+  public static Colors _darkGreen() {
     return new Colors(DARK_GREEN);
   }
 
   /** @see ChatColor#DARK_AQUA */
-  private static Colors _darkAqua() {
+  public static Colors _darkAqua() {
     return new Colors(DARK_AQUA);
   }
 
   /** @see ChatColor#DARK_RED */
-  private static Colors _darkRed() {
+  public static Colors _darkRed() {
     return new Colors(DARK_RED);
   }
 
   /** @see ChatColor#DARK_PURPLE */
-  private static Colors _darkPurple() {
+  public static Colors _darkPurple() {
     return new Colors(DARK_PURPLE);
   }
 
   /** @see ChatColor#GOLD */
-  private static Colors _gold() {
+  public static Colors _gold() {
     return new Colors(GOLD);
   }
 
   /** @see ChatColor#GRAY */
-  private static Colors _gray() {
+  public static Colors _gray() {
     return new Colors(GRAY);
   }
 
   /** @see ChatColor#DARK_GRAY */
-  private static Colors _darkGray() {
+  public static Colors _darkGray() {
     return new Colors(DARK_GRAY);
   }
 
   /** @see ChatColor#BLUE */
-  private static Colors _blue() {
+  public static Colors _blue() {
     return new Colors(BLUE);
   }
 
   /** @see ChatColor#GREEN */
-  private static Colors _green() {
+  public static Colors _green() {
     return new Colors(GREEN);
   }
 
   /** @see ChatColor#AQUA */
-  private static Colors _aqua() {
+  public static Colors _aqua() {
     return new Colors(AQUA);
   }
 
   /** @see ChatColor#RED */
-  private static Colors _red() {
+  public static Colors _red() {
     return new Colors(RED);
   }
 
   /** @see ChatColor#LIGHT_PURPLE */
-  private static Colors _lightPurple() {
+  public static Colors _lightPurple() {
     return new Colors(LIGHT_PURPLE);
   }
 
   /** @see ChatColor#YELLOW */
-  private static Colors _yellow() {
+  public static Colors _yellow() {
     return new Colors(YELLOW);
   }
 
   /** @see ChatColor#WHITE */
-  private static Colors _white() {
+  public static Colors _white() {
     return new Colors(WHITE);
   }
 
   /** @see ChatColor#MAGIC */
-  private static Colors _magic() {
+  public static Colors _magic() {
     return new Colors(MAGIC);
   }
 
   /** @see ChatColor#BOLD */
-  private static Colors _bold() {
+  public static Colors _bold() {
     return new Colors(BOLD);
   }
 
   /** @see ChatColor#STRIKETHROUGH */
-  private static Colors _strike() {
+  public static Colors _strike() {
     return new Colors(STRIKETHROUGH);
   }
 
   /** @see ChatColor#UNDERLINE */
-  private static Colors _underline() {
+  public static Colors _underline() {
     return new Colors(UNDERLINE);
   }
 
   /** @see ChatColor#ITALIC */
-  private static Colors _italic() {
+  public static Colors _italic() {
     return new Colors(ITALIC);
   }
 
   /** @see ChatColor#RESET */
-  private static Colors _reset() {
+  public static Colors _reset() {
     return new Colors(RESET);
   }
 
+  /**
+   * Creates a new instance of {@link Colors} with a given {@link String} appended to it.
+   *
+   * @param string string to append
+   *
+   * @return the new instance of this builder
+   */
+  public static Colors _append(@Nullable String string) {
+    return new Colors(string);
+  }
+
+  private Colors(ChatColor color) {
+    this(color.toString());
+  }
+
+  private Colors(String string) {
+    this.builder = new StringBuilder(string != null ? string.length() : 16);
+    append(string);
+  }
+
   /** @see ChatColor#BLACK */
-  private Colors black() {
+  public Colors black() {
     return append(BLACK);
   }
 
   /** @see ChatColor#DARK_BLUE */
-  private Colors darkBlue() {
+  public Colors darkBlue() {
     return append(DARK_BLUE);
   }
 
   /** @see ChatColor#DARK_GREEN */
-  private Colors darkGreen() {
+  public Colors darkGreen() {
     return append(DARK_GREEN);
   }
 
   /** @see ChatColor#DARK_AQUA */
-  private Colors darkAqua() {
+  public Colors darkAqua() {
     return append(DARK_AQUA);
   }
 
   /** @see ChatColor#DARK_RED */
-  private Colors darkRed() {
+  public Colors darkRed() {
     return append(DARK_RED);
   }
 
   /** @see ChatColor#DARK_PURPLE */
-  private Colors darkPurple() {
+  public Colors darkPurple() {
     return append(DARK_PURPLE);
   }
 
   /** @see ChatColor#GOLD */
-  private Colors gold() {
+  public Colors gold() {
     return append(GOLD);
   }
 
   /** @see ChatColor#GRAY */
-  private Colors gray() {
+  public Colors gray() {
     return append(GRAY);
   }
 
   /** @see ChatColor#DARK_GRAY */
-  private Colors darkGray() {
+  public Colors darkGray() {
     return append(DARK_GRAY);
   }
 
   /** @see ChatColor#BLUE */
-  private Colors blue() {
+  public Colors blue() {
     return append(BLUE);
   }
 
   /** @see ChatColor#GREEN */
-  private Colors green() {
+  public Colors green() {
     return append(GREEN);
   }
 
   /** @see ChatColor#AQUA */
-  private Colors aqua() {
+  public Colors aqua() {
     return append(AQUA);
   }
 
   /** @see ChatColor#RED */
-  private Colors red() {
+  public Colors red() {
     return append(RED);
   }
 
   /** @see ChatColor#LIGHT_PURPLE */
-  private Colors lightPurple() {
+  public Colors lightPurple() {
     return append(LIGHT_PURPLE);
   }
 
   /** @see ChatColor#YELLOW */
-  private Colors yellow() {
+  public Colors yellow() {
     return append(YELLOW);
   }
 
   /** @see ChatColor#WHITE */
-  private Colors white() {
+  public Colors white() {
     return append(WHITE);
   }
 
   /** @see ChatColor#MAGIC */
-  private Colors magic() {
+  public Colors magic() {
     return append(MAGIC);
   }
 
   /** @see ChatColor#BOLD */
-  private Colors bold() {
+  public Colors bold() {
     return append(BOLD);
   }
 
   /** @see ChatColor#STRIKETHROUGH */
-  private Colors strike() {
+  public Colors strike() {
     return append(STRIKETHROUGH);
   }
 
   /** @see ChatColor#UNDERLINE */
-  private Colors underline() {
+  public Colors underline() {
     return append(UNDERLINE);
   }
 
   /** @see ChatColor#ITALIC */
-  private Colors italic() {
+  public Colors italic() {
     return append(ITALIC);
   }
 
   /** @see ChatColor#RESET */
-  private Colors reset() {
+  public Colors reset() {
     return append(RESET);
   }
 
+  /**
+   * Appends a {@link String} to this {@link Colors}.
+   *
+   * @param string string to append
+   *
+   * @return this instance for chaining
+   */
+  public Colors append(String string) {
+    this.builder.append(string);
+    return this;
+  }
+
   private Colors append(ChatColor color) {
-    this.string += color;
+    this.builder.append(color);
     return this;
   }
 }
