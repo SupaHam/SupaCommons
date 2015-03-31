@@ -21,43 +21,43 @@ public class InventoryUtils {
    * Deducts a specific amount of {@link Material} from an {@link Inventory}. This is equivalent to
    * calling {@link #removeMaterial(Inventory, Material, boolean, int)} with the boolean as false.
    *
-   * @param inv inventory to deduct from
+   * @param inventory inventory to deduct from
    * @param type material to remove
    * @param amount amount of the material to deduct
    *
-   * @return true if anything was deducted
+   * @return count of items that were removed from the inventory
    */
-  public static boolean removeMaterial(@Nonnull Inventory inv, @Nonnull Material type, int amount) {
-    return removeMaterial(inv, type, false ,amount);
+  public static int removeMaterial(@Nonnull Inventory inventory, @Nonnull Material type,
+                                   int amount) {
+    return removeMaterial(inventory, type, false, amount);
   }
 
   /**
    * Deducts a specific amount of {@link Material} from an {@link Inventory}.
    *
-   * @param inv inventory to deduct from
+   * @param inventory inventory to deduct from
    * @param type material to remove
    * @param singleStack whether to stop at one itemstack or keep going
    * @param amount amount of the material to deduct
    *
-   * @return true if anything was deducted
+   * @return count of items that were removed from the inventory
    */
-  public static boolean removeMaterial(@Nonnull Inventory inv, @Nonnull Material type,
-                                       boolean singleStack, int amount) {
-    checkNotNull(inv, "inventory cannot be null.");
+  public static int removeMaterial(@Nonnull Inventory inventory, @Nonnull Material type,
+                                   boolean singleStack, int amount) {
+    checkNotNull(inventory, "inventory cannot be null.");
     checkNotNull(type, "material cannot be null.");
     if (amount <= 0) {
-      return false;
+      return 0;
     }
-    boolean removedAny = false;
-    for (ItemStack is : inv.getContents()) {
+    int initialAmount = amount;
+    for (ItemStack is : inventory.getContents()) {
       if (is != null && is.getType() == type) {
         int newAmount = is.getAmount() - amount;
-        removedAny = true;
         if (newAmount > 0) {
           is.setAmount(newAmount);
           break;
         } else { // item is of amount zero
-          inv.remove(is);
+          inventory.remove(is);
           amount -= newAmount;
           // check if we should keep removing items.
           if (singleStack || amount <= 0) {
@@ -66,6 +66,6 @@ public class InventoryUtils {
         }
       }
     }
-    return removedAny;
+    return initialAmount - amount;
   }
 }
