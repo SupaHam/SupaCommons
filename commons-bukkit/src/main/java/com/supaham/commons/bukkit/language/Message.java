@@ -13,7 +13,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import lombok.Getter;
 import lombok.NonNull;
 
 /**
@@ -26,7 +25,6 @@ public class Message {
 
   public static final Locale DEFAULT_LOCALE = Locale.getDefault();
   private final MessageManager manager;
-  @Getter
   private final String node;
   private final Map<Locale, String> messages = new HashMap<>();
 
@@ -205,5 +203,9 @@ public class Message {
   protected String _getParsedMessage(@Nonnull String message, @Nullable Map<Object, Object> locals,
                                      Object... args) {
     return manager.parseMessage(String.format(message, args), locals);
+  }
+
+  public String getNode() {
+    return node;
   }
 }

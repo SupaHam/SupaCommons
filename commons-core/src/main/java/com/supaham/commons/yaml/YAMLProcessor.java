@@ -43,7 +43,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.Getter;
 import lombok.NonNull;
 import pluginbase.config.ConfigSerializer;
 import pluginbase.config.SerializationRegistrar;
@@ -82,7 +81,6 @@ public class YAMLProcessor extends YAMLNode {
       .getString();
   public static final char COMMENT_CHAR = '#';
   protected final Yaml yaml;
-  @Getter
   private final DumperOptions options;
   protected final File file;
   protected String header = null;
@@ -356,6 +354,10 @@ public class YAMLProcessor extends YAMLNode {
     if (comments != null) {
       this.comments.putAll(comments);
     }
+  }
+
+  public DumperOptions getOptions() {
+    return options;
   }
 
   private static class FancyRepresenter extends Representer {
