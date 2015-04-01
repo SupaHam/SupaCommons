@@ -6,7 +6,7 @@ import com.supaham.commons.bukkit.ItemBuilder;
 import com.supaham.commons.bukkit.serializers.ItemEnchantmentSerializer;
 import com.supaham.commons.bukkit.utils.OBCUtils;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

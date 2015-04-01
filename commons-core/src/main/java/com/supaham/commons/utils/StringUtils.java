@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  *
  * @since 0.1
  */
-public final class StringUtils extends org.apache.commons.lang3.StringUtils {
+public final class StringUtils extends org.apache.commons.lang.StringUtils {
 
   private StringUtils() {
   }
@@ -81,14 +81,6 @@ public final class StringUtils extends org.apache.commons.lang3.StringUtils {
       }
     }
     return builder.toString();
-  }
-
-  /**
-   * @see org.apache.commons.lang3.StringUtils#repeat(String, int)
-   */
-  @Contract("!null,_->!null;null,_->null")
-  public static String repeat(@Nullable String str, int repeat) {
-    return org.apache.commons.lang3.StringUtils.repeat(str, repeat);
   }
 
   /**
