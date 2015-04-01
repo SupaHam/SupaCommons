@@ -5,9 +5,10 @@ import static com.supaham.commons.utils.NumberUtils.roundExact;
 import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 import static java.lang.Double.parseDouble;
 
+import com.google.common.base.Preconditions;
+
 import com.supaham.commons.utils.RandomUtils;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -78,9 +79,9 @@ public class VectorUtils {
    * @return whether the {@code test} vector is within the {@code min} and {@code max} vectors.
    */
   public static boolean isWithin(Vector test, Vector min, Vector max) {
-    Validate.notNull(test);
-    Validate.notNull(min);
-    Validate.notNull(max);
+    Preconditions.checkNotNull(test);
+    Preconditions.checkNotNull(min);
+    Preconditions.checkNotNull(max);
 
     double x = test.getX();
     double y = test.getY();

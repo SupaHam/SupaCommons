@@ -1,6 +1,6 @@
 package com.supaham.commons.utils;
 
-import org.apache.commons.lang3.Validate;
+import com.google.common.base.Preconditions;
 
 /**
  * Utility methods for working with time. This class contains methods such as {@link #elapsed(long,
@@ -66,7 +66,7 @@ public class TimeUtils {
    * @return the duration format
    */
   public static String getNeededDurationFormat(int seconds) {
-    Validate.isTrue(seconds > 0, "seconds must be larger than 0.");
+    Preconditions.checkArgument(seconds > 0, "seconds must be larger than 0.");
     String format = "";
     if (seconds > 86400) {
       format = "dd"; // more than 24 hours

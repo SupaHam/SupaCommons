@@ -1,6 +1,7 @@
 package com.supaham.commons.bukkit.language;
 
-import org.apache.commons.lang.Validate;
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -196,7 +197,8 @@ public class Message {
       locale = DEFAULT_LOCALE;
     }
     String message = getMessage(locale);
-    Validate.notNull(message, "Could not find message for locale " + locale.toLanguageTag());
+    Preconditions.checkNotNull(message, "Could not find message for locale " 
+                                        + locale.toLanguageTag());
     return _getParsedMessage(message, locals, args);
   }
 
