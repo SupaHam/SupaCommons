@@ -4,6 +4,7 @@ buildscript {
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url = "http://repo.supaham.com/nexus/content/repositories/releases/" }
         maven { url = "http://repo.supaham.com/nexus/content/repositories/snapshots/" }
+        maven { url = "http://repo.onarandombox.com/content/groups/public/" }
         jcenter()
     }
 }
