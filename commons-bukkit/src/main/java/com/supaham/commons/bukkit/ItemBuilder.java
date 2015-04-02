@@ -74,7 +74,8 @@ public class ItemBuilder {
    * @return item builder instance
    */
   public static ItemBuilder builder(Material type, boolean failSilently) {
-    return builder(new ItemStack(type), failSilently);
+    // default item amount because 1.8 displays the number 0 on itemstacks that have 0 as amount.
+    return builder(new ItemStack(type, 1), failSilently);
   }
 
   /**
