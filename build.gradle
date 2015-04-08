@@ -48,6 +48,9 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven { url = "http://repo.onarandombox.com/content/groups/public/" }
+        // Thanks NathanWolf <3
+        maven { url = "http://maven.elmakers.com/repository/" }
     }
     
     ext.internalVersion = version
