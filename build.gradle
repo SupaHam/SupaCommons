@@ -80,9 +80,10 @@ subprojects {
     uploadArchives {
         repositories {
             mavenDeployer {
-                repository(url: nexusRepoUrl) {
-                    authentication(userName: supahamNexusUser, password: supahamNexusPass)
-                }
+//                Goodbye ol' friend.
+//                repository(url: nexusRepoUrl) {
+//                    authentication(userName: supahamNexusUser, password: supahamNexusPass)
+//                }
                 
                 pom.project {
                     packaging 'jar'
