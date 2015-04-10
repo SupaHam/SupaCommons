@@ -32,7 +32,7 @@ public abstract class TickerTask implements Runnable {
     checkNotNull(plugin, "plugin cannot be null.");
     this.plugin = plugin;
     this.delay = delay;
-    this.interval = interval;
+    this.interval = Math.max(interval, 0);
   }
 
   private void _run() {
