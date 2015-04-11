@@ -199,9 +199,29 @@ public class PlayerUtils {
     }
   }
 
-  public static interface PlayerSupplier extends Supplier<Player> {}
+  public interface PlayerSupplier extends Supplier<Player> {}
 
-  public static interface PlayersSupplier extends Supplier<Collection<? extends Player>> {}
+  public interface PlayersSupplier extends Supplier<Collection<? extends Player>> {}
+
+  /**
+   * Represents a {@link Player} supplier for a specific type.
+   *
+   * @param <T> type used to supply the player
+   */
+  public interface PlayerSupplierFor<T> {
+
+    Player get(T t);
+  }
+
+  /**
+   * Represents a {@link Player} collection supplier for a specific type.
+   *
+   * @param <T> type used to supply the players collection
+   */
+  public interface PlayersSupplierFor<T> {
+
+    Collection<? extends Player> get(T t);
+  }
 
   private static class ChunkSupplier implements PlayersSupplier {
 
