@@ -112,38 +112,39 @@ public class PlayerTeleportFix implements Listener {
   }
 
   @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-  protected void onPlayerTeleport(final PlayerTeleportEvent event) {
+  protected void onPlayerTeleport(PlayerTeleportEvent event) {
     if (!isEnabled() || event.getFrom().equals(event.getPlayer().getLocation())) {
       return;
     }
+    final Player player = event.getPlayer();
     new BukkitRunnable() {
       @Override
       public void run() {
-        final Collection<? extends Player> players = supplier.get(event.getPlayer());
-        updateEntities(players, false); // hide all
+        final Collection<? extends Player> players = supplier.get(player);
+        updateEntities(player, players, false); // hide all
         new BukkitRunnable() {
           @Override
           public void run() {
-            updateEntities(players, true); // show all
+            updateEntities(player, players, true); // show all
           }
         }.runTaskLater(plugin, 1);
       }
     }.runTaskLater(plugin, taskDelay);
   }
 
-  private void updateEntities(Collection<? extends Player> players, boolean visible) {
+  private void updateEntities(Player observer, Collection<? extends Player> players, boolean visible) {
     // Hide every player
-    for (Player observer : players) {
       for (Player player : players) {
         if (observer.getEntityId() != player.getEntityId()) {
           if (visible) {
             observer.showPlayer(player);
+            player.showPlayer(observer);
           } else {
             observer.hidePlayer(player);
+            player.hidePlayer(observer);
           }
         }
       }
-    }
   }
 
   public Plugin getPlugin() {
