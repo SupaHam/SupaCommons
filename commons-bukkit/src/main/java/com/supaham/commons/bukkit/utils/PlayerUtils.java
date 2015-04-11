@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.Math.PI;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
@@ -163,16 +164,17 @@ public class PlayerUtils {
   }
 
   /**
-   * Gets a new {@link PlayerSupplier} which returns a matched player by name. This is equivalent 
+   * Gets a new {@link PlayerSupplier} which returns a matched player by name. This is equivalent
    * to calling {@code playerByName&#40;}{@link #serverPlayers()},{@code String&#41;}.
    *
    * @return entities supplier
+   *
    * @see #playerByName(PlayersSupplier, String)
    */
   public static PlayerSupplier playerByName(@Nonnull String name) {
     return new PlayerByNameSupplier(serverPlayers(), name);
   }
-  
+
   /**
    * Gets a new {@link PlayersSupplier} which returns all players in a {@link Bukkit#getServer()}.
    *
@@ -181,6 +183,23 @@ public class PlayerUtils {
   public static PlayerSupplier playerByName(@Nonnull PlayersSupplier supplier,
                                             @Nonnull String name) {
     return new PlayerByNameSupplier(supplier, name);
+  }
+
+  /**
+   * Gets a new {@link PlayersSupplierFor} which returns all players within a radius of a
+   * {@link Location}. Although this utilizes a {@link PlayersSupplier} it returns a new
+   * {@link ArrayList} as opposed to a {@link Collection} of the players within range.
+   * <p />
+   * If the {@code supplier} is null, {@link #worldPlayers(World)} is called during each call.
+   *
+   * @param supplier players to check radius against, nullable
+   * @param radius radius of the players to return
+   *
+   * @return players supplier
+   */
+  public static PlayersSupplierFor<Location> playersByRadius(@Nullable PlayersSupplier supplier,
+                                                             double radius) {
+    return new PlayersRadiusSupplier(supplier, radius);
   }
 
   private PlayerUtils() {}
@@ -283,11 +302,36 @@ public class PlayerUtils {
     @Override
     public Player get() {
       for (Player player : this.supplier.get()) {
-        if(player.getName().equalsIgnoreCase(this.name)) {
+        if (player.getName().equalsIgnoreCase(this.name)) {
           return player;
         }
       }
       return null;
+    }
+  }
+
+  private static class PlayersRadiusSupplier implements PlayersSupplierFor<Location> {
+
+    private final PlayersSupplier supplier;
+    private final double radius;
+
+    public PlayersRadiusSupplier(PlayersSupplier supplier, double radius) {
+      Preconditions.checkArgument(radius >= 0, "radius cannot be smaller than 1.");
+      this.supplier = supplier;
+      this.radius = radius;
+    }
+
+    @Override
+    public ArrayList<? extends Player> get(Location location) {
+      PlayersSupplier supplier = this.supplier == null ? worldPlayers(location.getWorld())
+                                                       : this.supplier;
+      ArrayList<? extends Player> players = new ArrayList<>(supplier.get());
+      for (int i = players.size(); i > 0; i--) {
+        if (players.get(i).getLocation().distanceSquared(location) <= radius * radius) {
+          players.remove(i);
+        }
+      }
+      return players;
     }
   }
 }
