@@ -62,7 +62,7 @@ public class BlockFaceUtils {
    */
   public static BlockFace getRight(BlockFace face) {
     Preconditions.checkArgument(isHorizontal(face), "block face must be horizontal.");
-    return BlockFace.values()[face.ordinal() + 1 % 4]; // n -> e -> s -> w -> n
+    return BlockFace.values()[(face.ordinal() + 1) % 4]; // n -> e -> s -> w -> n
   }
 
   private BlockFaceUtils() {}
