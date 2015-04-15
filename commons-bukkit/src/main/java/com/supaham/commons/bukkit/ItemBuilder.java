@@ -193,6 +193,16 @@ public class ItemBuilder {
     }
     return this;
   }
+  /**
+   * Sets the item's display name.
+   *
+   * @param name display name to set
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder name(@Nullable Colors name) {
+    return name(name == null ? null : name.toString());
+  }
 
   /**
    * Sets the item's display name.
@@ -210,6 +220,21 @@ public class ItemBuilder {
       }
     }
     return this;
+  }
+  
+  /**
+   * Adds lore to this item.
+   *
+   * @param lore lore to add
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder lore(@Nonnull Colors... lore) {
+    List<String> list = new ArrayList<>(lore.length);
+    for (Colors colors : lore) {
+      list.add(colors.toString());
+    }
+    return lore(list);
   }
 
   /**
@@ -443,7 +468,20 @@ public class ItemBuilder {
    *
    * @return this item builder instance, for chaining
    */
-  public ItemBuilder bookTitle(String title) {
+  public ItemBuilder bookTitle(@Nullable Colors title) {
+    return bookTitle(title == null ? null : title.toString());
+  }
+  
+  /**
+   * Sets this book's title, assuming it is a book.
+   * <p />
+   * <b>UNSAFE</b>
+   *
+   * @param title title to set
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder bookTitle(@Nullable String title) {
     if (isBookMeta()) {
       try {
         ((BookMeta) this.itemMeta).setTitle(title);
@@ -454,6 +492,19 @@ public class ItemBuilder {
       }
     }
     return this;
+  }
+
+  /**
+   * Sets this book's author, assuming it is a book.
+   * <p />
+   * <b>UNSAFE</b>
+   *
+   * @param author author to set
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder bookAuthor(@Nullable Colors author) {
+    return bookAuthor(author == null ? null : author.toString());
   }
 
   /**
@@ -477,6 +528,19 @@ public class ItemBuilder {
     }
     return this;
   }
+  /**
+   * Sets this a page index in this book, assuming it is a book.
+   * <p />
+   * <b>UNSAFE</b>
+   *
+   * @param index index of the page to set
+   * @param data page data to set
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder bookSetPage(int index, @Nullable Colors data) {
+    return bookSetPage(index, data == null ? null : data.toString());
+  }
 
   /**
    * Sets this a page index in this book, assuming it is a book.
@@ -499,6 +563,26 @@ public class ItemBuilder {
       }
     }
     return this;
+  }
+  
+  /**
+   * Sets this book's pages, assuming it is a book.
+   * <p />
+   * <b>Note: This is a clear and write operation, for appending, see {@link
+   * #bookAdd(String...)}</b>
+   * <p />
+   * <b>UNSAFE</b>
+   *
+   * @param pages pages to set
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder bookSet(@Nullable Colors... pages) {
+    String[] array = new String[pages == null ? 0 : pages.length];
+    for (int i = 0; i < array.length; i++) {
+      array[i] = pages[i].toString();
+    }
+    return bookSet(array);
   }
 
   /**
@@ -530,6 +614,23 @@ public class ItemBuilder {
       }
     }
     return this;
+  }
+
+  /**
+   * Adds pages to this book, assuming it is a book.
+   * <p />
+   * <b>UNSAFE</b>
+   *
+   * @param pages pages to add
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder bookAdd(@Nonnull Colors... pages) {
+    List<String> list = new ArrayList<>(pages.length);
+    for (Colors colors : pages) {
+      list.add(colors.toString());
+    }
+    return lore(list);
   }
 
   /**
