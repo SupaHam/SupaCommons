@@ -1,4 +1,4 @@
-package com.supaham.commons.bukkit.utils;
+package com.supaham.commons.bukkit.players;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.lang.Math.PI;
@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
  *
  * @since 0.1
  */
-public class PlayerUtils {
+public class Players {
 
   private static final Predicate<Object> IS_PLAYER = Predicates.instanceOf(Player.class);
   private static final PlayersSupplier SERVER_SUPPLIER = new ServerSupplier(Bukkit.getServer());
@@ -202,7 +202,7 @@ public class PlayerUtils {
     return new PlayersRadiusSupplier(supplier, radius);
   }
 
-  private PlayerUtils() {}
+  private Players() {}
 
   private static class EntityToPlayer implements Function<Entity, Player> {
 
