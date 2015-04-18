@@ -41,7 +41,7 @@ import javax.annotation.Nullable;
 public class PlayerUtils {
 
   private static final Predicate<Object> IS_PLAYER = Predicates.instanceOf(Player.class);
-  private static final PlayersSupplier SERVER_SUPPLIER = new ServerSupplier(null);
+  private static final PlayersSupplier SERVER_SUPPLIER = new ServerSupplier(Bukkit.getServer());
 
   public static Item dropItem(@Nonnull Player player, @Nonnull ItemStack itemStack) {
     return dropItem(player, itemStack, false);
