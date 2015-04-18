@@ -4,8 +4,8 @@ package com.supaham.commons.bukkit;
 
 import com.google.common.base.Preconditions;
 
-import com.supaham.commons.bukkit.utils.PlayerUtils;
-import com.supaham.commons.bukkit.utils.PlayerUtils.PlayersSupplierFor;
+import com.supaham.commons.bukkit.players.Players;
+import com.supaham.commons.bukkit.players.Players.PlayersSupplierFor;
 
 import org.bukkit.Location;
 import org.bukkit.Server;
@@ -48,7 +48,7 @@ public class PlayerTeleportFix implements Listener {
 
     // The following is a playersByRadius wrapper that passes the given player's location
     return new PlayersSupplierFor<Player>() {
-      PlayersSupplierFor<Location> delegate = PlayerUtils.playersByRadius(null, radius);
+      PlayersSupplierFor<Location> delegate = Players.playersByRadius(null, radius);
 
       @Override
       public Collection<? extends Player> get(Player player) {
