@@ -1,8 +1,17 @@
 package com.supaham.commons.bukkit.utils;
 
+import static org.bukkit.block.BlockFace.DOWN;
+import static org.bukkit.block.BlockFace.EAST;
+import static org.bukkit.block.BlockFace.NORTH;
+import static org.bukkit.block.BlockFace.SOUTH;
+import static org.bukkit.block.BlockFace.UP;
+import static org.bukkit.block.BlockFace.WEST;
+
 import com.google.common.base.Preconditions;
 
 import org.bukkit.block.BlockFace;
+
+import java.util.Arrays;
 
 /**
  * Utility methods for working with {@link BlockFace} instances. This class contains methods such
@@ -12,6 +21,8 @@ import org.bukkit.block.BlockFace;
  * @since 0.2
  */
 public class BlockFaceUtils {
+
+  private static BlockFace[] adjacents = new BlockFace[]{NORTH, EAST, WEST, SOUTH, UP, DOWN};
 
   /**
    * Returns whether a {@link BlockFace} is vertical. That is, {@link BlockFace#UP} or
@@ -24,7 +35,7 @@ public class BlockFaceUtils {
    * @see #isHorizontal(BlockFace)
    */
   public static boolean isVertical(BlockFace face) {
-    return face == BlockFace.UP || face == BlockFace.DOWN;
+    return face == UP || face == DOWN;
   }
 
   /**
@@ -63,6 +74,24 @@ public class BlockFaceUtils {
   public static BlockFace getRight(BlockFace face) {
     Preconditions.checkArgument(isHorizontal(face), "block face must be horizontal.");
     return BlockFace.values()[(face.ordinal() + 1) % 4]; // n -> e -> s -> w -> n
+  }
+
+  /**
+   * Returns an array of adjacent {@link BlockFace}s. List:
+   * <p />
+   * <ul>
+   *   <li>{@link BlockFace#NORTH}</li>
+   *   <li>{@link BlockFace#EAST}</li>
+   *   <li>{@link BlockFace#SOUTH}</li>
+   *   <li>{@link BlockFace#WEST}</li>
+   *   <li>{@link BlockFace#UP}</li>
+   *   <li>{@link BlockFace#DOWN}</li>
+   * </ul>
+   *
+   * @return an array
+   */
+  public static BlockFace[] getAdjacents() {
+    return Arrays.copyOf(adjacents, 6);
   }
 
   private BlockFaceUtils() {}
