@@ -220,7 +220,7 @@ public class Players {
 
   public interface PlayerSupplier extends Supplier<Player> {}
 
-  public interface PlayersSupplier extends Supplier<Collection<? extends Player>> {}
+  public interface PlayersSupplier extends Supplier<Collection<Player>> {}
 
   /**
    * Represents a {@link Player} supplier for a specific type.
@@ -251,7 +251,7 @@ public class Players {
     }
 
     @Override
-    public Collection<? extends Player> get() {
+    public Collection<Player> get() {
       ArrayList<Player> players = new ArrayList<>();
       for (Chunk chunk : this.chunks) {
         players.addAll(Collections2.transform(Arrays.asList(chunk.getEntities()),
@@ -270,7 +270,7 @@ public class Players {
     }
 
     @Override
-    public Collection<? extends Player> get() {
+    public Collection<Player> get() {
       return Collections2.transform(this.world.getEntities(), entityToPlayerFunction());
     }
   }
@@ -284,8 +284,8 @@ public class Players {
     }
 
     @Override
-    public Collection<? extends Player> get() {
-      return this.server.getOnlinePlayers();
+    public Collection<Player> get() {
+      return ((Collection<Player>) this.server.getOnlinePlayers());
     }
   }
 
