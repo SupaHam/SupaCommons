@@ -18,4 +18,11 @@ public interface Pausable {
    * @return whether the operation was successful, typically false if the state is already resumed
    */
   boolean resume();
+
+  /**
+   * Returns whether this object is paused.
+   *
+   * @return whether this object is paused
+   */
+  boolean isPaused();
 }

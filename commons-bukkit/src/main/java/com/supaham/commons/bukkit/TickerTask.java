@@ -81,6 +81,11 @@ public abstract class TickerTask implements Runnable, Pausable {
     return true;
   }
 
+  @Override
+  public boolean isPaused() {
+    return paused;
+  }
+
   /**
    * Pauses this {@link TickerTask}. If this task is already paused the call is terminated.
    *
@@ -131,10 +136,6 @@ public abstract class TickerTask implements Runnable, Pausable {
 
   public long getLastTickMillis() {
     return lastTickMillis;
-  }
-
-  public boolean isPaused() {
-    return paused;
   }
 
   /**
