@@ -1,6 +1,7 @@
 package com.supaham.commons.bukkit.serializers;
 
 import com.supaham.commons.bukkit.items.ItemEnchantment;
+import com.supaham.commons.bukkit.potion.Potion;
 import com.supaham.commons.serializers.ListSerializer;
 
 import org.bukkit.Location;
@@ -33,6 +34,8 @@ public class CBSerializers {
     SerializationRegistrar.registerClass(ListLocationSerializer.class);
     SerializationRegistrar.registerClass(ListMaterialDataSerializer.class);
     SerializationRegistrar.registerClass(ListVectorSerializer.class);
+    
+    SerializationRegistrar.registerClass(Potion.class);
   }
 
   public static class ListColorStringSerializer extends ListSerializer<String> {
