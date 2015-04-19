@@ -2,6 +2,8 @@ package com.supaham.commons;
 
 /**
  * Represents an interface for objects that can be named.
+ * 
+ * @since 0.1
  */
 public interface Nameable {
 

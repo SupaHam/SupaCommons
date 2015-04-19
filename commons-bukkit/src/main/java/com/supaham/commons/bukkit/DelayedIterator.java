@@ -22,6 +22,9 @@ import javax.annotation.Nonnull;
  * <p />
  * Although this class extends {@link TickerTask}, delay is not supported as it is unnecessary. The
  * iterator may be controlled through {@link TickerTask}'s state changing methods.
+ *
+ * @see #DelayedIterator(Plugin, Supplier, long)
+ * @since 0.2
  */
 public abstract class DelayedIterator<T> extends TickerTask {
 

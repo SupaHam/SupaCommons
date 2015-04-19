@@ -2,6 +2,8 @@ package com.supaham.commons;
 
 /**
  * Represents am object with the ability to pause and resume.
+ * 
+ * @since 0.2
  */
 public interface Pausable {
 
