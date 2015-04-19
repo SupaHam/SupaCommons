@@ -2,6 +2,8 @@ package com.supaham.commons.bukkit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.supaham.commons.Pausable;
+
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -16,7 +18,7 @@ import javax.annotation.Nonnull;
  *
  * @since 0.1
  */
-public abstract class TickerTask implements Runnable {
+public abstract class TickerTask implements Runnable, Pausable {
 
   private final Plugin plugin;
   private final long delay;
@@ -80,28 +82,30 @@ public abstract class TickerTask implements Runnable {
   }
 
   /**
-   * Resumes this {@link TickerTask}. If this task is not paused the call is terminated.
-   *
-   * @return true if this task's state was changed to resumed
-   */
-  public boolean resume() {
-    if (!isStarted() || !this.paused) {
-      return false;
-    }
-    this.paused = false;
-    return true;
-  }
-
-  /**
    * Pauses this {@link TickerTask}. If this task is already paused the call is terminated.
    *
    * @return true if this task's state was changed to paused
    */
+  @Override
   public boolean pause() {
     if (!isStarted() || this.paused) {
       return false;
     }
     this.paused = true;
+    return true;
+  }
+
+  /**
+   * Resumes this {@link TickerTask}. If this task is not paused the call is terminated.
+   *
+   * @return true if this task's state was changed to resumed
+   */
+  @Override
+  public boolean resume() {
+    if (!isStarted() || !this.paused) {
+      return false;
+    }
+    this.paused = false;
     return true;
   }
 
