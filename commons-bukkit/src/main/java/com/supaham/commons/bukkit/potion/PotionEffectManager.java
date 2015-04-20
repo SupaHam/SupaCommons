@@ -387,10 +387,7 @@ public class PotionEffectManager implements Pausable {
       try {
         return new PotionEffect(type, duration, this.potion.getAmplifier(), this.potion.isAmbient(),
                                 this.potion.isSpawningParticles());
-      } catch (Exception e) { // 1.7
-        if (!(e instanceof NoSuchMethodException)) {
-          e.printStackTrace();
-        }
+      } catch (NoSuchMethodError e) { // 1.7
         return new PotionEffect(type, duration, this.potion.getAmplifier(),
                                 this.potion.isAmbient());
       }
