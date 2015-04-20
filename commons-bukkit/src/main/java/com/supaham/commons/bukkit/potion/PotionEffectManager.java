@@ -112,7 +112,8 @@ public class PotionEffectManager implements Pausable {
   }
 
   /**
-   * Stops this manager. Please note that this call does not clear any existing potions.
+   * Stops this manager. Please note that this call does not clear any existing potions. See 
+   * {@link #clearAll()}.
    *
    * @return whether there was a change in state, true if the task has stopped, false if it hasn't,
    * which may be due to it already being inactive
