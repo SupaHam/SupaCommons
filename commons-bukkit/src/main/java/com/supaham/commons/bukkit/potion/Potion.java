@@ -5,7 +5,7 @@ import pluginbase.config.annotation.Name;
 /**
  * Represents a minecraft potion, with some custom fields utilized by {@link PotionEffectManager}.
  * Each getter and setter for the custom fields say what they actually do for the manager. This
- * class supports serialization through PluginBase. 
+ * class supports serialization through PluginBase.
  *
  * @see PotionEffectManager
  * @since 0.2
@@ -85,6 +85,31 @@ public class Potion {
     this.amplifier = amplifier;
     this.ambient = ambient;
     this.spawningParticles = particles;
+  }
+
+  @Override
+  public String toString() {
+    return "Potion{" +
+           "potionId=" + potionId +
+           ", amplifier=" + amplifier +
+           ", duration=" + duration +
+           ", ambient=" + ambient +
+           ", spawningParticles=" + spawningParticles +
+           ", reapplyTicks=" + reapplyTicks +
+           ", hidingDuration=" + hidingDuration +
+           ", deathPersistent=" + deathPersistent +
+           ", sessionPersistent=" + sessionPersistent +
+           '}';
+  }
+
+  /**
+   * Makes this potion infinite by setting its duration to {@link Integer#MAX_VALUE}.
+   *
+   * @return this potion instance for chaining
+   */
+  public Potion infinite() {
+    this.duration = Integer.MAX_VALUE;
+    return this;
   }
 
   /**
