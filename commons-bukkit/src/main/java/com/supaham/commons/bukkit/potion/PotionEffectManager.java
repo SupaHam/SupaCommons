@@ -3,13 +3,13 @@ package com.supaham.commons.bukkit.potion;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import com.google.common.collect.Table.Cell;
 
 import com.supaham.commons.Pausable;
 import com.supaham.commons.bukkit.TickerTask;
 import com.supaham.commons.utils.TimeUtils;
 
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -112,7 +112,7 @@ public class PotionEffectManager implements Pausable {
   }
 
   /**
-   * Stops this manager. Please note that this call does not clear any existing potions. See 
+   * Stops this manager. Please note that this call does not clear any existing potions. See
    * {@link #clearAll()}.
    *
    * @return whether there was a change in state, true if the task has stopped, false if it hasn't,
@@ -186,6 +186,66 @@ public class PotionEffectManager implements Pausable {
     }
     data.apply(entity, true); // always force the first application
     this.entityEffects.put(entity.getUniqueId(), potion.getPotionId(), data);
+  }
+
+  /**
+   * Handles a {@link Player} leaving the game. This clears any registered effects to the manager
+   * as well as the effects applied to the player by this manager.
+   *
+   * @param player player to handle
+   */
+  public void handleSessionQuit(Player player) {
+    Iterator<PotionData> it = this.entityEffects.row(player.getUniqueId()).values().iterator();
+    while (it.hasNext()) {
+      // Remove potion effects that are not death persistent.
+      PotionData data = it.next();
+      player.removePotionEffect(data.type); // remove all effects
+      if (!data.potion.isSessionPersistent()) {
+        it.remove();
+      }
+    }
+  }
+
+  /**
+   * Handles the death of an entity by {@link UUID}. This merely clears any registered effects as
+   * the potions themselves are already removed on death.
+   *
+   * @param uuid uuid of the entity to handle
+   */
+  public void handleDeath(UUID uuid) {
+    Iterator<PotionData> it = this.entityEffects.row(uuid).values()
+        .iterator();
+    while (it.hasNext()) {
+      // Remove potion effects that are not death persistent.
+      PotionData data = it.next();
+      if (!data.potion.isDeathPersistent()) {
+        it.remove();
+      }
+    }
+  }
+
+  /**
+   * Handles the effect expiration of an entity by {@link UUID}. If an effect has expired, this
+   * will clear the effect registration from the manager as well as the effects applied to the
+   * player by this manager. Otherwise, it will attempt to apply the effect, assuming the entity is
+   * not null, using {@link PotionData#apply(LivingEntity)}.
+   *
+   * @param uuid uuid of the entity to handle
+   */
+  public void handleExpire(UUID uuid) {
+    LivingEntity entity = getEntityByUUID(uuid);
+    Iterator<PotionData> it = this.entityEffects.row(uuid).values().iterator();
+    while (it.hasNext()) {
+      PotionData data = it.next();
+      if (data.isDone()) {
+        it.remove();
+        if (entity != null) {
+          entity.removePotionEffect(data.type);
+        }
+      } else {
+        data.apply(entity);
+      }
+    }
   }
 
   /**
@@ -357,7 +417,7 @@ public class PotionEffectManager implements Pausable {
     public boolean isPaused() {
       return this.pausedAt > -1;
     }
-    
+
     public boolean isDone() {
       return this.expires > -1 && System.currentTimeMillis() - this.expires >= 0;
     }
@@ -403,21 +463,14 @@ public class PotionEffectManager implements Pausable {
   private final class EffectApplyingTask extends TickerTask {
 
     public EffectApplyingTask(long delay, long interval) {
-      super(plugin, delay, interval);
+      super(PotionEffectManager.this.plugin, delay, interval);
     }
 
     @Override
     public void run() {
-      Iterator<Cell<UUID, Integer, PotionData>> it = entityEffects.cellSet().iterator();
-      while (it.hasNext()) {
-        Cell<UUID, Integer, PotionData> cell = it.next();
-        PotionData data = cell.getValue();
-        if (data.isDone()) {
-          it.remove();
-          getEntityByUUID(cell.getRowKey()).removePotionEffect(data.type);
-        } else {
-          data.apply(getEntityByUUID(cell.getRowKey()));
-        }
+      Iterator<UUID> it = PotionEffectManager.this.entityEffects.rowKeySet().iterator();
+      while (it.hasNext()) { // iterator in case removals during the handle process
+        handleExpire(it.next());
       }
     }
   }
@@ -426,29 +479,12 @@ public class PotionEffectManager implements Pausable {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-      Iterator<PotionData> it = entityEffects.row(event.getPlayer().getUniqueId()).values()
-          .iterator();
-      while (it.hasNext()) {
-        // Remove potion effects that are not session persistent.
-        PotionData data = it.next();
-        event.getPlayer().removePotionEffect(data.type); // remove all effects
-        if (!data.potion.isSessionPersistent()) {
-          it.remove();
-        }
-      }
+      handleSessionQuit(event.getPlayer());
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-      Iterator<PotionData> it = entityEffects.row(event.getEntity().getUniqueId()).values()
-          .iterator();
-      while (it.hasNext()) {
-        // Remove potion effects that are not death persistent.
-        PotionData data = it.next();
-        if (!data.potion.isDeathPersistent()) {
-          it.remove();
-        }
-      }
+      handleDeath(event.getEntity().getUniqueId());
     }
   }
 }
