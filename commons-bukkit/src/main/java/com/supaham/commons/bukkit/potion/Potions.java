@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 public class Potions {
 
   private static final Potion
-      NO_JUMP = new Potion(PotionEffectType.JUMP.getId(), 600, 127),
+      NO_JUMP = new Potion(PotionEffectType.JUMP.getId(), 600, 128),
       NO_WALK = new Potion(PotionEffectType.SLOW.getId(), 600, 6);
 
   /**
