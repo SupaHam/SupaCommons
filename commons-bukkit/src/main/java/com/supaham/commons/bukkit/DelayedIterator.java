@@ -22,6 +22,13 @@ import javax.annotation.Nonnull;
  * <p />
  * Although this class extends {@link TickerTask}, delay is not supported as it is unnecessary. The
  * iterator may be controlled through {@link TickerTask}'s state changing methods.
+ * <p />
+ * Although this class has the word iterator in it, it is anything but {@link Iterator}. Since
+ * the whole iteration is delayed, the implementation of {@link Iterator} would be invalid for the
+ * following reasons: this class does not support element removals (write), only read. And the
+ * {@link Iterator} requires {@link Iterator#next()}, which does exist in this class
+ * ({@link #next()}), but is NOT recommended to be used as it may cause instability issues across 
+ * implementations, but is there for whatever reason someone might wish to use it for.
  *
  * @see #DelayedIterator(Plugin, Supplier, long)
  * @since 0.2
@@ -116,5 +123,14 @@ public abstract class DelayedIterator<T> extends TickerTask {
     T next = this.iterator.next();
     onRun(next);
     return next;
+  }
+
+  /**
+   * Gets the collection {@link Supplier} of this delayed iterator.
+   *
+   * @return supplier of a collection
+   */
+  public Supplier<Collection<T>> getSupplier() {
+    return supplier;
   }
 }
