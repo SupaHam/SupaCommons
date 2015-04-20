@@ -71,7 +71,8 @@ public class LocationUtils {
   /**
    * Serializes a {@link Location} in the form of 'world x y z yaw pitch'. The x, y, and z
    * coordinates are rounded to <em>two</em> decimal places. The yaw and the pitch are rounded to
-   * <em>three</em> decimal places. If the yaw and/or pitch are true but their values are ZERO, they
+   * <em>three</em> decimal places. If the yaw and/or pitch are true but their values are ZERO,
+   * they
    * will be set to false, removing it from the serialized string that is returned. <p/>
    * <b>NOTE</b>: This is equivalent to calling {@code serialize(Location, true)}
    *
@@ -88,7 +89,8 @@ public class LocationUtils {
   /**
    * Serializes a {@link Location} in the form of 'world x y z yaw pitch'. The x, y, and z
    * coordinates are rounded to <em>two</em> decimal places. The yaw and the pitch are rounded to
-   * <em>three</em> decimal places. If the yaw and/or pitch are true but their values are ZERO, they
+   * <em>three</em> decimal places. If the yaw and/or pitch are true but their values are ZERO,
+   * they
    * will be set to false, removing it from the serialized string that is returned. <p/>
    * <b>NOTE</b>: This is equivalent to calling {@code serialize(Location, direction, direction)}
    *
@@ -106,7 +108,8 @@ public class LocationUtils {
   /**
    * Serializes a {@link Location} in the form of 'world x y z yaw pitch'. The x, y, and z
    * coordinates are rounded to <em>two</em> decimal places. The yaw and the pitch are rounded to
-   * <em>three</em> decimal places. If the yaw and/or pitch are true but their values are ZERO, they
+   * <em>three</em> decimal places. If the yaw and/or pitch are true but their values are ZERO,
+   * they
    * will be set to false, removing it from the serialized string that is returned.
    *
    * @param location location to serialize
@@ -126,7 +129,8 @@ public class LocationUtils {
   }
 
   /**
-   * Returns a new random {@link Location} that is within two given Locations. This is equivalent to
+   * Returns a new random {@link Location} that is within two given Locations. This is equivalent
+   * to
    * calling #getRandomLocationWithin(Location, Location, boolean) with the boolean as false.
    *
    * @param min minimum location of a cuboid region
@@ -141,7 +145,8 @@ public class LocationUtils {
   }
 
   /**
-   * Returns a new random {@link Location} that is within two given Locations. This is equivalent to
+   * Returns a new random {@link Location} that is within two given Locations. This is equivalent
+   * to
    * calling #getRandomLocationWithin(Random, Location, Location, boolean) using {@link
    * RandomUtils#getRandom()} and the boolean as false.
    *
@@ -160,7 +165,8 @@ public class LocationUtils {
   }
 
   /**
-   * Returns a new random {@link Location} that is within two given Locations. This is equivalent to
+   * Returns a new random {@link Location} that is within two given Locations. This is equivalent
+   * to
    * calling #getRandomLocationWithin(Random, Location, Location, boolean) with the boolean as
    * false.
    *
@@ -238,8 +244,8 @@ public class LocationUtils {
   }
 
   /**
-   * Checks if two {@link Vector} instances are within the same block. If both of them are null,
-   * true is returned.
+   * Checks if two {@link Location} instances are within the same block. If both of them are null,
+   * true is returned. If either one is null, false is returned.
    *
    * @param l1 first location to match with {@code l2}
    * @param l2 second location to match with {@code l1}
@@ -251,5 +257,23 @@ public class LocationUtils {
   public static boolean isSameBlock(@Nullable Location l1, @Nullable Location l2) {
     return VectorUtils.isSameBlock(l1 != null ? l1.toVector() : null,
                                    l2 != null ? l2.toVector() : null);
+  }
+
+  /**
+   * Checks if two {@link Location} instances are the same coordinates. If both of them are null,
+   * true is returned. If either one is null, false is returned.
+   *
+   * @param l1 first location to match with {@code l2}, nullable
+   * @param l2 second location to match with {@code l1}, nullable
+   *
+   * @return whether both locations are the same coordinates
+   */
+  public static boolean isSameCoordinates(@Nullable Location l1, @Nullable Location l2) {
+    if (l1 == null && l2 == null) {
+      return true;
+    } else if (l1 == null || l2 == null) {
+      return false;
+    }
+    return l1.getX() == l2.getX() && l1.getY() == l2.getY() && l1.getZ() == l2.getZ();
   }
 }
