@@ -319,7 +319,7 @@ public class PotionEffectManager implements Pausable {
 
     private final Potion potion;
     private final PotionEffectType type;
-    private long expires;
+    private long expires = -1; // infinite by default
     private long firstApply = -1;
     private long lastApply = -1; // don't reapply the potion by default.
     private long pausedAt = -1;
@@ -335,7 +335,9 @@ public class PotionEffectManager implements Pausable {
       if (this.potion.getReapplyTicks() > 0) {
         this.lastApply = 0; // allow reapplications of this effect
       }
-      this.expires = System.currentTimeMillis() + (potion.getDuration() * 50);
+      if (potion.getDuration() != Integer.MAX_VALUE) {
+        this.expires = System.currentTimeMillis() + ((long) potion.getDuration() * 50);
+      }
     }
 
     @Override
@@ -354,6 +356,10 @@ public class PotionEffectManager implements Pausable {
     @Override
     public boolean isPaused() {
       return this.pausedAt > -1;
+    }
+    
+    public boolean isDone() {
+      return this.expires > -1 && System.currentTimeMillis() - this.expires >= 0;
     }
 
     // TODO should these methods be public?
@@ -406,7 +412,7 @@ public class PotionEffectManager implements Pausable {
       while (it.hasNext()) {
         Cell<UUID, Integer, PotionData> cell = it.next();
         PotionData data = cell.getValue();
-        if (System.currentTimeMillis() - data.expires >= 0) {
+        if (data.isDone()) {
           it.remove();
           getEntityByUUID(cell.getRowKey()).removePotionEffect(data.type);
         } else {
