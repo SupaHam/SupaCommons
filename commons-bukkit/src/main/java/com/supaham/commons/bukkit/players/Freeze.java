@@ -36,6 +36,10 @@ import javax.annotation.Nonnull;
  * Since this code does modify a player's walk speed when they get frozen, if for whatever case
  * the player retains the zero walk speed, you may use {@link PlayerListeners#defaultSpeeds(Plugin)}
  * in order to reset their default walk and flight speed on join.
+ *
+ * <p/>
+ * This effect does not carry across sessions as the player is immediately unfrozen upon quitting
+ * the game.
  */
 public class Freeze extends CommonModule {
 
@@ -43,21 +47,39 @@ public class Freeze extends CommonModule {
 
   private final Map<Player, PlayerData> frozenPlayers = new HashMap<>();
   private final Listener listener = new PlayerListener();
+  private final TickerTask expiryTask;
   private final PotionEffectManager potionEffectManager;
-  private TickerTask expiryTask;
 
+  /**
+   * Constructs a new {@link Freeze}. This is equivalent to calling {@link #Freeze(ModuleContainer,
+   * long)} with the {@code long} parameter as 1.
+   *
+   * @param container module container to own this module.
+   *
+   * @see #Freeze(ModuleContainer, long)
+   * @see #freeze(Player, int)
+   */
   public Freeze(@Nonnull ModuleContainer container) {
     this(container, 1);
   }
 
+  /**
+   * Constructs a new {@link Freeze}. The long parameter is how often (in ticks) the expiry
+   * checking task should run, by default it's 1.
+   *
+   * @param container module container to own this module
+   * @param interval interval of the expiry checking task
+   *
+   * @see #freeze(Player, int)
+   */
   public Freeze(@Nonnull ModuleContainer container, long interval) {
     super(container);
+    this.expiryTask = new ExpiryTask(0, interval);
     PotionEffectManager pem = this.container.getModule(PotionEffectManager.class);
     this.potionEffectManager = pem == null ? new PotionEffectManager(container) : pem;
     if (pem == null) { // we created our own freeze.
       this.potionEffectManager.setState(State.ACTIVE);
     }
-    this.expiryTask = new ExpiryTask(0, interval);
   }
 
   @Override
@@ -85,16 +107,54 @@ public class Freeze extends CommonModule {
     return change;
   }
 
+  /**
+   * Freezes a {@link Player}, completely stopping them from moving, infinitely. This is equivalent
+   * to calling {@link #freeze(Player, int)} with the {@code long} parameter as -1.
+   * <p />
+   * This effect does not carry across sessions as the player is immediately unfrozen upon quitting
+   * the game.
+   *
+   * @param player player to freeze
+   */
   public void freeze(@Nonnull Player player) {
     freeze(player, -1);
   }
 
-  public void freeze(@Nonnull Player player, long expiry) {
-    freeze(player, expiry, false);
+  /**
+   * Freezes a {@link Player}, completely stopping them from moving. The duration is in ticks, if
+   * set to anything smaller than 0, the effect will be infinite.
+   * This is equivalent to calling {@link #freeze(Player, int, boolean)} with the {@code boolean}
+   * parameter as false.
+   * <p />
+   * This effect does not carry across sessions as the player is immediately unfrozen upon quitting
+   * the game.
+   *
+   * @param player player to freeze
+   * @param duration duration (in ticks) of this effect
+   */
+  public void freeze(@Nonnull Player player, int duration) {
+    freeze(player, duration, false);
   }
 
-  public void freeze(@Nonnull Player player, long expiry, boolean turningAllowed) {
-    this.frozenPlayers.put(player, new PlayerData(player, expiry, turningAllowed));
+  /**
+   * Freezes a {@link Player}, completely stopping them from moving. The duration is in ticks, if
+   * set to anything smaller than 0, the effect will be infinite. If {@code turningAllowed} is
+   * true, then the player may look around them, but still be frozen in their block coordinates.
+   *
+   * <p />
+   * This effect does not carry across sessions as the player is immediately unfrozen upon quitting
+   * the game.
+   *
+   * @param player player to freeze
+   * @param duration duration (in ticks) of this effect
+   * @param turningAllowed whether to allow the player to look around, but still not move
+   */
+  public void freeze(@Nonnull Player player, int duration, boolean turningAllowed) {
+    PlayerData data = this.frozenPlayers.get(player);
+    if (data != null) {
+      data.setExpires(duration);
+    }
+    this.frozenPlayers.put(player, new PlayerData(player, duration, turningAllowed));
     this.potionEffectManager.apply(NO_JUMP, player);
     player.setWalkSpeed(0);
     player.setFlySpeed(0);
@@ -102,13 +162,21 @@ public class Freeze extends CommonModule {
     player.setFlying(true);
   }
 
+  /**
+   * Unfreezes a {@link Player}, undoing any changes applied by this effect.
+   *
+   * @param player player to unfreeze
+   *
+   * @return whether the player was unfrozen
+   */
   public boolean unfreeze(@Nonnull Player player) {
     return unfreeze(player, this.frozenPlayers.remove(player));
   }
 
   private boolean unfreeze(@Nonnull Player player, PlayerData data) {
     if (data != null) {
-      data.apply(player);
+      data.applyDefaults(player);
+      this.potionEffectManager.clear(player, NO_JUMP.getPotionId());
     }
     return data != null;
   }
@@ -162,7 +230,6 @@ public class Freeze extends CommonModule {
 
   private final class PlayerData {
 
-    private final long expiry;
     // player's state prior to being frozen
     private final float walkSpeed;
     private final float flySpeed;
@@ -170,16 +237,19 @@ public class Freeze extends CommonModule {
     private final boolean flying;
     private final boolean turningAllowed;
 
-    public PlayerData(Player player, long expiry, boolean turningAllowed) {
-      this.expiry = expiry;
+    private long expires = -1;
+
+    public PlayerData(Player player, int duration, boolean turningAllowed) {
+      this.expires = duration;
       this.walkSpeed = player.getWalkSpeed();
       this.flySpeed = player.getFlySpeed();
       this.allowFlight = player.getAllowFlight();
       this.flying = player.isFlying();
       this.turningAllowed = turningAllowed;
+      setExpires(duration);
     }
 
-    public void apply(Player player) {
+    public void applyDefaults(Player player) {
       player.setWalkSpeed(this.walkSpeed);
       player.setFlySpeed(this.flySpeed);
       player.setAllowFlight(this.allowFlight);
@@ -187,7 +257,15 @@ public class Freeze extends CommonModule {
     }
 
     public boolean isDone() {
-      return this.expiry > -1 && System.currentTimeMillis() - this.expiry >= 0;
+      return this.expires > -1 && System.currentTimeMillis() - this.expires >= 0;
+    }
+
+    public void setExpires(int duration) {
+      if (duration < 0 || duration != Integer.MAX_VALUE) {
+        this.expires = System.currentTimeMillis() + ((long) duration * 50);
+      } else {
+        this.expires = -1;
+      }
     }
   }
 }
