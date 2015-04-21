@@ -41,6 +41,10 @@ import javax.annotation.Nonnull;
  * <p/>
  * This effect does not carry across sessions as the player is immediately unfrozen upon quitting
  * the game.
+ *
+ * @see #Freeze(ModuleContainer)
+ * @see #freeze(Player)
+ * @since 0.2
  */
 public class Freeze extends CommonModule {
 
@@ -116,6 +120,10 @@ public class Freeze extends CommonModule {
    * the game.
    *
    * @param player player to freeze
+   *
+   * @see #freeze(Player, int)
+   * @see #freeze(Player, int, boolean)
+   * @see #unfreeze(Player) 
    */
   public void freeze(@Nonnull Player player) {
     freeze(player, -1);
@@ -132,6 +140,9 @@ public class Freeze extends CommonModule {
    *
    * @param player player to freeze
    * @param duration duration (in ticks) of this effect
+   *
+   * @see #freeze(Player, int, boolean)
+   * @see #unfreeze(Player)
    */
   public void freeze(@Nonnull Player player, int duration) {
     freeze(player, duration, false);
@@ -149,6 +160,8 @@ public class Freeze extends CommonModule {
    * @param player player to freeze
    * @param duration duration (in ticks) of this effect
    * @param turningAllowed whether to allow the player to look around, but still not move
+   * 
+   * @see #unfreeze(Player)
    */
   public void freeze(@Nonnull Player player, int duration, boolean turningAllowed) {
     PlayerData data = this.frozenPlayers.get(player);
