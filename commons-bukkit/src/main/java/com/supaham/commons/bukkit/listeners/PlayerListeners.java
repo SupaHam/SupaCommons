@@ -61,8 +61,12 @@ public class PlayerListeners {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
       if (predicate == null || predicate.apply(event.getPlayer())) {
-        event.getPlayer().setWalkSpeed(Players.DEFAULT_WALK_SPEED);
-        event.getPlayer().setFlySpeed(Players.DEFAULT_FLY_SPEED);
+        if (event.getPlayer().getWalkSpeed() != Players.DEFAULT_WALK_SPEED) {
+          event.getPlayer().setWalkSpeed(Players.DEFAULT_WALK_SPEED);
+        }
+        if (event.getPlayer().getFlySpeed() != Players.DEFAULT_FLY_SPEED) {
+          event.getPlayer().setFlySpeed(Players.DEFAULT_FLY_SPEED);
+        }
       }
     }
   }
