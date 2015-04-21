@@ -40,6 +40,9 @@ import javax.annotation.Nullable;
  */
 public class Players {
 
+  public static final float DEFAULT_FLY_SPEED = 0.1f;
+  public static final float DEFAULT_WALK_SPEED = 0.2f;
+  
   private static final Predicate<Object> IS_PLAYER = Predicates.instanceOf(Player.class);
   private static final PlayersSupplier SERVER_SUPPLIER = new ServerSupplier(Bukkit.getServer());
 
