@@ -215,7 +215,7 @@ public class Freeze extends CommonModule {
       }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
       unfreeze(event.getPlayer());
     }
