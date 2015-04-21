@@ -94,6 +94,58 @@ public class PotionEffectManager extends CommonModule {
   }
 
   /**
+   * Clears a specific effect registered to this manager for a {@link UUID}. If the entity of the
+   * given UUID is active and loaded, the registered effect is removed from them.
+   *
+   * @param entity entity to clear effect from in this manager
+   * @param type type of the effect to remove
+   *
+   * @return whether the entity was located and cleared
+   *
+   * @see #clear(UUID, PotionEffectType)
+   */
+  public boolean clear(@Nonnull LivingEntity entity, PotionEffectType type) {
+    return clear(entity.getUniqueId(), type);
+  }
+
+  /**
+   * Clears a specific effect registered to this manager for a {@link UUID}. If the entity of the
+   * given UUID is active and loaded, the registered effect is removed from them.
+   *
+   * @param uuid uuid to clear effect from in this manager
+   * @param type type of the effect to remove
+   *
+   * @return whether the entity was located and cleared
+   *
+   * @see #clear(UUID, int)
+   */
+  public boolean clear(@Nonnull UUID uuid, PotionEffectType type) {
+    return clear(uuid, type.getId());
+  }
+
+  /**
+   * Clears a specific effect registered to this manager for a {@link UUID}. If the entity of the
+   * given UUID is active and loaded, the registered effect is removed from them.
+   *
+   * @param uuid uuid to clear effect from in this manager
+   * @param potionId potion id of the effect to remove
+   *
+   * @return whether the entity was located and cleared
+   */
+  public boolean clear(@Nonnull UUID uuid, int potionId) {
+    PotionData data = this.entityEffects.remove(uuid, potionId);
+    if (data == null) {
+      return false;
+    }
+    LivingEntity entity = getEntityByUUID(uuid);
+    if (entity == null) {
+      return false;
+    }
+    entity.removePotionEffect(data.type);
+    return true;
+  }
+
+  /**
    * Clears all registered registered potion effects from this manager.
    *
    * @see #clearAll(UUID)
