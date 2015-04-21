@@ -96,11 +96,11 @@ public class PotionEffectManager extends CommonModule {
   /**
    * Clears all registered registered potion effects from this manager.
    *
-   * @see #clear(UUID)
+   * @see #clearAll(UUID)
    */
   public void clearAll() {
     for (UUID uuid : this.entityEffects.rowKeySet()) {
-      clear(uuid);
+      clearAll(uuid);
     }
   }
 
@@ -112,7 +112,7 @@ public class PotionEffectManager extends CommonModule {
    *
    * @return whether the entity was located and cleared
    */
-  public boolean clear(@Nonnull UUID uuid) {
+  public boolean clearAll(@Nonnull UUID uuid) {
     Preconditions.checkNotNull(uuid, "uuid cannot be null.");
     LivingEntity entity = getEntityByUUID(uuid);
     if (entity == null) {
