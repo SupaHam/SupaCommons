@@ -6,15 +6,18 @@ import com.google.common.collect.Table;
 
 import com.supaham.commons.Pausable;
 import com.supaham.commons.bukkit.TickerTask;
+import com.supaham.commons.bukkit.modules.CommonModule;
+import com.supaham.commons.bukkit.modules.ModuleContainer;
+import com.supaham.commons.state.State;
 import com.supaham.commons.utils.TimeUtils;
 
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -41,87 +44,53 @@ import javax.annotation.Nonnull;
  * @see #apply(Potion, LivingEntity)
  * @since 0.2
  */
-public class PotionEffectManager implements Pausable {
+public class PotionEffectManager extends CommonModule {
 
-  private final Plugin plugin;
-  private final TickerTask task;
+  private final TickerTask expiryTask;
   private final Listener listener = new PlayerListener();
   private final Table<UUID, Integer, PotionData> entityEffects = HashBasedTable.create();
-  private boolean paused;
 
   /**
-   * Constructs a new {@link PotionEffectManager} with a {@link Plugin} as the owner. The newly
-   * created {@link PotionEffectManager} automatically calls {@link #start()} to get things
-   * rolling.
+   * Constructs a new {@link PotionEffectManager}.
    *
-   * @param plugin plugin to own the manager
+   * @param container module container to own this module.
    *
    * @see #apply(Potion, LivingEntity)
    */
-  public PotionEffectManager(@Nonnull Plugin plugin) {
-    this.plugin = Preconditions.checkNotNull(plugin, "plugin cannot be null.");
-    this.task = new EffectApplyingTask(0, 1);
-    start();
-    plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+  public PotionEffectManager(@Nonnull ModuleContainer container) {
+    super(container);
+    this.expiryTask = new ExpiryTask(0, 1);
   }
 
   @Override
-  public boolean pause() {
-    if (this.paused) {
-      return false;
-    } else {
-      this.paused = true;
-      for (PotionData data : this.entityEffects.values()) {
-        data.pause();
+  public boolean setState(State state) throws UnsupportedOperationException {
+    State old = this.state;
+    boolean change = super.setState(state);
+    if (change) {
+      switch (state) {
+        case PAUSED:
+          for (PotionData data : this.entityEffects.values()) {
+            data.pause();
+          }
+          this.expiryTask.pause();
+          break;
+        case ACTIVE:
+          if (old == State.PAUSED) { // Only resume if it was previously paused
+            for (PotionData data : this.entityEffects.values()) {
+              data.resume();
+            }
+            this.expiryTask.resume();
+          }
+          this.plugin.registerEvents(this.listener);
+          this.expiryTask.start();
+          break;
+        case STOPPED:
+          this.expiryTask.stop();
+          HandlerList.unregisterAll(this.listener);
+          break;
       }
-      return true;
     }
-  }
-
-  @Override
-  public boolean resume() {
-    if (!this.paused) {
-      return false;
-    } else {
-      this.paused = false;
-      for (PotionData data : this.entityEffects.values()) {
-        data.resume();
-      }
-      return true;
-    }
-  }
-
-  @Override
-  public boolean isPaused() {
-    return this.paused;
-  }
-
-  /**
-   * Starts this manager. Starting the manager is important in order for it to actually manage
-   * effects.
-   * <p />
-   * <b>Note: This method is already called in the constructor</b>
-   *
-   * @return whether there was a change in state, true if the task has started, false if it hasn't,
-   * which may be due to it already being active
-   *
-   * @see #stop()
-   */
-  public boolean start() {
-    return this.task.start();
-  }
-
-  /**
-   * Stops this manager. Please note that this call does not clear any existing potions. See
-   * {@link #clearAll()}.
-   *
-   * @return whether there was a change in state, true if the task has stopped, false if it hasn't,
-   * which may be due to it already being inactive
-   *
-   * @see #start()
-   */
-  public boolean stop() {
-    return this.task.stop();
+    return change;
   }
 
   /**
@@ -181,7 +150,7 @@ public class PotionEffectManager implements Pausable {
 
     potion = new Potion(potion);
     PotionData data = new PotionData(potion);
-    if (this.paused) {
+    if (this.state == State.PAUSED) {
       data.pause();
     }
     data.apply(entity, true); // always force the first application
@@ -372,7 +341,7 @@ public class PotionEffectManager implements Pausable {
 
   private LivingEntity getEntityByUUID(@Nonnull UUID uuid) {
     Preconditions.checkNotNull(uuid, "uuid cannot be null.");
-    return plugin.getServer().getPlayer(uuid);
+    return this.plugin.getServer().getPlayer(uuid);
   }
 
   public static final class PotionData implements Pausable {
@@ -460,9 +429,9 @@ public class PotionEffectManager implements Pausable {
     }
   }
 
-  private final class EffectApplyingTask extends TickerTask {
+  private final class ExpiryTask extends TickerTask {
 
-    public EffectApplyingTask(long delay, long interval) {
+    public ExpiryTask(long delay, long interval) {
       super(PotionEffectManager.this.plugin, delay, interval);
     }
 
