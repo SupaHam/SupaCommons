@@ -94,8 +94,7 @@ public class PotionEffectManager extends CommonModule {
   }
 
   /**
-   * Clears a specific effect registered to this manager for a {@link UUID}. If the entity of the
-   * given UUID is active and loaded, the registered effect is removed from them.
+   * Clears a specific effect registered to this manager for a {@link LivingEntity}.
    *
    * @param entity entity to clear effect from in this manager
    * @param type type of the effect to remove
@@ -106,6 +105,20 @@ public class PotionEffectManager extends CommonModule {
    */
   public boolean clear(@Nonnull LivingEntity entity, PotionEffectType type) {
     return clear(entity.getUniqueId(), type);
+  }
+  
+  /**
+   * Clears a specific effect registered to this manager for a {@link LivingEntity}.
+   *
+   * @param entity entity to clear effect from in this manager
+   * @param potionId potion id of the effect to remove
+   *
+   * @return whether the entity was located and cleared
+   *
+   * @see #clear(UUID, int)
+   */
+  public boolean clear(@Nonnull LivingEntity entity, int potionId) {
+    return clear(entity.getUniqueId(), potionId);
   }
 
   /**
