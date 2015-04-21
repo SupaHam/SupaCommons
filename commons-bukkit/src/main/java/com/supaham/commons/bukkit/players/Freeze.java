@@ -10,6 +10,7 @@ import com.supaham.commons.bukkit.potion.Potions;
 import com.supaham.commons.bukkit.utils.LocationUtils;
 import com.supaham.commons.state.State;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -153,6 +154,8 @@ public class Freeze extends CommonModule {
     PlayerData data = this.frozenPlayers.get(player);
     if (data != null) {
       data.setExpires(duration);
+      data.turningAllowed = turningAllowed;
+      return;
     }
     this.frozenPlayers.put(player, new PlayerData(player, duration, turningAllowed));
     this.potionEffectManager.apply(NO_JUMP, player);
@@ -211,6 +214,11 @@ public class Freeze extends CommonModule {
       PlayerData data = Freeze.this.frozenPlayers.get(event.getPlayer());
       if (data != null && (!data.turningAllowed
                            || !LocationUtils.isSameCoordinates(event.getFrom(), event.getTo()))) {
+        Location tp = event.getFrom();
+        if (data.turningAllowed) {
+          tp.setYaw(event.getTo().getYaw());
+          tp.setPitch(event.getTo().getPitch());
+        }
         event.getPlayer().teleport(event.getFrom());
       }
     }
@@ -235,9 +243,9 @@ public class Freeze extends CommonModule {
     private final float flySpeed;
     private final boolean allowFlight;
     private final boolean flying;
-    private final boolean turningAllowed;
 
     private long expires = -1;
+    private boolean turningAllowed;
 
     public PlayerData(Player player, int duration, boolean turningAllowed) {
       this.expires = duration;
@@ -261,7 +269,7 @@ public class Freeze extends CommonModule {
     }
 
     public void setExpires(int duration) {
-      if (duration < 0 || duration != Integer.MAX_VALUE) {
+      if (duration >= 0 && duration != Integer.MAX_VALUE) {
         this.expires = System.currentTimeMillis() + ((long) duration * 50);
       } else {
         this.expires = -1;
