@@ -1,11 +1,15 @@
 package com.supaham.commons.bukkit.utils;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.material.TrapDoor;
+
+import javax.annotation.Nonnull;
 
 /**
  * Utility methods for working with {@link Block} instances. This class contains methods such as
@@ -14,7 +18,7 @@ import org.bukkit.material.TrapDoor;
  * @since 0.1
  */
 public final class BlockUtils {
-  
+
   /**
    * Checks whether a {@link Block} is a door.
    *
@@ -116,11 +120,12 @@ public final class BlockUtils {
   }
 
   /**
-   * Opens a door {@link Block}. This method takes no action if the given block is not a door, or 
+   * Opens a door {@link Block}. This method takes no action if the given block is not a door, or
    * if it is already open.
    *
    * @param block door block to open
-   * @return whether any action was taken. The cases in which it is false is if the block is not a 
+   *
+   * @return whether any action was taken. The cases in which it is false is if the block is not a
    * door, or the door is already open.
    */
   public static boolean openDoor(Block block) {
@@ -146,11 +151,12 @@ public final class BlockUtils {
   }
 
   /**
-   * Closes a door {@link Block}. This method takes no action if the given block is not a door, or 
+   * Closes a door {@link Block}. This method takes no action if the given block is not a door, or
    * if it is already open.
    *
    * @param block door block to open
-   * @return whether any action was taken. The cases in which it is false is if the block is not a 
+   *
+   * @return whether any action was taken. The cases in which it is false is if the block is not a
    * door, or the door is already closed.
    */
   public static boolean closeDoor(Block block) {
@@ -173,6 +179,22 @@ public final class BlockUtils {
       }
     }
     return false;
+  }
+
+  /**
+   * Returns whether snow may be placed under a {@link Block}.
+   *
+   * @param block block to check
+   *
+   * @return whether snow may be placed
+   */
+  public static boolean canPlaceSnowUnderneath(@Nonnull Block block) {
+    Preconditions.checkNotNull(block, "block cannot be null.");
+    block = block.getRelative(BlockFace.DOWN);
+    byte d = block.getData();
+    Material type = block.getType();
+    return type != Material.ICE && type != Material.PACKED_ICE
+           && (MaterialUtils.isLeaves(type) || (type == Material.SNOW && d >= 7 || type.isSolid()));
   }
 
   private BlockUtils() {}
