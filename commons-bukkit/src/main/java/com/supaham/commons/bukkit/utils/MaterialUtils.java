@@ -12,6 +12,7 @@ import java.util.EnumSet;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Utility methods for working with {@link Material} instances. This class contains methods such as
@@ -382,5 +383,17 @@ public final class MaterialUtils {
         break;
     }
     return new MaterialData(material, data);
+  }
+
+  /**
+   * Returns whether a {@link Material} is a block of leaves. Useful since Minecraft has multiple
+   * leaves blocks with different ids.
+   *
+   * @param material material to check, nullable
+   *
+   * @return whether the given material is leaves
+   */
+  public static boolean isLeaves(@Nullable Material material) {
+    return material != null && (material == Material.LEAVES || material == Material.LEAVES_2);
   }
 }
