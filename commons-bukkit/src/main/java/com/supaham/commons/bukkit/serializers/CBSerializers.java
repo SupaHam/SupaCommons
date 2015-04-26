@@ -2,6 +2,8 @@ package com.supaham.commons.bukkit.serializers;
 
 import com.supaham.commons.bukkit.items.ItemEnchantment;
 import com.supaham.commons.bukkit.potion.Potion;
+import com.supaham.commons.bukkit.serializables.CuboidProperties;
+import com.supaham.commons.bukkit.serializables.Poly2DProperties;
 import com.supaham.commons.serializers.ListSerializer;
 
 import org.bukkit.Location;
@@ -15,11 +17,11 @@ import pluginbase.config.serializers.Serializer;
 /**
  * Contains Bukkit {@link Serializer} classes such as {@link ListColorStringSerializer}, {@link
  * ListLocationSerializer}, and more.
- * 
+ *
  * @since 0.1
  */
 public class CBSerializers {
-  
+
   static {
     SerializationRegistrar.registerClass(ColorStringSerializer.class);
     SerializationRegistrar.registerClass(ComplexItemStackSerializer.class);
@@ -27,15 +29,17 @@ public class CBSerializers {
     SerializationRegistrar.registerClass(LocationSerializer.class);
     SerializationRegistrar.registerClass(MaterialDataSerializer.class);
     SerializationRegistrar.registerClass(VectorSerializer.class);
-    
+
     SerializationRegistrar.registerClass(ListColorStringSerializer.class);
     SerializationRegistrar.registerClass(ListComplexItemStackSerializer.class);
     SerializationRegistrar.registerClass(ListItemEnchantmentSerializer.class);
     SerializationRegistrar.registerClass(ListLocationSerializer.class);
     SerializationRegistrar.registerClass(ListMaterialDataSerializer.class);
     SerializationRegistrar.registerClass(ListVectorSerializer.class);
-    
+
     SerializationRegistrar.registerClass(Potion.class);
+    SerializationRegistrar.registerClass(CuboidProperties.class);
+    SerializationRegistrar.registerClass(Poly2DProperties.class);
   }
 
   public static class ListColorStringSerializer extends ListSerializer<String> {
@@ -58,7 +62,7 @@ public class CBSerializers {
       return ItemEnchantmentSerializer.class;
     }
   }
-  
+
   public static class ListLocationSerializer extends ListSerializer<Location> {
 
     @Override public Class<LocationSerializer> getSerializerClass() {
