@@ -2,8 +2,8 @@ package com.supaham.commons.bukkit.serializers;
 
 import com.supaham.commons.bukkit.items.ItemEnchantment;
 import com.supaham.commons.bukkit.potion.Potion;
-import com.supaham.commons.bukkit.serializables.CuboidProperties;
-import com.supaham.commons.bukkit.serializables.Poly2DProperties;
+import com.supaham.commons.bukkit.area.CuboidRegion;
+import com.supaham.commons.bukkit.area.Poly2DRegion;
 import com.supaham.commons.serializers.ListSerializer;
 
 import org.bukkit.Location;
@@ -38,8 +38,8 @@ public class CBSerializers {
     SerializationRegistrar.registerClass(ListVectorSerializer.class);
 
     SerializationRegistrar.registerClass(Potion.class);
-    SerializationRegistrar.registerClass(CuboidProperties.class);
-    SerializationRegistrar.registerClass(Poly2DProperties.class);
+    SerializationRegistrar.registerClass(CuboidRegion.class);
+    SerializationRegistrar.registerClass(Poly2DRegion.class);
   }
 
   public static class ListColorStringSerializer extends ListSerializer<String> {
