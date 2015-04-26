@@ -6,6 +6,8 @@ import static com.supaham.commons.utils.NumberUtils.roundExact;
 import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 import static java.lang.Double.parseDouble;
 
+import com.google.common.base.Function;
+
 import com.supaham.commons.utils.RandomUtils;
 
 import org.bukkit.Bukkit;
@@ -275,5 +277,26 @@ public class LocationUtils {
       return false;
     }
     return l1.getX() == l2.getX() && l1.getY() == l2.getY() && l1.getZ() == l2.getZ();
+  }
+
+  /**
+   * Gets a {@link Function} which converts a {@link Location} into {@link Vector} by calling
+   * {@link Location#toVector()}.
+   *
+   * @return function
+   */
+  public static Function<Location, Vector> toVectorFunction() {
+    return ToVectorFunction.INSTANCE;
+  }
+
+  private static final class ToVectorFunction implements Function<Location, Vector> {
+
+    public static final ToVectorFunction INSTANCE = new ToVectorFunction();
+
+    @Nullable
+    @Override
+    public Vector apply(@Nullable Location input) {
+      return input == null ? null : input.toVector();
+    }
   }
 }
