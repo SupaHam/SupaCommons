@@ -1,8 +1,11 @@
-package com.supaham.commons.bukkit;
+package com.supaham.commons.bukkit.entities;
 
 import com.google.common.base.Preconditions;
 
-import com.supaham.commons.CMain;
+import com.supaham.commons.bukkit.TickerTask;
+import com.supaham.commons.bukkit.modules.CommonModule;
+import com.supaham.commons.bukkit.modules.ModuleContainer;
+import com.supaham.commons.state.State;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -10,7 +13,6 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.Nonnull;
@@ -25,30 +27,22 @@ import javax.annotation.Nonnull;
  * @see {@link ##EntityTeleporter(Plugin, long)}
  * @since 0.2
  */
-public class EntityTeleporter extends TickerTask {
-
-  private static EntityTeleporter INSTANCE;
+public class EntityTeleporter extends CommonModule implements Runnable {
 
   private final LinkedHashMap<Entity, Location> queuedTeleports = new LinkedHashMap<>();
+  private final TickerTask tickerTask;
 
-  public static EntityTeleporter getInstance() {
-    if (INSTANCE == null) {
-      Map<String, Plugin> hooked = CBukkitMain.get().getHookedPlugins();
-      Preconditions.checkArgument(!hooked.isEmpty(),
-                                  "No plugins hooked into CBukkitMain to create instance");
-      INSTANCE = new EntityTeleporter(hooked.values().iterator().next());
-      CMain.getLogger().fine("Created " + INSTANCE + " using plugin "
-                             + INSTANCE.getPlugin().getName());
-    }
-    return INSTANCE;
+  public EntityTeleporter(@Nonnull ModuleContainer container) {
+    this(container, 1);
   }
 
-  public EntityTeleporter(@Nonnull Plugin plugin) {
-    this(plugin, 1);
-  }
-
-  public EntityTeleporter(@Nonnull Plugin plugin, long interval) {
-    super(plugin, 0, interval);
+  public EntityTeleporter(@Nonnull ModuleContainer container, long interval) {
+    super(container);
+    this.tickerTask = new TickerTask(plugin, 0, interval) {
+      @Override public void run() {
+        EntityTeleporter.this.run();
+      }
+    };
   }
 
   @Override
@@ -59,6 +53,25 @@ public class EntityTeleporter extends TickerTask {
       entry.getKey().teleport(entry.getValue());
       it.remove();
     }
+  }
+
+  @Override
+  public boolean setState(State state) throws UnsupportedOperationException {
+    if (super.setState(state)) {
+      switch (state) {
+        case PAUSED:
+          this.tickerTask.pause();
+          break;
+        case ACTIVE:
+          this.tickerTask.start();
+          break;
+        case STOPPED:
+          this.tickerTask.stop();
+          break;
+      }
+      return true;
+    }
+    return false;
   }
 
   public boolean contains(Entity entity) {

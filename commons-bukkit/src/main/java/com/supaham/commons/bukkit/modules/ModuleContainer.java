@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import com.supaham.commons.bukkit.CommonPlugin;
 import com.supaham.commons.bukkit.ServerShutdown;
 import com.supaham.commons.bukkit.entities.EntityRemover;
+import com.supaham.commons.bukkit.entities.EntityTeleporter;
 import com.supaham.commons.bukkit.players.Freeze;
 import com.supaham.commons.bukkit.potion.PotionEffectManager;
 import com.supaham.commons.state.State;
@@ -43,6 +44,7 @@ public class ModuleContainer {
     modules.add(new Freeze(this));
     modules.add(new PotionEffectManager(this));
     modules.add(new EntityRemover(this));
+    modules.add(new EntityTeleporter(this));
     modules.add(new ServerShutdown(this));
 
     for (Module module : modules) {
