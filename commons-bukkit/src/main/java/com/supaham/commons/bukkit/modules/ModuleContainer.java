@@ -3,9 +3,16 @@ package com.supaham.commons.bukkit.modules;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.CommonPlugin;
+import com.supaham.commons.bukkit.ServerShutdown;
+import com.supaham.commons.bukkit.entities.EntityRemover;
+import com.supaham.commons.bukkit.players.Freeze;
+import com.supaham.commons.bukkit.potion.PotionEffectManager;
+import com.supaham.commons.state.State;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -21,6 +28,34 @@ public class ModuleContainer {
 
   public ModuleContainer(@Nonnull CommonPlugin plugin) {
     this.plugin = Preconditions.checkNotNull(plugin, "plugin cannot be null.");
+  }
+
+  /**
+   * Registers all the supa-commons modules to this module container. The {@code activateAll}
+   * boolean dictates whether the method should also set the module's state to {@link
+   * State#ACTIVE}.
+   *
+   * @param activateAll whether to activate all registered defaults
+   */
+  public void registerAll(boolean activateAll) {
+    List<Module> modules = new ArrayList<>();
+
+    modules.add(new Freeze(this));
+    modules.add(new PotionEffectManager(this));
+    modules.add(new EntityRemover(this));
+    modules.add(new ServerShutdown(this));
+
+    for (Module module : modules) {
+      Module registered = register(module);
+      if (registered == null || registered != module) { // registered
+        if (activateAll) {
+          try {
+            module.setState(State.ACTIVE);
+          } catch (UnsupportedOperationException ignored) {
+          }
+        }
+      }
+    }
   }
 
   /**
