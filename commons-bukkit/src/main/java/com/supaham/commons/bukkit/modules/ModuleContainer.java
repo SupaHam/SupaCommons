@@ -49,7 +49,14 @@ public class ModuleContainer {
   public Module register(@Nonnull Class<? extends Module> clazz, @Nonnull Module module) {
     Preconditions.checkNotNull(clazz, "class cannot be null.");
     Preconditions.checkNotNull(module, "module cannot be null.");
-    return this.modules.put(clazz, module);
+    Module old = this.modules.put(clazz, module);
+    if (old != null && old != module) {
+      try {
+        old.setState(State.STOPPED);
+      } catch (UnsupportedOperationException ignored) {
+      }
+    }
+    return old;
   }
 
   /**
@@ -77,7 +84,14 @@ public class ModuleContainer {
   @Nullable
   public Module unregister(@Nonnull Class<? extends Module> clazz) {
     Preconditions.checkNotNull(clazz, "class cannot be null.");
-    return this.modules.remove(clazz);
+    Module old = this.modules.remove(clazz);
+    if (old != null) {
+      try {
+        old.setState(State.STOPPED);
+      } catch (UnsupportedOperationException ignored) {
+      }
+    }
+    return old;
   }
 
   /**
