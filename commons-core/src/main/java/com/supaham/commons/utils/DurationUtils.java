@@ -1,16 +1,12 @@
 package com.supaham.commons.utils;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-
-import com.google.common.math.LongMath;
 
 import com.supaham.commons.exceptions.DurationParseException;
 
 import org.joda.time.Duration;
 
 import java.util.Random;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
@@ -22,10 +18,6 @@ import javax.annotation.Nonnull;
  * @since 0.1
  */
 public class DurationUtils {
-
-  public static final Pattern PATTERN =
-      Pattern.compile("(?=\\b\\d+[DHMS])(?:([0-9]+)D)?(?:([0-9]+)H)?(?:([0-9]+)M)?(?:([0-9]+)S)?",
-                      Pattern.CASE_INSENSITIVE);
 
   /**
    * Parses a {@link CharSequence} into a {@link Duration}. The pattern used to parse the duration
@@ -46,92 +38,28 @@ public class DurationUtils {
    * @throws DurationParseException thrown if the text failed to parse
    */
   public static Duration parseDuration(@Nonnull CharSequence text) throws DurationParseException {
-    checkNotNull(text, "text cannot be null.");
-    checkArgument(text.length() > 0, "text cannot be empty.");
-
-    Matcher matcher = PATTERN.matcher(text);
-    if (matcher.matches()) {
-      String dayMatch = matcher.group(1);
-      String hourMatch = matcher.group(2);
-      String minuteMatch = matcher.group(3);
-      String secondMatch = matcher.group(4);
-      if (dayMatch != null || hourMatch != null || minuteMatch != null || secondMatch != null) {
-        long daysAsSecs = parseNumber(dayMatch, TimeUtils.SECONDS_PER_DAY, "days");
-        long hoursAsSecs = parseNumber(hourMatch, TimeUtils.SECONDS_PER_HOUR, "hours");
-        long minsAsSecs = parseNumber(minuteMatch, TimeUtils.SECONDS_PER_MINUTE, "minutes");
-        long seconds = parseNumber(secondMatch, 1, "seconds");
-        try {
-          long secs = daysAsSecs + hoursAsSecs + minsAsSecs + seconds;
-          return Duration.standardSeconds(secs);
-        } catch (ArithmeticException ex) {
-          throw (DurationParseException) new DurationParseException(
-              "Text cannot be parsed to a Duration: overflow").initCause(ex);
-        }
-      }
-    }
-    throw new DurationParseException("Text cannot be parsed to a Duration");
-  }
-
-  private static long parseNumber(String parsed, int multiplier, String errorText) {
-    // regex limits to [-+]?[0-9]+
-    if (parsed == null) {
-      return 0;
-    }
-    try {
-      long val = Long.parseLong(parsed);
-      return LongMath.checkedMultiply(val, multiplier);
-    } catch (NumberFormatException | ArithmeticException ex) {
-      throw (DurationParseException)
-          new DurationParseException("Text cannot be parsed to a Duration: " + errorText)
-              .initCause(ex);
-    }
+    return Duration.standardSeconds(TimeUtils.parseDuration(text));
   }
 
   /**
    * Converts a {@link Duration} into a {@link String}. <br /> The following examples are
-   * demonstrated for a Duration with 3725 seconds.
+   * demonstrated for a Duration with 3725 seconds:
    * <pre>
    *   DurationUtils.toString(duration, true) = 1h2m5s
    *   DurationUtils.toString(duration, false) = 1 hour 2 minutes 5 seconds
    * </pre>
    *
    * @param duration duration to convert
-   * @param simple whether the string should be simple or pretty. If true, simple, the string can be
-   * passed later to {@link #parseDuration(CharSequence)} for parsing into a {@link Duration} once
-   * again.
+   * @param simple whether the string should be simple or pretty. If true, simple, the string can
+   * be passed later to {@link #parseDuration(CharSequence)} for parsing into a {@link Duration}
+   * once again.
    *
    * @return the string of the {@code duration}
+   *
+   * @see #toString(long, boolean)
    */
   public static String toString(@Nonnull Duration duration, boolean simple) {
-
-    long seconds = duration.getStandardSeconds();
-    long days = seconds / TimeUtils.SECONDS_PER_DAY;
-    long hours = (seconds % TimeUtils.SECONDS_PER_DAY) / TimeUtils.SECONDS_PER_HOUR;
-    int minutes = (int) ((seconds % TimeUtils.SECONDS_PER_HOUR) / TimeUtils.SECONDS_PER_MINUTE);
-    int secs = (int) (seconds % TimeUtils.SECONDS_PER_MINUTE);
-    StringBuilder buf = new StringBuilder(24);
-    if (days != 0) {
-      buf.append(days).append(simple ? "d" : " day" + (days != 1 ? "s" : ""));
-    }
-    if (hours != 0) {
-      if (!simple && buf.length() > 0) {
-        buf.append(" ");
-      }
-      buf.append(hours).append(simple ? "h" : " hour" + (hours != 1 ? "s" : ""));
-    }
-    if (minutes != 0) {
-      if (!simple && buf.length() > 0) {
-        buf.append(" ");
-      }
-      buf.append(minutes).append(simple ? "m" : " minute" + (minutes != 1 ? "s" : ""));
-    }
-    if (secs != 0) {
-      if (!simple && buf.length() > 0) {
-        buf.append(" ");
-      }
-      buf.append(secs).append(simple ? "s" : " second" + (secs != 1 ? "s" : ""));
-    }
-    return buf.toString();
+    return TimeUtils.toString(duration.getStandardSeconds(), simple);
   }
 
   /**
