@@ -36,6 +36,8 @@ public class DurationUtils {
    * @return the {@link Duration}
    *
    * @throws DurationParseException thrown if the text failed to parse
+   * 
+   * @see TimeUtils#parseDuration(CharSequence)
    */
   public static Duration parseDuration(@Nonnull CharSequence text) throws DurationParseException {
     return Duration.standardSeconds(TimeUtils.parseDuration(text));
@@ -56,7 +58,7 @@ public class DurationUtils {
    *
    * @return the string of the {@code duration}
    *
-   * @see #toString(long, boolean)
+   * @see TimeUtils#toString(long, boolean)
    */
   public static String toString(@Nonnull Duration duration, boolean simple) {
     return TimeUtils.toString(duration.getStandardSeconds(), simple);
