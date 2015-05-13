@@ -36,7 +36,7 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'com.supaham.commons'
-    version = '0.2.5-SNAPSHOT'
+    version = '0.2.6-SNAPSHOT'
     def nexusRepoUrl
     
     if (!version.endsWith("-SNAPSHOT")) {
