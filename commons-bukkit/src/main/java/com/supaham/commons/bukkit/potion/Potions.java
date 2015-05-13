@@ -10,8 +10,9 @@ public class Potions {
 
   private static final Potion
       NO_JUMP = new Potion(PotionEffectType.JUMP.getId(), 600, 128),
-      NO_WALK = new Potion(PotionEffectType.SLOW.getId(), 600, 6);
-
+      NO_WALK = new Potion(PotionEffectType.SLOW.getId(), 600, 6),
+      INFINITE_INVIS = new Potion(PotionEffectType.INVISIBILITY.getId(), Integer.MAX_VALUE, 1);
+  
   /**
    * Returns potion with the attributes to stop the client from jumping.
    *
@@ -28,5 +29,14 @@ public class Potions {
    */
   public static Potion noWalk() {
     return new Potion(NO_WALK);
+  }
+
+  /**
+   * Returns potion with the attributes to make the client invisible until removal.
+   *
+   * @return invisibility potion effect
+   */
+  public static Potion infiniteInvisibility() {
+    return new Potion(INFINITE_INVIS);
   }
 }
