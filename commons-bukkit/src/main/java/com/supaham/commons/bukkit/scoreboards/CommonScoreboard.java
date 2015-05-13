@@ -17,6 +17,8 @@ import javax.annotation.Nonnull;
 /**
  * Represents a scoreboard of the SupaCommons library, providing convenience when interacting with
  * scoreboards.
+ * 
+ * @since 0.2.5
  */
 public class CommonScoreboard {
 

@@ -13,6 +13,8 @@ import javax.annotation.Nonnull;
  * Represents an indexed {@link Objective}, providing the ability to display entries in a specific
  * order. This feature utilizes the entry's score in the scoreboard, making it impossible to
  * utilize from this API (or any for that matter).
+ *
+ * @since 0.2.5
  */
 public class IndexedObjective {
 

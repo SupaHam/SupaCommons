@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
  * it impossible to utilize from this API (or any for that matter).
  *
  * @see IndexedObjective
+ * @since 0.2.5
  */
 public class MappedObjective {
 
