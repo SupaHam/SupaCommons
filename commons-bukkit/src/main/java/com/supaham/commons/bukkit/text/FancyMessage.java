@@ -415,6 +415,19 @@ public class FancyMessage {
     return jsonString;
   }
 
+  /**
+   * Returns a human readable string of this fancy message.
+   *
+   * @return readable string
+   */
+  public String toReadableString() {
+    StringBuilder stringBuilder = new StringBuilder();
+    for (MessagePart messagePart : this.messageParts) {
+      stringBuilder.append(messagePart.getText());
+    }
+    return stringBuilder.toString();
+  }
+
   private MessagePart latest() {
     return messageParts.get(messageParts.size() - 1);
   }
