@@ -28,12 +28,12 @@ public class ReflectionUtils {
 
     classes.put("entityPlayer", nms.getClassSafe("EntityPlayer"));
     fields.put("playerConnection", getField(classes.get("entityPlayer"), "playerConnection"));
-    methods.put("sendPacket", getMethod(fields.get("playerConnection").getClass(), "sendPacket"));
+    methods.put("sendPacket", getMethod(fields.get("playerConnection").getType(), "sendPacket"));
   }
 
   public static void sendPacket(Player player, Object object) {
     try {
-      Object connection = fields.get("playerConnection").get(player);
+      Object connection = fields.get("playerConnection").get(getHandle(player));
       methods.get("sendPacket").invoke(connection, object);
     } catch (IllegalAccessException | InvocationTargetException e) {
       e.printStackTrace();
