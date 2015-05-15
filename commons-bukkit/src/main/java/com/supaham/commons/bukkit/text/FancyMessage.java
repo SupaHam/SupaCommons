@@ -449,10 +449,8 @@ public class FancyMessage {
    */
   public void send(Player player) {
     try {
-      Object serialized = ReflectionUtils.getMethod(nmsChatSerializer, "a", String.class)
-          .invoke(null, toJSONString());
       Object packet = nmsPacketPlayOutChat.getConstructor(nmsIChatBaseComponent)
-          .newInstance(serialized);
+          .newInstance(getNMSChatObject());
       ReflectionUtils.sendPacket(player, packet);
     } catch (Exception e) {
       e.printStackTrace();
@@ -468,15 +466,23 @@ public class FancyMessage {
    */
   public void send(final Iterable<Player> players) {
     try {
-      Object serialized = ReflectionUtils.getMethod(nmsChatSerializer, "a", String.class)
-          .invoke(null, toJSONString());
       Object packet = nmsPacketPlayOutChat.getConstructor(nmsIChatBaseComponent)
-          .newInstance(serialized);
+          .newInstance(getNMSChatObject());
       for (final Player player : players) {
         ReflectionUtils.sendPacket(player, packet);
       }
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+  
+  public Object getNMSChatObject() {
+    try {
+      return ReflectionUtils.getMethod(nmsChatSerializer, "a", String.class)
+          .invoke(null, toJSONString());
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
     }
   }
 }
