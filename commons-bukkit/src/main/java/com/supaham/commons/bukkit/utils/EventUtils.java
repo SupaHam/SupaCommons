@@ -2,6 +2,7 @@ package com.supaham.commons.bukkit.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.Event;
@@ -19,9 +20,23 @@ import javax.annotation.Nonnull;
 public class EventUtils {
 
   /**
+   * Helper method for calling an {@link Event} and returning it.
+   *
+   * @param event event to call
+   * @param <T> event type
+   *
+   * @return same exact {@code event} instance after it is called
+   */
+  public static <T extends Event> T callEvent(T event) {
+    Bukkit.getServer().getPluginManager().callEvent(event);
+    return event;
+  }
+
+  /**
    * Gets the {@link LivingEntity} from a {@link EntityDamageByEntityEvent}. If the {@link
    * EntityDamageByEntityEvent#getDamager()} is a LivingEntity, then that instance is returned.
-   * Otherwise, if the damager is a projectile and it's shooter is a LivingEntity, that LivingEntity
+   * Otherwise, if the damager is a projectile and it's shooter is a LivingEntity, that
+   * LivingEntity
    * shooter instance is returned.
    *
    * @param event event to get LivingEntity from
