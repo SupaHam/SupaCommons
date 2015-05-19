@@ -26,9 +26,16 @@ public class ModuleContainer {
 
   private final CommonPlugin plugin;
   private final Map<Class<? extends Module>, Module> modules = new HashMap<>();
+  private final ModuleContainer parent;
 
   public ModuleContainer(@Nonnull CommonPlugin plugin) {
     this.plugin = Preconditions.checkNotNull(plugin, "plugin cannot be null.");
+    this.parent = null;
+  }
+
+  public ModuleContainer(@Nonnull ModuleContainer parent) {
+    this.plugin = parent.plugin;
+    this.parent = parent;
   }
 
   /**
@@ -143,7 +150,9 @@ public class ModuleContainer {
   @Nullable
   public <T extends Module> T getModule(@Nonnull Class<T> clazz) {
     Preconditions.checkNotNull(clazz, "class cannot be null.");
-    return (T) this.modules.get(clazz);
+    Module module = this.modules.get(clazz);
+    return (T) (module != null ? module : this.parent != null ? this.parent.getModule(clazz)
+                                                              : null);
   }
 
   /**
@@ -164,6 +173,13 @@ public class ModuleContainer {
    */
   @Nonnull
   public Map<Class<? extends Module>, Module> getModules() {
-    return Collections.unmodifiableMap(modules);
+    Map<Class<? extends Module>, Module> map;
+    if (parent != null) { // Make sure to add parent modules then these modules to override
+      map = new HashMap<>(parent.modules);
+      map.putAll(modules);
+    } else {
+      map = modules;
+    }
+    return Collections.unmodifiableMap(map);
   }
 }
