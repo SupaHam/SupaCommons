@@ -4,33 +4,35 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import com.google.common.base.Preconditions;
+
+import com.supaham.commons.Uuidable;
 import com.supaham.commons.bukkit.language.Message;
+import com.supaham.commons.bukkit.text.FancyMessage;
 
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
-import lombok.NonNull;
 
 /**
  * Represents a common player.
  *
- * @since 0.1
+ * @since 0.2.7
  */
-public class CPlayer {
+public class CommonPlayer implements Uuidable {
 
-  protected final PlayerManager manager;
+  protected final BukkitPlayerManager manager;
   protected final UUID uuid;
   
-  protected String name;
+  private String name;
   private WeakReference<Player> player = new WeakReference<>(null);
   PlayerStatus status = PlayerStatus.OFFLINE;
 
-  public CPlayer(@Nonnull PlayerManager manager, @Nonnull Player player) {
+  public CommonPlayer(@Nonnull BukkitPlayerManager manager, @Nonnull Player player) {
     checkNotNull(manager, "manager cannot be null.");
     checkNotNull(player, "player cannot be null.");
     this.manager = manager;
@@ -43,11 +45,11 @@ public class CPlayer {
    * @param message message to send
    * @param args arguments, optional
    */
-  public void send(@NotNull String message, Object... args) {
-    if (getPlayer() == null) {
-      return;
+  public void message(@Nonnull String message, Object... args) {
+    Preconditions.checkNotNull(message, "message cannot be null.");
+    if (getPlayer() != null) {
+      getPlayer().sendMessage(String.format(message, args));
     }
-    getPlayer().sendMessage(String.format(message, args));
   }
 
   /**
@@ -56,31 +58,38 @@ public class CPlayer {
    * @param message message to send
    * @param args arguments, optional
    */
-  public void send(@NotNull Message message, Object... args) {
-    if (getPlayer() == null) {
-      return;
+  public void message(@Nonnull Message message, Object... args) {
+    Preconditions.checkNotNull(message, "message cannot be null.");
+    if (getPlayer() != null) {
+      message.send(getPlayer(), args);
     }
-    message.send(getPlayer(), args);
+  }
+
+  public void message(@Nonnull FancyMessage fancyMessage) {
+    Preconditions.checkNotNull(fancyMessage, "message cannot be null.");
+    if (getPlayer() != null) {
+      fancyMessage.send(getPlayer());
+    }
   }
   
   protected void connect() {
-    checkState(!isOnline(), "player is already online");
+    checkState(!isOnline(), "player is already online.");
     this.status = PlayerStatus.CONNECTING;
   }
   
   protected void join() {
-    checkState(!isOnline(), "player is already online");
+    checkState(!isOnline(), "player is already online.");
     this.status = PlayerStatus.ONLINE;
     
   }
   
   protected void disconnect() {
-    checkState(isOnline(), "player is already offline");
+    checkState(isOnline(), "player is already offline.");
     this.status = PlayerStatus.DISCONNECTING;
     // PlayerListener sets online to false, go there for more information.
   }
 
-  public PlayerManager getManager() {
+  public BukkitPlayerManager getManager() {
     return this.manager;
   }
 
@@ -96,9 +105,10 @@ public class CPlayer {
     return player.get();
   }
 
-  public void setPlayer(@NonNull Player player) {
-    if (!player.equals(getPlayer())) {
-      checkArgument(player.getUniqueId().equals(this.uuid),
+  public void setPlayer(@Nonnull Player player) {
+    Preconditions.checkNotNull(player, "player cannot be null.");
+    if (player != getPlayer()) { // Only set if we have to
+      checkArgument(!player.getUniqueId().equals(this.uuid),
                     "UUID of this player and the given Player do not match.");
       this.player = new WeakReference<>(player);
       this.name = player.getName();
@@ -107,5 +117,14 @@ public class CPlayer {
 
   public boolean isOnline() {
     return !status.equals(PlayerStatus.OFFLINE);
+  }
+
+  public PlayerStatus getStatus() {
+    return status;
+  }
+
+  protected void setStatus(@Nonnull PlayerStatus status) {
+    Preconditions.checkNotNull(status, "status cannot be null.");
+    this.status = status;
   }
 }

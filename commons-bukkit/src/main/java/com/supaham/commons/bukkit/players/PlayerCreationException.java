@@ -3,8 +3,8 @@ package com.supaham.commons.bukkit.players;
 import org.bukkit.entity.Player;
 
 /**
- * Represents an exception that is thrown when a {@link CPlayer} instance creation has failed, as a
- * result of the {@link PlayerManager#createPlayer(Player)} call.
+ * Represents an exception that is thrown when a {@link CommonPlayer} instance creation has failed, as a
+ * result of the {@link BukkitPlayerManager#createPlayer(Player)} call.
  *
  * @since 0.1
  */

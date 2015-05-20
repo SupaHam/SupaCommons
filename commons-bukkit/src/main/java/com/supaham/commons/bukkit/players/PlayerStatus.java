@@ -1,7 +1,7 @@
 package com.supaham.commons.bukkit.players;
 
 /**
- * Represents a player status for {@link CPlayer}.
+ * Represents a player status for {@link CommonPlayer}.
  * <p />
  * This Enumeration has been sorted in the order OF states the player can be in since creation;
  * that is:
