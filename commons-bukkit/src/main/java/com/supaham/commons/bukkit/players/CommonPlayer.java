@@ -25,18 +25,29 @@ import javax.annotation.Nonnull;
  */
 public class CommonPlayer implements Uuidable {
 
-  protected final BukkitPlayerManager manager;
   protected final UUID uuid;
   
   private String name;
   private WeakReference<Player> player = new WeakReference<>(null);
   PlayerStatus status = PlayerStatus.OFFLINE;
 
-  public CommonPlayer(@Nonnull BukkitPlayerManager manager, @Nonnull Player player) {
-    checkNotNull(manager, "manager cannot be null.");
+  public CommonPlayer(@Nonnull Player player) {
     checkNotNull(player, "player cannot be null.");
-    this.manager = manager;
     this.uuid = player.getUniqueId();
+    setPlayer(player);
+  }
+
+  @Override public boolean equals(Object obj) {
+    if (obj == this) {
+      return true;
+    } else if (obj instanceof CommonPlayer) {
+      return uuid.equals(((CommonPlayer) obj).uuid);
+    }
+    return false;
+  }
+
+  @Override public int hashCode() {
+    return this.uuid.hashCode();
   }
 
   /**
@@ -87,10 +98,6 @@ public class CommonPlayer implements Uuidable {
     checkState(isOnline(), "player is already offline.");
     this.status = PlayerStatus.DISCONNECTING;
     // PlayerListener sets online to false, go there for more information.
-  }
-
-  public BukkitPlayerManager getManager() {
-    return this.manager;
   }
 
   public UUID getUuid() {
