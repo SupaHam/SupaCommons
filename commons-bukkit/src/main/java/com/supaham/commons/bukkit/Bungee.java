@@ -1,19 +1,25 @@
 package com.supaham.commons.bukkit;
 
+import com.google.common.base.Preconditions;
+
+import com.supaham.commons.bukkit.modules.CommonModule;
+import com.supaham.commons.bukkit.modules.ModuleContainer;
+import com.supaham.commons.state.State;
+
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
-import lombok.Getter;
-import lombok.NonNull;
+import javax.annotation.Nonnull;
 
 /**
  * Utility class for working with Bungee. This class contains methods such as
@@ -21,12 +27,13 @@ import lombok.NonNull;
  *
  * @since 0.1
  */
-@Getter
-public class Bungee {
+public class Bungee extends CommonModule {
 
   private final Plugin owner;
-  private final List<UUID> connecting = new ArrayList<>();
-  private int connectCooldown;
+  private final Map<UUID, Long> connecting = new HashMap<>();
+  private final int connectCooldown;
+
+  private TickerTask cooldownRemover = new CooldownRemover();
 
   /**
    * Constructs a {@link Bungee} instance with a {@link Plugin} as the owner and a 40 tick
@@ -36,12 +43,13 @@ public class Bungee {
    * <b>30</b> ticks later the same player is asked to leave the server again and still hasn't left
    * the code terminates.
    *
+   * @param container module container to own this module.
    * @param owner plugin to own this session.
    *
-   * @see #Bungee(Plugin, int)
+   * @see #Bungee(ModuleContainer, Plugin, int)
    */
-  public Bungee(@NonNull Plugin owner) {
-    this(owner, 40);
+  public Bungee(@Nonnull ModuleContainer container, @Nonnull Plugin owner) {
+    this(container, owner, 40);
   }
 
   /**
@@ -51,13 +59,38 @@ public class Bungee {
    * <b>30</b> ticks later the same player is asked to leave the server again and still hasn't left
    * the code terminates.
    *
+   * @param container module container to own this module.
    * @param owner plugin to own this session.
    * @param connectCooldown cooldown in ticks that a player should be able to connect to a server.
    */
-  public Bungee(@NonNull Plugin owner, int connectCooldown) {
+  public Bungee(@Nonnull ModuleContainer container, @Nonnull Plugin owner, int connectCooldown) {
+    super(container);
     this.owner = owner;
     owner.getServer().getMessenger().registerOutgoingPluginChannel(owner, "BungeeCord");
     this.connectCooldown = connectCooldown;
+  }
+
+  public boolean setState(State state) throws UnsupportedOperationException {
+    State old = this.state;
+    boolean change = super.setState(state);
+    if (change) {
+      switch (state) {
+        case PAUSED:
+          this.cooldownRemover.pause();
+          break;
+        case ACTIVE:
+          if (old == State.PAUSED) { // Only resume if it was previously paused
+            this.cooldownRemover.resume();
+          }
+          this.cooldownRemover.start();
+          break;
+        case STOPPED:
+          this.cooldownRemover.stop();
+          this.connecting.clear();
+          break;
+      }
+    }
+    return change;
   }
 
   /**
@@ -76,18 +109,22 @@ public class Bungee {
   /**
    * Sends a {@link Player} to a specific bungee server.
    * <br />
-   * The one and only case where the returned boolean would be false is if the {@code player} was 
+   * The one and only case where the returned boolean would be false is if the {@code player} was
    * already being sent within the {@link #getConnectCooldown()} ticks.
    *
    * @param player player to send
    * @param serverName bungee server to send player to
+   *
    * @return whether the player is being sent to the specified {@code serverName}.
    */
   public boolean sendPlayerTo(final Player player, String serverName) {
-    if (this.connecting.contains(player.getUniqueId())) {
+    Preconditions.checkState(getState().equals(State.ACTIVE), "Bungee module not active.");
+    Long previous = this.connecting.get(player.getUniqueId());
+    // below, connectCooldown is being converted from minecraft ticks to milliseconds
+    if (previous != null && previous < System.currentTimeMillis() + (this.connectCooldown * 50)) {
       return false;
     }
-    
+
     ByteArrayOutputStream bout = new ByteArrayOutputStream();
 
     try (DataOutputStream out = new DataOutputStream(bout)) {
@@ -98,17 +135,31 @@ public class Bungee {
     }
 
     player.sendPluginMessage(this.owner, "BungeeCord", bout.toByteArray());
-    this.connecting.add(player.getUniqueId());
-    new BukkitRunnable() {
-      @Override
-      public void run() {
-        connecting.remove(player.getUniqueId());
-      }
-    }.runTaskLater(this.owner, this.connectCooldown);
+    this.connecting.put(player.getUniqueId(), System.currentTimeMillis());
     return true;
   }
-  
-  public List<UUID> getConnecting() {
-    return Collections.unmodifiableList(this.connecting);
+
+  public int getConnectCooldown() {
+    return connectCooldown;
+  }
+
+  public Set<UUID> getConnecting() {
+    return Collections.unmodifiableSet(this.connecting.keySet());
+  }
+
+  private final class CooldownRemover extends TickerTask {
+
+    public CooldownRemover() {
+      super(Bungee.this.plugin, 0, 1);
+    }
+
+    @Override public void run() {
+      Iterator<Long> it = Bungee.this.connecting.values().iterator();
+      while (it.hasNext()) {
+        if (it.next() <= System.currentTimeMillis()) {
+          it.remove();
+        }
+      }
+    }
   }
 }
