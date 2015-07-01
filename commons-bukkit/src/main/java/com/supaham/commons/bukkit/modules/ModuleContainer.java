@@ -2,6 +2,7 @@ package com.supaham.commons.bukkit.modules;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.bukkit.Bungee;
 import com.supaham.commons.bukkit.CommonPlugin;
 import com.supaham.commons.bukkit.ServerShutdown;
 import com.supaham.commons.bukkit.entities.EntityRemover;
@@ -53,6 +54,7 @@ public class ModuleContainer {
     modules.add(new EntityRemover(this));
     modules.add(new EntityTeleporter(this));
     modules.add(new ServerShutdown(this));
+    modules.add(new Bungee(this));
 
     for (Module module : modules) {
       Module registered = register(module);

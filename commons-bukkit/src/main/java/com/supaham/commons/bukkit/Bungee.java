@@ -29,7 +29,6 @@ import javax.annotation.Nonnull;
  */
 public class Bungee extends CommonModule {
 
-  private final Plugin owner;
   private final Map<UUID, Long> connecting = new HashMap<>();
   private final int connectCooldown;
 
@@ -44,12 +43,11 @@ public class Bungee extends CommonModule {
    * the code terminates.
    *
    * @param container module container to own this module.
-   * @param owner plugin to own this session.
    *
-   * @see #Bungee(ModuleContainer, Plugin, int)
+   * @see #Bungee(ModuleContainer, int)
    */
-  public Bungee(@Nonnull ModuleContainer container, @Nonnull Plugin owner) {
-    this(container, owner, 40);
+  public Bungee(@Nonnull ModuleContainer container) {
+    this(container, 40);
   }
 
   /**
@@ -60,13 +58,11 @@ public class Bungee extends CommonModule {
    * the code terminates.
    *
    * @param container module container to own this module.
-   * @param owner plugin to own this session.
    * @param connectCooldown cooldown in ticks that a player should be able to connect to a server.
    */
-  public Bungee(@Nonnull ModuleContainer container, @Nonnull Plugin owner, int connectCooldown) {
+  public Bungee(@Nonnull ModuleContainer container, int connectCooldown) {
     super(container);
-    this.owner = owner;
-    owner.getServer().getMessenger().registerOutgoingPluginChannel(owner, "BungeeCord");
+    this.plugin.getServer().getMessenger().registerOutgoingPluginChannel(this.plugin, "BungeeCord");
     this.connectCooldown = connectCooldown;
   }
 
@@ -101,7 +97,7 @@ public class Bungee extends CommonModule {
    * @see #sendPlayerTo(Player, String)
    */
   public void sendAllTo(String serverName) {
-    for (Player player : owner.getServer().getOnlinePlayers()) {
+    for (Player player : this.plugin.getServer().getOnlinePlayers()) {
       sendPlayerTo(player, serverName);
     }
   }
@@ -134,7 +130,7 @@ public class Bungee extends CommonModule {
       throw new RuntimeException(e);
     }
 
-    player.sendPluginMessage(this.owner, "BungeeCord", bout.toByteArray());
+    player.sendPluginMessage(this.plugin, "BungeeCord", bout.toByteArray());
     this.connecting.put(player.getUniqueId(), System.currentTimeMillis());
     return true;
   }
