@@ -31,13 +31,23 @@ public class EntityTeleporter extends CommonModule implements Runnable {
 
   private final LinkedHashMap<Entity, Location> queuedTeleports = new LinkedHashMap<>();
   private final TickerTask tickerTask;
+  private final boolean eject;
 
   public EntityTeleporter(@Nonnull ModuleContainer container) {
     this(container, 1);
   }
 
+  public EntityTeleporter(@Nonnull ModuleContainer container, boolean eject) {
+    this(container, 1, eject);
+  }
+
   public EntityTeleporter(@Nonnull ModuleContainer container, long interval) {
+    this(container, interval, true);
+  }
+  
+  public EntityTeleporter(@Nonnull ModuleContainer container, long interval, boolean eject) {
     super(container);
+    this.eject = eject;
     this.tickerTask = new TickerTask(plugin, 0, interval) {
       @Override public void run() {
         EntityTeleporter.this.run();
@@ -50,6 +60,9 @@ public class EntityTeleporter extends CommonModule implements Runnable {
     Iterator<Entry<Entity, Location>> it = queuedTeleports.entrySet().iterator();
     if (it.hasNext()) {
       Entry<Entity, Location> entry = it.next();
+      if (eject && entry.getKey().getVehicle() != null) {
+        entry.getKey().eject();
+      }
       entry.getKey().teleport(entry.getValue());
       it.remove();
     }
