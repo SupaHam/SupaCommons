@@ -522,10 +522,19 @@ public class FancyMessage {
 
   protected static Class<?> nmsIChatBaseComponent = PackageType.MINECRAFT_SERVER
       .getClassSafe("IChatBaseComponent");
-  protected static Class<?> nmsChatSerializer = PackageType.MINECRAFT_SERVER
-      .getClassSafe("IChatBaseComponent$ChatSerializer");
   protected static Class<?> nmsPacketPlayOutChat = PackageType.MINECRAFT_SERVER
       .getClassSafe("PacketPlayOutChat");
+  protected static Class<?> nmsChatSerializer;
+
+
+  static {
+    if (ReflectionUtils.isServer18()) {
+      nmsChatSerializer = PackageType.MINECRAFT_SERVER
+          .getClassSafe("IChatBaseComponent$ChatSerializer");
+    } else {
+      nmsChatSerializer = PackageType.MINECRAFT_SERVER.getClassSafe("ChatSerializer");
+    }
+  }
 
   /**
    * Sends this FancyMessage to a {@link Player}.
