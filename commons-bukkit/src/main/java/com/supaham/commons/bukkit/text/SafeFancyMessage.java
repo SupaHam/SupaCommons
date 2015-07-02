@@ -40,6 +40,7 @@ public class SafeFancyMessage {
           if (color.equals(ChatColor.RESET)) {
             fancyMessage.then();
           } else if (color.isFormat()) {
+            fancyMessage.then();
             switch (color) {
               case BOLD:
                 fancyMessage.style(ChatColor.BOLD);
