@@ -22,7 +22,8 @@ public class ReflectionUtils {
   private static final Map<String, Method> methods = new HashMap<>();
   private static final Map<String, Field> fields = new HashMap<>();
 
-  static {
+  // This cannot be done in a static block as PackageType needs to initialize ReflectionUtils first.
+  private static void init() {
     PackageType nms = PackageType.MINECRAFT_SERVER;
     PackageType obc = PackageType.CRAFTBUKKIT;
 
@@ -41,7 +42,13 @@ public class ReflectionUtils {
   }
 
   public static String getServerVersion() {
+    // org.bukkit.craftbukkit.v1_7_R4.entity
+    // org.bukkit.craftbukkit.v1_8_R2.entity;
     return Bukkit.getServer().getClass().getPackage().getName().substring(23);
+  }
+  
+  public static boolean isServer18() {
+    return getServerVersion().startsWith("v1_8");
   }
 
   public static Class<?> getNMSClass(String className) {
@@ -102,6 +109,7 @@ public class ReflectionUtils {
    * An enumeration with versioned packages such as {@code nms} and {@code obc}.
    */
   public enum PackageType {
+    
     /**
      * {@code net.minecraft.server.server_version} package.
      */
@@ -112,6 +120,10 @@ public class ReflectionUtils {
     CRAFTBUKKIT("org.bukkit.craftbukkit." + getServerVersion()),;
 
     private final String path;
+    
+    static {
+      ReflectionUtils.init();
+    }
 
     PackageType(String path) {
       this.path = path;
