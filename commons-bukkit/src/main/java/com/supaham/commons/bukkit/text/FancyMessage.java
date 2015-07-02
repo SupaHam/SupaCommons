@@ -1,7 +1,13 @@
 package com.supaham.commons.bukkit.text;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonWriter;
 
+import com.supaham.commons.Enums;
+import com.supaham.commons.bukkit.utils.ChatColorUtils;
 import com.supaham.commons.bukkit.utils.ReflectionUtils;
 import com.supaham.commons.bukkit.utils.ReflectionUtils.PackageType;
 
@@ -32,6 +38,87 @@ public class FancyMessage {
   private final List<MessagePart> messageParts;
   private String jsonString;
   private boolean dirty;
+
+  public static FancyMessage of(JsonElement serialized) {
+    if (serialized.isJsonPrimitive()) {
+      return new FancyMessage(serialized.getAsString());
+    } else if (!serialized.isJsonObject()) {
+      if (serialized.isJsonArray()) {
+        JsonArray array = serialized.getAsJsonArray();
+        FancyMessage fancyMessage = null;
+        for (JsonElement jsonElement : array) {
+          FancyMessage curMessage = of(jsonElement);
+          if (fancyMessage == null) {
+            fancyMessage = curMessage;
+          } else {
+            fancyMessage.append(curMessage);
+          }
+        }
+        return fancyMessage;
+      } else {
+        throw new JsonParseException("Invalid JSON chat syntax: " + serialized.toString());
+      }
+    } else {
+      JsonObject jsonObject = serialized.getAsJsonObject();
+      FancyMessage result = new FancyMessage();
+      if (jsonObject.has("text")) {
+        result = new FancyMessage(jsonObject.get("text").getAsString());
+      } else if (jsonObject.has("translate")) {
+        // TODO
+      } else if (jsonObject.has("score")) {
+        // TODO
+      } else {
+        if (!jsonObject.has("selector")) {
+          throw new JsonParseException("Invalid JSON chat syntax: " + serialized.toString());
+        }
+        // TODO
+      }
+
+      if (jsonObject.has("extra")) {
+        JsonArray jsonarray2 = jsonObject.getAsJsonArray("extra");
+
+        if (jsonarray2.size() <= 0) {
+          throw new JsonParseException("Unexpected empty array of components.");
+        }
+
+        for (int j = 0; j < jsonarray2.size(); ++j) {
+          result.append(of(jsonarray2.get(j)));
+        }
+      }
+
+      if (jsonObject.has("color")) {
+        result.color(Enums.findFuzzyByValue(ChatColor.class,
+                                            jsonObject.get("color").getAsString()));
+      }
+      for (ChatColor color : ChatColorUtils.STYLES) {
+        if (jsonObject.has(color.name().toLowerCase())) {
+          result.style(color);
+        } else if (color == ChatColor.MAGIC && jsonObject.has("obfuscated")) {
+          result.style(ChatColor.MAGIC);
+        } else if (color == ChatColor.UNDERLINE && jsonObject.has("underlined")) {
+          result.style(ChatColor.UNDERLINE);
+        }
+      }
+
+      if (jsonObject.has("clickEvent")) {
+        JsonObject clickEvent = jsonObject.getAsJsonObject("clickEvent");
+        if (!clickEvent.has("action") || !clickEvent.has("value")) {
+          throw new JsonParseException("clickEvent must have an action and value: " + serialized);
+        }
+        result.onClick(clickEvent.get("action").getAsString(),
+                       clickEvent.get("value").getAsString());
+      } else if (jsonObject.has("hoverEvent")) {
+        JsonObject hoverEvent = jsonObject.getAsJsonObject("hoverEvent");
+        if (!hoverEvent.has("action") || !hoverEvent.has("value")) {
+          throw new JsonParseException("hoverEvent must have an action and value: " + serialized);
+        }
+        result.onHover(hoverEvent.get("action").getAsString(),
+                       hoverEvent.get("value").getAsString());
+      }
+
+      return result;
+    }
+  }
 
   public FancyMessage(final String firstPartText) {
     messageParts = new ArrayList<>();
@@ -475,7 +562,7 @@ public class FancyMessage {
       e.printStackTrace();
     }
   }
-  
+
   public Object getNMSChatObject() {
     try {
       return ReflectionUtils.getMethod(nmsChatSerializer, "a", String.class)
