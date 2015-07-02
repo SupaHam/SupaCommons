@@ -42,7 +42,7 @@ public class Players {
 
   public static final float DEFAULT_FLY_SPEED = 0.1f;
   public static final float DEFAULT_WALK_SPEED = 0.2f;
-  
+
   private static final Predicate<Object> IS_PLAYER = Predicates.instanceOf(Player.class);
   private static final PlayersSupplier SERVER_SUPPLIER = new ServerSupplier(Bukkit.getServer());
 
@@ -81,6 +81,19 @@ public class Players {
       v.setZ(v.getZ() + (Math.sin(d1) * d));
     }
     item.setVelocity(v);
+  }
+
+  /**
+   * Returns whether a {@link Player} is vanished.
+   *
+   * @param player player to check
+   *
+   * @return whether the {@code player} is vanished
+   */
+  public static boolean isVanished(@Nonnull Player player) {
+    Preconditions.checkNotNull(player, "player cannot be null.");
+    return player.hasMetadata("vanished")
+           && ((Boolean) player.getMetadata("vanished").get(0).value());
   }
 
   /**
