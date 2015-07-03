@@ -1,9 +1,13 @@
 package com.supaham.commons.bukkit.text;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.ChatColor;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
 
 /**
  * Represents a class that transforms a {@link String} into a {@link FancyMessage}. Useful for
@@ -22,6 +26,20 @@ public class SafeFancyMessage {
       "[0-9a-fk-or])|(\\n)|(?:(https?://[^ ][^ ]*?)(?=[\\.\\?!,;:]?(?:[ \\n]|$)))",
       Pattern.CASE_INSENSITIVE
   );
+
+  /**
+   * Converts a {@link String} to to {@link FancyMessage} with minecraft json-chat support.
+   *
+   * @param message message to convert
+   *
+   * @return fancy message of {@code message}
+   */
+  public static FancyMessage from(@Nonnull String message) {
+    Preconditions.checkNotNull(message, "message cannot be null.");
+    FancyMessage fancyMessage = new FancyMessage();
+    new SafeFancyMessage(message, fancyMessage);
+    return fancyMessage;
+  }
 
   public SafeFancyMessage(String message, FancyMessage fancyMessage) {
     this.message = message;
