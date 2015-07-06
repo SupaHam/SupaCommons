@@ -4,14 +4,25 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.ItemBuilder;
 import com.supaham.commons.bukkit.serializers.ItemEnchantmentSerializer;
+import com.supaham.commons.bukkit.text.xml.tags.S;
+import com.supaham.commons.bukkit.utils.ChatColorUtils;
 import com.supaham.commons.bukkit.utils.OBCUtils;
 
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.MapMeta;
+import org.bukkit.inventory.meta.Repairable;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -108,6 +119,62 @@ public class ItemMetaSerializer {
    *
    * @see #deserialize(ItemBuilder, Map)
    */
+  public static Map<String, Object> serialize(ItemStack item) {
+    Map<String, Object> map = new HashMap<>();
+    ItemMeta im = item.getItemMeta();
+    if (im.hasDisplayName()) {
+      map.put("name", ChatColorUtils.serialize(im.getDisplayName()));
+    }
+    if (im.hasLore()) {
+      List<String> result = new ArrayList<>();
+      for (String s : im.getLore()) {
+        result.add(ChatColorUtils.serialize(s));
+      }
+      map.put("lore", result.size() == 1 ? result.get(0) : result);
+    }
+    {
+      ItemEnchantmentSerializer ser = Serializers.getSerializer(ItemEnchantmentSerializer.class);
+      List<Object> result = new ArrayList<>();
+      for (Entry<Enchantment, Integer> entry : im.getEnchants().entrySet()) {
+        result.add(ser.serialize(new ItemEnchantment(entry.getKey(), entry.getValue())));
+      }
+      if (!result.isEmpty()) {
+        map.put("enchants", result.size() == 1 ? result.get(0) : result);
+      }
+    }
+    if (((Repairable) im).getRepairCost() != 0) {
+      map.put("repairCost", ((Repairable) im).getRepairCost());
+    }
+    if (im instanceof BookMeta) {
+      BookMeta bm = ((BookMeta) im);
+      map.put("bookTitle", bm.getTitle());
+      map.put("bookAuthor", bm.getAuthor());
+      map.put("bookPages", bm.getPages());
+    }
+    if (im instanceof LeatherArmorMeta) {
+      LeatherArmorMeta lam = ((LeatherArmorMeta) im);
+      map.put("color", lam.getColor().asRGB());
+    }
+    if (im instanceof MapMeta) {
+      map.put("mapScale", ((MapMeta) im).isScaling());
+    }
+    if (im instanceof SkullMeta) {
+      map.put("skull", ((SkullMeta) im).getOwner());
+    }
+    return map;
+  }
+
+  /**
+   * Deserializes a {@link Map} of Strings and Objects which represents a serialized {@link
+   * ItemMeta} metadata, which is later applied to the given {@link ItemStack}.
+   *
+   * @param item item to append deserialized data to
+   * @param map serialized metadata
+   *
+   * @return {@link ItemBuilder#build()}
+   *
+   * @see #deserialize(ItemBuilder, Map)
+   */
   public static ItemStack deserialize(ItemStack item, Map<String, Object> map) {
     Preconditions.checkNotNull(item, "item cannot be null.");
     Preconditions.checkNotNull(map, "map cannot be null.");
@@ -137,13 +204,17 @@ public class ItemMetaSerializer {
       Object val = entry.getValue();
       switch (entry.getKey()) {
         case "name":
-          builder.name(val.toString());
+          builder.name(ChatColorUtils.deserialize(val.toString()));
           break;
         case "lore":
           if (val instanceof String) {
-            builder.lore(val.toString());
+            builder.lore(ChatColorUtils.deserialize(val.toString()));
           } else if (val instanceof List) {
-            builder.lore((List<String>) val);
+            List<String> result = new ArrayList<>();
+            for (String s : (List<String>) val) {
+              result.add(ChatColorUtils.deserialize(s));
+            }
+            builder.lore(result);
           } else {
             throw new UnsupportedOperationException("lore is of type " + val.getClass());
           }

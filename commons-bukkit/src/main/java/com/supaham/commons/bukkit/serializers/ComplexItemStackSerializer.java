@@ -11,6 +11,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.Nullable;
+import org.yaml.snakeyaml.Yaml;
 
 import pluginbase.bukkit.config.YamlConfiguration;
 import pluginbase.config.serializers.Serializer;
@@ -24,6 +25,8 @@ import pluginbase.config.serializers.Serializers;
  * @since 0.1
  */
 public class ComplexItemStackSerializer implements Serializer<ItemStack> {
+  
+  private static final Yaml yaml = new Yaml();
 
   @Nullable
   @Override
@@ -39,6 +42,7 @@ public class ComplexItemStackSerializer implements Serializer<ItemStack> {
       sb.append(':').append(object.getDurability());
     }
     sb.append(" ").append(object.getAmount());
+    sb.append(" ").append(yaml.dump(ItemMetaSerializer.serialize(object)));
     return sb.toString();
   }
 
