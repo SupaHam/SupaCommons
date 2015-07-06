@@ -13,6 +13,7 @@ import static org.bukkit.ChatColor.RESET;
 import static org.bukkit.ChatColor.STRIKETHROUGH;
 import static org.bukkit.ChatColor.UNDERLINE;
 
+import com.supaham.commons.bukkit.serializers.ColorStringSerializer;
 import com.supaham.commons.utils.CollectionUtils;
 
 import org.bukkit.ChatColor;
@@ -25,9 +26,12 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import pluginbase.config.serializers.Serializers;
+
 /**
- * Utility methods for working with {@link ChatColor} instances. This class contains methods such as
- * {@link #randomChatColorExcept(char...)}, {@link #randomChatColorExcept(ChatColor...)}, and more.
+ * Utility methods for working with {@link ChatColor} instances. This class contains methods such
+ * as {@link #randomChatColorExcept(char...)}, {@link #randomChatColorExcept(ChatColor...)},
+ * and more.
  *
  * @since 0.1
  */
@@ -145,5 +149,13 @@ public class ChatColorUtils {
     }
     checkArgument(!result.isEmpty(), "at least one color must be provided.");
     return CollectionUtils.getRandomElement(result);
+  }
+
+  public static String serialize(String string) {
+    return ((String) Serializers.getSerializer(ColorStringSerializer.class).serialize(string));
+  }
+
+  public static String deserialize(String string) {
+    return Serializers.getSerializer(ColorStringSerializer.class).deserialize(string, String.class);
   }
 }
