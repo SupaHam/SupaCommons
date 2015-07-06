@@ -1,5 +1,7 @@
 package com.supaham.commons.bukkit.serializers;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +34,9 @@ public class MaterialDataSerializer implements Serializer<MaterialData> {
       return null;
     }
     String[] split = serialized.toString().split(":");
-    return new MaterialData(Material.getMaterial(split[0]),
+    Material material = Material.getMaterial(split[0]);
+    Preconditions.checkArgument(material != null, split[0] + " is not a valid material.");
+    return new MaterialData(material,
                             split.length >= 2 && !split[1].isEmpty() ? Byte.valueOf(split[1]) : 0);
   }
 }
