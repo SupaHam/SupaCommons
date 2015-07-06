@@ -1,5 +1,6 @@
 package com.supaham.commons.bukkit.text;
 
+import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,6 +17,7 @@ import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +25,8 @@ import org.bukkit.inventory.ItemStack;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * Represents a Minecraft chat message that can be fancified with hover & click events, colors,
@@ -537,13 +541,27 @@ public class FancyMessage {
   }
 
   /**
+   * Sends this FancyMessage to a {@link CommandSender} by calling {@link #toReadableString()} for
+   * {@link CommandSender#sendMessage(String)}.
+   *
+   * @param commandSender command sender to send message to
+   *
+   * @see #send(Iterable)
+   */
+  public void send(@Nonnull CommandSender commandSender) {
+    Preconditions.checkNotNull(commandSender, "command sender cannot be null.");
+    commandSender.sendMessage(toReadableString());
+  }
+
+  /**
    * Sends this FancyMessage to a {@link Player}.
    *
    * @param player player to send message to
    *
    * @see #send(Iterable)
    */
-  public void send(Player player) {
+  public void send(@Nonnull Player player) {
+    Preconditions.checkNotNull(player, "player cannot be null.");
     try {
       Object packet = nmsPacketPlayOutChat.getConstructor(nmsIChatBaseComponent)
           .newInstance(getNMSChatObject());
@@ -560,7 +578,8 @@ public class FancyMessage {
    *
    * @see #send(Player)
    */
-  public void send(final Iterable<Player> players) {
+  public void send(@Nonnull final Iterable<Player> players) {
+    Preconditions.checkNotNull(players, "players cannot be null.");
     try {
       Object packet = nmsPacketPlayOutChat.getConstructor(nmsIChatBaseComponent)
           .newInstance(getNMSChatObject());
