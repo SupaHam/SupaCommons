@@ -550,7 +550,11 @@ public class FancyMessage {
    */
   public void send(@Nonnull CommandSender commandSender) {
     Preconditions.checkNotNull(commandSender, "command sender cannot be null.");
-    commandSender.sendMessage(toReadableString());
+    if (commandSender instanceof Player) {
+      send(((Player) commandSender));
+    } else {
+      commandSender.sendMessage(toReadableString());
+    }
   }
 
   /**
