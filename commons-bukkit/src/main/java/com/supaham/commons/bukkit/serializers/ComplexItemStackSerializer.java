@@ -2,7 +2,6 @@ package com.supaham.commons.bukkit.serializers;
 
 import com.google.common.base.Preconditions;
 
-import com.supaham.commons.CMain;
 import com.supaham.commons.bukkit.items.ItemMetaSerializer;
 import com.supaham.commons.utils.StringUtils;
 
@@ -34,8 +33,6 @@ public class ComplexItemStackSerializer implements Serializer<ItemStack> {
     if (object == null) {
       return null;
     }
-    // TODO fully implement
-    CMain.getLogger().warning("ComplexItemStackSerializer serialize is not fully implemented.");
     StringBuilder sb = new StringBuilder();
     sb.append(object.getType());
     if (object.getDurability() != 0) {
