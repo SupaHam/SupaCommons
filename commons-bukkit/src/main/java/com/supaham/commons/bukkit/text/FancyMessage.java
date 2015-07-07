@@ -24,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -523,6 +524,17 @@ public class FancyMessage {
     return messageParts.get(messageParts.size() - 1);
   }
 
+  public List<MessagePart> getMessageParts() {
+    return Collections.unmodifiableList(messageParts);
+  }
+
+  public MessagePart removePart(int index) {
+    MessagePart removed = this.messageParts.remove(index);
+    if (removed != null) {
+      this.dirty = true;
+    }
+    return removed;
+  }
 
   protected static Class<?> nmsIChatBaseComponent = PackageType.MINECRAFT_SERVER
       .getClassSafe("IChatBaseComponent");
