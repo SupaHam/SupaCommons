@@ -421,7 +421,9 @@ public class MessagePart implements Cloneable {
    * @return JSON of this MessagePart
    */
   public String toJSONString() {
-    return writeJson(new JsonWriter(new StringWriter())).toString();
+    StringWriter json = new StringWriter();
+    writeJson(new JsonWriter(json));
+    return json.toString();
   }
 
   /**
