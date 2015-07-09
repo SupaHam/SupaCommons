@@ -3,6 +3,7 @@ package com.supaham.commons.bukkit.title;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.text.FancyMessage;
+import com.supaham.commons.bukkit.text.MessagePart;
 import com.supaham.commons.bukkit.utils.ReflectionUtils;
 
 import org.bukkit.entity.Player;
@@ -28,6 +29,8 @@ import javax.annotation.Nullable;
 public class Title {
 
   private static Class<?> packetClass = ReflectionUtils.getNMSClass("PacketPlayOutTitle");
+  private static Class<?> chatPacket = ReflectionUtils.getNMSClass("PacketPlayOutChat");
+  
   private static Class<? extends Enum> packetActionClass = ((Class<? extends Enum>) ReflectionUtils
       .getNMSClass("PacketPlayOutTitle$EnumTitleAction"));
   private static Class<?> chatComponentClass = ReflectionUtils.getNMSClass("IChatBaseComponent");
@@ -108,6 +111,41 @@ public class Title {
         ReflectionUtils.sendPacket(player, subtitlePacket);
       }
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void sendActionBarMessage(@Nonnull Player player,
+                                          @Nonnull MessagePart messagePart) {
+    Preconditions.checkNotNull(player, "player cannot be null.");
+    Preconditions.checkNotNull(messagePart, "Message part cannot be null.");
+    try {
+      Constructor<?> ctor = chatPacket.getDeclaredConstructor(chatComponentClass, byte.class);
+      Object packet = ctor.newInstance(messagePart.getNMSChatObject(), (byte) 2);
+      ReflectionUtils.sendPacket(player, packet);
+    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
+        | InstantiationException e) {
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * This doesn't work properly as {@link FancyMessage} doesn't serialize everything in the first
+   * text json string-object.
+   *
+   * @see #sendActionBarMessage(Player, MessagePart)
+   */
+  @Deprecated
+  public static void sendActionBarMessage(@Nonnull Player player,
+                                          @Nonnull FancyMessage fancyMessage) {
+    Preconditions.checkNotNull(player, "player cannot be null.");
+    Preconditions.checkNotNull(fancyMessage, "fancy message cannot be null.");
+    try {
+      Constructor<?> ctor = chatPacket.getDeclaredConstructor(chatComponentClass, byte.class);
+      Object packet = ctor.newInstance(fancyMessage.getNMSChatObject(), (byte) 2);
+      ReflectionUtils.sendPacket(player, packet);
+    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
+        | InstantiationException e) {
       e.printStackTrace();
     }
   }
