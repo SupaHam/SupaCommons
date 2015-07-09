@@ -274,6 +274,17 @@ public class Colors {
     return new Colors(string);
   }
 
+  /**
+   * Creates a new instance of {@link Colors} with a given {@link Colors} instance appended to it.
+   *
+   * @param colors colors text to append
+   *
+   * @return this new instance of this builder
+   */
+  public Colors _append(Colors colors) {
+    return new Colors(colors.toString());
+  }
+
   private Colors(ChatColor color) {
     this(color.toString());
   }
@@ -528,6 +539,18 @@ public class Colors {
    */
   public Colors append(String string) {
     this.builder.append(string);
+    return this;
+  }
+  
+  /**
+   * Appends a {@link Colors} instance to this {@link Colors}.
+   *
+   * @param colors colors text to append
+   *
+   * @return this instance for chaining
+   */
+  public Colors append(Colors colors) {
+    this.builder.append(colors.toString());
     return this;
   }
 
