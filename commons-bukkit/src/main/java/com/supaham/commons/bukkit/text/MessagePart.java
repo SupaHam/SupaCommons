@@ -560,4 +560,14 @@ public class MessagePart implements Cloneable {
   public void setColor(ChatColor color) {
     this.color = color;
   }
+
+  public Object getNMSChatObject() {
+    try {
+      return ReflectionUtils.getMethod(FancyMessage.nmsChatSerializer, "a", String.class)
+          .invoke(null, toJSONString());
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 }
