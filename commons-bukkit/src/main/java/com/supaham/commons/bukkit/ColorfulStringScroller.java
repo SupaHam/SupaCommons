@@ -55,7 +55,9 @@ public class ColorfulStringScroller extends StringScroller {
         }
       }
     }
+    // make room for all the color codes in lastColors.
     string = string.substring(0, string.length() - (this.lastColors.size() * 2));
+    // if the last character is color code due to us chopping off the next char, remove it.
     if (string.charAt(string.length() - 1) == ChatColor.COLOR_CHAR) {
       string = string.substring(0, string.length() - 1);
     }
