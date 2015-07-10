@@ -13,13 +13,17 @@ import static org.bukkit.ChatColor.RESET;
 import static org.bukkit.ChatColor.STRIKETHROUGH;
 import static org.bukkit.ChatColor.UNDERLINE;
 
+import com.google.common.base.Preconditions;
+
 import com.supaham.commons.bukkit.serializers.ColorStringSerializer;
+import com.supaham.commons.utils.ArrayUtils;
 import com.supaham.commons.utils.CollectionUtils;
 
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -157,5 +161,51 @@ public class ChatColorUtils {
 
   public static String deserialize(String string) {
     return Serializers.getSerializer(ColorStringSerializer.class).deserialize(string, String.class);
+  }
+
+  public static ChatColor getFirstColorFromString(String string) {
+    return getFirstColorFromString(string, 0);
+  }
+
+  public static ChatColor getFirstColorFromString(String string, int index) {
+    for (; index < string.length(); index++) {
+      if (string.charAt(index) == ChatColor.COLOR_CHAR && index < string.length()) {
+        return ChatColor.getByChar(string.charAt(index + 1));
+      }
+    }
+    return null;
+  }
+
+  public static List<ChatColor> getPreviousChatColorsFromString(String string, int index,
+                                                                ChatColor... ignore) {
+    Preconditions.checkArgument(index >= 0, "index cannot be smaller than 0.");
+    return getChatColorsFromString(string, 0, index, ignore);
+  }
+
+  public static List<ChatColor> getChatColorsFromString(String string, int startIdx, int endIdx,
+                                                        ChatColor... ignore) {
+    Preconditions.checkArgument(startIdx >= 0, "start index cannot be smaller than 0.");
+    if (endIdx >= string.length()) {
+      endIdx = string.length() - 1;
+    }
+    if (startIdx < 2) {
+      return Collections.emptyList();
+    }
+
+    ArrayList<ChatColor> result = new ArrayList<>();
+    for (int i = startIdx; 0 < endIdx; i++) {
+      if (string.charAt(i) == ChatColor.COLOR_CHAR && i < endIdx) {
+        ChatColor byChar = ChatColor.getByChar(string.charAt(++i));
+        if (byChar != null) {
+          if (byChar.isColor() || byChar.equals(RESET)) {
+            result.clear();
+          }
+          if (!ArrayUtils.contains(ignore, byChar)) {
+            result.add(byChar);
+          }
+        }
+      }
+    }
+    return result;
   }
 }
