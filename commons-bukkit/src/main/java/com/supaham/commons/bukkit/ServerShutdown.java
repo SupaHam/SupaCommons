@@ -15,14 +15,20 @@ import com.supaham.commons.utils.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.server.ServerCommandEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,6 +54,8 @@ public class ServerShutdown extends CommonModule implements Runnable {
   private String restartMessage;
   private int shutdownDelay = 0;
   private boolean kickingPlayersOnShutdown = true;
+  private String stopPermission;
+  private String restartPermission;
 
   private boolean restarting;
 
@@ -169,7 +177,7 @@ public class ServerShutdown extends CommonModule implements Runnable {
 
     this.state = State.ACTIVE;
     this.delayedIterator.start();
-    if(this.restarting) {
+    if (this.restarting) {
       if (this.restartMessage != null) {
         this.plugin.getServer().broadcastMessage(this.restartMessage);
       }
@@ -268,14 +276,6 @@ public class ServerShutdown extends CommonModule implements Runnable {
     this.restartMessage = StringUtils.stripToNull(restartMessage);
   }
 
-  public boolean isKickingPlayersOnShutdown() {
-    return kickingPlayersOnShutdown;
-  }
-
-  public void setKickingPlayersOnShutdown(boolean kickingPlayersOnShutdown) {
-    this.kickingPlayersOnShutdown = kickingPlayersOnShutdown;
-  }
-
   public int getShutdownDelay() {
     return shutdownDelay;
   }
@@ -284,7 +284,59 @@ public class ServerShutdown extends CommonModule implements Runnable {
     this.shutdownDelay = shutdownDelay;
   }
 
+  public boolean isKickingPlayersOnShutdown() {
+    return kickingPlayersOnShutdown;
+  }
+
+  public void setKickingPlayersOnShutdown(boolean kickingPlayersOnShutdown) {
+    this.kickingPlayersOnShutdown = kickingPlayersOnShutdown;
+  }
+
+  public String getStopPermission() {
+    return stopPermission;
+  }
+
+  public void setStopPermission(String stopPermission) {
+    this.stopPermission = stopPermission;
+  }
+
+  public String getRestartPermission() {
+    return restartPermission;
+  }
+
+  public void setRestartPermission(String restartPermission) {
+    this.restartPermission = restartPermission;
+  }
+
   private final class ServerShutdownListener implements Listener {
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onServerCommandEvent(ServerCommandEvent event) {
+      String command = event.getCommand();
+      boolean restart = command.startsWith("restart");
+      if (restart || command.startsWith("stop")) {
+        ServerShutdown.this.run(restart);
+        event.setCommand(""); // dont execute stop!
+      }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onServerCommandEvent(PlayerCommandPreprocessEvent event) {
+      String message = event.getMessage();
+      if (message.startsWith("/restart")) {
+        if (!event.getPlayer().hasPermission(getRestartPermission())) {
+          return;
+        }
+        ServerShutdown.this.run(true);
+        event.setCancelled(true); // dont execute stop!
+      } else if (message.startsWith("/stop")) {
+        if (!event.getPlayer().hasPermission(getStopPermission())) {
+          return;
+        }
+        ServerShutdown.this.run(false);
+        event.setCancelled(true); // dont execute stop!
+      }
+    }
 
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent event) {
@@ -321,5 +373,38 @@ public class ServerShutdown extends CommonModule implements Runnable {
         event.setCancelled(true);
       }
     }
+  }
+
+  /**
+   * Called when the server is about to shutdown.
+   */
+  public static class ServerShutdownEvent extends Event implements Cancellable {
+
+    private final ServerShutdown serverShutdown;
+    private boolean cancelled;
+
+    public ServerShutdownEvent(@Nonnull ServerShutdown serverShutdown) {
+      this.serverShutdown = Preconditions.checkNotNull(serverShutdown,
+                                                       "serverShutdown cannot be null.");
+    }
+
+    public ServerShutdown getServerShutdown() {
+      return serverShutdown;
+    }
+
+    @Override public boolean isCancelled() {
+      return cancelled;
+    }
+
+    @Override public void setCancelled(boolean cancelled) {
+      this.cancelled = cancelled;
+    }
+
+    private static final HandlerList handlerList = new HandlerList();
+
+    @Override
+    public HandlerList getHandlers() { return handlerList; }
+
+    public static HandlerList getHandlerList() { return handlerList; }
   }
 }
