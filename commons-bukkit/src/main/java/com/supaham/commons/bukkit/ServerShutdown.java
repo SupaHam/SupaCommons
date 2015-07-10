@@ -9,6 +9,7 @@ import com.supaham.commons.bukkit.players.Players;
 import com.supaham.commons.bukkit.players.Players.PlayersSupplier;
 import com.supaham.commons.bukkit.potion.PotionEffectManager;
 import com.supaham.commons.bukkit.potion.Potions;
+import com.supaham.commons.bukkit.utils.EventUtils;
 import com.supaham.commons.state.State;
 import com.supaham.commons.utils.StringUtils;
 
@@ -195,13 +196,14 @@ public class ServerShutdown extends CommonModule implements Runnable {
 
   /**
    * This method is executed right before the kicking process begins. This method applies
-   * {@link Potions#noJump()} and {@link Potions#noWalk()} to players.
+   * {@link Potions#noJump()} and {@link Potions#noWalk()} to players. This method also fires the
+   * {@link ServerShutdownEvent}.
    */
   protected boolean preRun() {
     for (Player player : this.delayedIterator.getSupplier().get()) {
       this.freeze.freeze(player, -1, true);
     }
-    return true;
+    return !EventUtils.callEvent(new ServerShutdownEvent(this)).isCancelled();
   }
 
   /**
