@@ -44,7 +44,12 @@ public class ServerShutdown extends CommonModule implements Runnable {
 
   private TickerTask rerunTask; // privately used to retry to shutdown if cancelled by preRun.
   private String kickMessage;
-  private String broadcastMessage;
+  private String shutdownMessage;
+  private String restartMessage;
+  private int shutdownDelay = 0;
+  private boolean kickingPlayersOnShutdown = true;
+
+  private boolean restarting;
 
   /**
    * Constructs a new {@link ServerShutdown} in charge of slowly kicking players and stopping the
@@ -109,12 +114,23 @@ public class ServerShutdown extends CommonModule implements Runnable {
     this.delayedIterator = new DelayedIterator<Player>(plugin, supplier, interval) {
       @Override
       public void onRun(Player player) {
-        player.kickPlayer(ServerShutdown.this.kickMessage);
+        if (kickingPlayersOnShutdown) {
+          player.kickPlayer(ServerShutdown.this.kickMessage);
+        }
       }
 
       @Override
       public void onDone() {
-        Bukkit.getServer().shutdown();
+        new TickerTask(plugin, shutdownDelay, 0) {
+          @Override public void run() {
+            if (restarting) {
+              Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "restart");
+            } else {
+              Bukkit.getServer().shutdown();
+            }
+            stop();
+          }
+        }.start();
       }
     };
 
@@ -137,8 +153,12 @@ public class ServerShutdown extends CommonModule implements Runnable {
    */
   @Override
   public void run() {
-    Preconditions.checkState(!isInProgress(), "Shutdown already in progress.");
+    run(false);
+  }
 
+  public void run(boolean restart) {
+    Preconditions.checkState(!isInProgress(), "Shutdown already in progress.");
+    this.restarting = restart;
     if (!preRun()) {
       this.state = State.STOPPED;
       this.rerunTask.start();
@@ -149,8 +169,14 @@ public class ServerShutdown extends CommonModule implements Runnable {
 
     this.state = State.ACTIVE;
     this.delayedIterator.start();
-    if (this.broadcastMessage != null) {
-      this.plugin.getServer().broadcastMessage(this.broadcastMessage);
+    if(this.restarting) {
+      if (this.restartMessage != null) {
+        this.plugin.getServer().broadcastMessage(this.restartMessage);
+      }
+    } else {
+      if (this.shutdownMessage != null) {
+        this.plugin.getServer().broadcastMessage(this.shutdownMessage);
+      }
     }
   }
 
@@ -208,18 +234,54 @@ public class ServerShutdown extends CommonModule implements Runnable {
    * @return broadcast message, nullable but never empty
    */
   @Nullable
-  public String getBroadcastMessage() {
-    return broadcastMessage;
+  public String getShutdownMessage() {
+    return shutdownMessage;
   }
 
   /**
    * Sets the message to broadcast when this shutdown task begins. If the message is empty it will
    * be set to null.
    *
-   * @param broadcastMessage broadcast message to set, nullable
+   * @param shutdownMessage shutdown message to set, nullable
    */
-  public void setBroadcastMessage(@Nullable String broadcastMessage) {
-    this.broadcastMessage = StringUtils.stripToNull(broadcastMessage);
+  public void setShutdownMessage(@Nullable String shutdownMessage) {
+    this.shutdownMessage = StringUtils.stripToNull(shutdownMessage);
+  }
+
+  /**
+   * Returns the message to broadcast when this shutdown task begins.
+   *
+   * @return broadcast message, nullable but never empty
+   */
+  @Nullable
+  public String getRestartMessage() {
+    return restartMessage;
+  }
+
+  /**
+   * Sets the message to broadcast when this restart task begins. If the message is empty it will
+   * be set to null.
+   *
+   * @param restartMessage restart message to set, nullable
+   */
+  public void setRestartMessage(@Nullable String restartMessage) {
+    this.restartMessage = StringUtils.stripToNull(restartMessage);
+  }
+
+  public boolean isKickingPlayersOnShutdown() {
+    return kickingPlayersOnShutdown;
+  }
+
+  public void setKickingPlayersOnShutdown(boolean kickingPlayersOnShutdown) {
+    this.kickingPlayersOnShutdown = kickingPlayersOnShutdown;
+  }
+
+  public int getShutdownDelay() {
+    return shutdownDelay;
+  }
+
+  public void setShutdownDelay(int shutdownDelay) {
+    this.shutdownDelay = shutdownDelay;
   }
 
   private final class ServerShutdownListener implements Listener {
