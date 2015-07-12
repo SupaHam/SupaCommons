@@ -4,9 +4,11 @@ import com.google.common.base.Preconditions;
 
 import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.material.TrapDoor;
 
 import javax.annotation.Nonnull;
@@ -195,6 +197,39 @@ public final class BlockUtils {
     Material type = block.getType();
     return type != Material.ICE && type != Material.PACKED_ICE
            && (MaterialUtils.isLeaves(type) || (type == Material.SNOW && d >= 7 || type.isSolid()));
+  }
+
+  /**
+   * Sets up a {@link Block} with the properties of a {@link BannerMeta}.
+   *
+   * @param block block to modify
+   * @param bannerMeta banner metadata to apply to {@code block}
+   *
+   * @throws IllegalArgumentException if the {@code block} is not {@link Material#STANDING_BANNER}
+   * or {@link Material#WALL_BANNER}
+   */
+  public static void setBlockBanner(Block block, BannerMeta bannerMeta)
+      throws IllegalArgumentException {
+    setBlockBanner(block.getState(), bannerMeta);
+  }
+
+  /**
+   * Sets up a {@link BlockState} with the properties of a {@link BannerMeta}. This method finally
+   * calls {@link BlockState#update(boolean, boolean)} with the first boolean as {@code true} and
+   * the second as {@code false}, causing an update but without any physics checks.
+   *
+   * @param state block state to modify
+   * @param bannerMeta banner metadata to apply to {@code block}
+   *
+   * @throws IllegalArgumentException if the {@code block} is not {@link Material#STANDING_BANNER}
+   * or {@link Material#WALL_BANNER}
+   */
+  public static void setBlockBanner(BlockState state, BannerMeta bannerMeta) {
+    Preconditions.checkArgument(state instanceof Banner, "block state is not of Banner.");
+    Banner bannerState = (Banner) state;
+    bannerState.setBaseColor(bannerMeta.getBaseColor());
+    bannerState.setPatterns(bannerMeta.getPatterns());
+    bannerState.update(true, false);
   }
 
   private BlockUtils() {}
