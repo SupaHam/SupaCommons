@@ -2,6 +2,8 @@ package com.supaham.commons.bukkit.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Preconditions;
+
 import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
@@ -21,8 +23,6 @@ import javax.annotation.Nullable;
  * @since 0.1
  */
 public final class MaterialUtils {
-
-  private MaterialUtils() {}
 
   private static final Set<Material> interactableBlocks = EnumSet.noneOf(Material.class);
 
@@ -396,4 +396,26 @@ public final class MaterialUtils {
   public static boolean isLeaves(@Nullable Material material) {
     return material != null && (material == Material.LEAVES || material == Material.LEAVES_2);
   }
+
+  /**
+   * Returns whether a {@link Material} matches any of the given others.
+   *
+   * @param material material to test
+   * @param any materials to check for
+   *
+   * @return whether {@code material} is of any of the materials in {@code any}
+   */
+  public static boolean equals(@Nullable Material material, @Nonnull Material... any) {
+    Preconditions.checkNotNull(any, "array of materials cannot be null.");
+    for (Material anyMat : any) {
+      if (material == null && anyMat == Material.AIR) {
+        return true;
+      } else if (material == anyMat) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private MaterialUtils() {}
 }
