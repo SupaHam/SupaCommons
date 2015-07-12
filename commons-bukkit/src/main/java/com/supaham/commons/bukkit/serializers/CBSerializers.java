@@ -4,6 +4,7 @@ import com.supaham.commons.bukkit.area.CuboidRegion;
 import com.supaham.commons.bukkit.area.Poly2DRegion;
 import com.supaham.commons.bukkit.items.ItemEnchantment;
 import com.supaham.commons.bukkit.potion.Potion;
+import com.supaham.commons.bukkit.utils.CoordinatesUtils.CommonLocationSerializer;
 import com.supaham.commons.serializers.ListSerializer;
 
 import org.bukkit.ChatColor;
@@ -33,7 +34,7 @@ public class CBSerializers {
     SerializationRegistrar.registerClass(LocationSerializer.class);
     SerializationRegistrar.registerClass(MaterialDataSerializer.class);
     SerializationRegistrar.registerClass(VectorSerializer.class);
-
+    SerializationRegistrar.registerClass(CommonLocationSerializer.class);
     SerializationRegistrar.registerClass(FriendlyChatColor.class);
 
     SerializationRegistrar.registerClass(ListColorStringSerializer.class);
@@ -46,6 +47,9 @@ public class CBSerializers {
     SerializationRegistrar.registerClass(Potion.class);
     SerializationRegistrar.registerClass(CuboidRegion.class);
     SerializationRegistrar.registerClass(Poly2DRegion.class);
+
+    // PluginBase
+    SerializationRegistrar.registerClass(CoordinatesSerializer.class);
   }
 
   /**

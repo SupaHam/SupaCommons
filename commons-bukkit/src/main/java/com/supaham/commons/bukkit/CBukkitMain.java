@@ -3,6 +3,7 @@ package com.supaham.commons.bukkit;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.supaham.commons.CMain;
+import com.supaham.commons.bukkit.serializers.CBSerializers;
 
 import org.bukkit.plugin.Plugin;
 
@@ -11,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+
+import pluginbase.config.SerializationRegistrar;
 
 /**
  * Commons main bukkit class.
@@ -22,6 +25,10 @@ public class CBukkitMain {
   private static CBukkitMain instance = null;
 
   private final Map<String, Plugin> hookedPlugins = new HashMap<>();
+  
+  static {
+    SerializationRegistrar.registerClass(CBSerializers.class); // init the class
+  }
 
   /**
    * Gets the instance of this singleton class.
