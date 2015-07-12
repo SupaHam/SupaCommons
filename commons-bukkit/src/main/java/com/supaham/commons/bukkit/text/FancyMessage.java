@@ -8,6 +8,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.stream.JsonWriter;
 
 import com.supaham.commons.Enums;
+import com.supaham.commons.bukkit.Colors;
 import com.supaham.commons.bukkit.utils.ChatColorUtils;
 import com.supaham.commons.bukkit.utils.ReflectionUtils;
 import com.supaham.commons.bukkit.utils.ReflectionUtils.PackageType;
@@ -125,6 +126,10 @@ public class FancyMessage {
     }
   }
 
+  public FancyMessage(@Nonnull final Object object) {
+    this(Preconditions.checkNotNull(object, "object cannot be null.").toString());
+  }
+
   public FancyMessage(final String firstPartText) {
     messageParts = new ArrayList<>();
     messageParts.add(new MessagePart(firstPartText));
@@ -140,7 +145,21 @@ public class FancyMessage {
   }
 
   /**
-   * Sets the text of the current MessagePart.
+   * Sets the text of the current {@link MessagePart}.
+   *
+   * @param text text to set
+   *
+   * @return this instance of FancyMessage, for chaining.
+   *
+   * @throws IllegalStateException thrown if the text is already set for the message part.
+   * @see #append(String)
+   */
+  public FancyMessage text(Colors text) throws IllegalStateException {
+    return text(Preconditions.checkNotNull(text, "text cannot be null.").toString());
+  }
+  
+  /**
+   * Sets the text of the current {@link MessagePart}.
    *
    * @param text text to set
    *
@@ -160,8 +179,7 @@ public class FancyMessage {
 
   /**
    * Appends text to this FancyMessage. If the text is already set for this MessagePart it will
-   * clone the
-   * MessagePart to keep styles and colors.
+   * clone the {@link MessagePart} to keep styles and colors.
    *
    * @param text text to append
    *
@@ -382,6 +400,17 @@ public class FancyMessage {
    *
    * @return this instance of FancyMessage, for chaining.
    */
+  public FancyMessage tooltip(final Colors text) {
+    return tooltip(Preconditions.checkNotNull(text, "text cannot be null.").toString());
+  }
+  
+  /**
+   * Displays a tooltip on hover event.
+   *
+   * @param text text to display
+   *
+   * @return this instance of FancyMessage, for chaining.
+   */
   public FancyMessage tooltip(final String text) {
     latest().tooltip(text);
     dirty = true;
@@ -400,11 +429,24 @@ public class FancyMessage {
     dirty = true;
     return this;
   }
+  /**
+   * Displays a list of lines on hover event.
+   *
+   * @param lines lines to display
+   *
+   * @return this instance of FancyMessage, for chaining.
+   */
+  public FancyMessage tooltip(final Colors... lines) {
+    for (Colors line : Preconditions.checkNotNull(lines, "lines cannot be null.")) {
+      tooltip(Preconditions.checkNotNull(line, "line element cannot be null."));
+    }
+    return this;
+  }
 
   /**
    * Displays a list of lines on hover event.
    *
-   * @param lines
+   * @param lines lines to display
    *
    * @return this instance of FancyMessage, for chaining.
    */
@@ -515,6 +557,12 @@ public class FancyMessage {
   public String toReadableString() {
     StringBuilder stringBuilder = new StringBuilder();
     for (MessagePart messagePart : this.messageParts) {
+      if(messagePart.getColor() != null) {
+        stringBuilder.append(messagePart.getColor());
+      }
+      for (ChatColor color : messagePart.getStyles()) {
+        stringBuilder.append(color);
+      }
       stringBuilder.append(messagePart.getText());
     }
     return stringBuilder.toString();
