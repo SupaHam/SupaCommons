@@ -123,6 +123,38 @@ public final class NumberUtils {
     return df.format(value);
   }
 
+  /**
+   * Returns whether a given {@link String} is an {@link Integer}.
+   *
+   * @param string string to test
+   *
+   * @return whether the given string is an integer
+   */
+  public static boolean isInteger(String string) {
+    try {
+      Integer.parseInt(string);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
+  /**
+   * Returns whether a given {@link String} is a {@link Double}.
+   *
+   * @param string string to test
+   *
+   * @return whether the given string is a double
+   */
+  public static boolean isDouble(String string) {
+    try {
+      Double.parseDouble(string);
+      return true;
+    } catch (NumberFormatException e) {
+      return false;
+    }
+  }
+
   private NumberUtils() {
   }
 }
