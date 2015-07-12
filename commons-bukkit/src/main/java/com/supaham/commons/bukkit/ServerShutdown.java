@@ -102,8 +102,6 @@ public class ServerShutdown extends CommonModule implements Runnable {
   public ServerShutdown(@Nonnull ModuleContainer container, int interval,
                         @Nullable PlayersSupplier supplier) {
     super(container);
-    plugin.registerEvents(listener);
-
     ModuleContainer cont = plugin.getModuleContainer();
     PotionEffectManager pem = cont.getModule(PotionEffectManager.class);
     this.potionEffectManager = pem == null ? new PotionEffectManager(container) : pem;
@@ -189,9 +187,30 @@ public class ServerShutdown extends CommonModule implements Runnable {
     }
   }
 
-  @Override
-  public boolean setState(State state) throws UnsupportedOperationException {
-    throw new UnsupportedOperationException("ServerShutdown does not support state changing.");
+  @Override public boolean setState(State state) throws UnsupportedOperationException {
+    State old = this.state;
+    boolean change = super.setState(state);
+    if (change) {
+      switch (state) {
+        case PAUSED:
+          this.delayedIterator.pause();
+          this.rerunTask.pause();
+          break;
+        case ACTIVE:
+          if (old == State.PAUSED) { // Only resume if it was previously paused
+            this.delayedIterator.resume();
+            this.rerunTask.resume();
+          }
+          this.plugin.registerEvents(this.listener);
+          break;
+        case STOPPED:
+          HandlerList.unregisterAll(this.listener);
+          this.delayedIterator.stop();
+          this.rerunTask.stop();
+          break;
+      }
+    }
+    return change;
   }
 
   /**
