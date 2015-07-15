@@ -178,6 +178,23 @@ public class FancyMessage {
   }
 
   /**
+   * Safely appends text to this FancyMessage using {@link SafeFancyMessage#from(String)}. If the 
+   * text is already set for this MessagePart it will clone the {@link MessagePart} to keep styles 
+   * and colors.
+   * <p/>
+   * <b>Note:</b> this method calls {@link ChatColor#translateAlternateColorCodes(char, String)} on 
+   * the given string, where the {@code char} is &, replacing all ampersands with &sect;.
+   *
+   * @param text text to append
+   *
+   * @return this instance of FancyMessage, for chaining.
+   */
+  public FancyMessage safeAppend(String text) {
+    append(SafeFancyMessage.from(ChatColor.translateAlternateColorCodes('&', text)));
+    return this;
+  }
+
+  /**
    * Appends text to this FancyMessage. If the text is already set for this MessagePart it will
    * clone the {@link MessagePart} to keep styles and colors.
    *
