@@ -14,6 +14,8 @@ import com.sk89q.worldedit.util.command.CommandMapping;
 import com.sk89q.worldedit.util.command.Description;
 import com.sk89q.worldedit.util.command.Dispatcher;
 import com.sk89q.worldedit.util.command.InvalidUsageException;
+import com.sk89q.worldedit.util.command.fluent.CommandGraph;
+import com.sk89q.worldedit.util.command.fluent.DispatcherNode;
 import com.sk89q.worldedit.util.command.parametric.LegacyCommandsHandler;
 import com.sk89q.worldedit.util.command.parametric.ParametricBuilder;
 import com.sk89q.worldedit.util.formatting.ColorCodeBuilder;
@@ -21,7 +23,10 @@ import com.sk89q.worldedit.util.formatting.component.CommandUsageBox;
 import com.supaham.commons.bukkit.CommonPlugin;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -35,11 +40,13 @@ import javax.annotation.Nonnull;
  *
  * @since 0.1
  */
-public abstract class CommandsManager {
+public class CommandsManager implements CommandExecutor, TabCompleter {
 
   private final CommonPlugin plugin;
   private final Dispatcher dispatcher;
-  private CommandRegistration dynamicCommands;
+  private final CommandRegistration dynamicCommands;
+
+  private DispatcherNode commandGraph;
 
   protected static ParametricBuilder getDefaultParametricBuilder(@Nonnull CommonPlugin plugin) {
     ParametricBuilder builder = new ParametricBuilder();
@@ -52,15 +59,44 @@ public abstract class CommandsManager {
   }
 
   public CommandsManager(@Nonnull CommonPlugin plugin) {
-    this.plugin = plugin;
-    dynamicCommands = new CommandRegistration(plugin);
+    this(plugin, false);
+  }
 
-    this.dispatcher = addCommands();
+  public CommandsManager(@Nonnull CommonPlugin plugin, boolean pluginExecutor) {
+    this.plugin = plugin;
+    this.dynamicCommands = new CommandRegistration(plugin, pluginExecutor ? plugin : this);
+
+    this.commandGraph = init().commands();
+    if (this.commandGraph == null) {
+      ParametricBuilder builder = getDefaultParametricBuilder(getPlugin());
+      this.commandGraph = new CommandGraph().builder(builder).commands();
+    }
+    this.dispatcher = this.commandGraph.graph().getDispatcher();
     checkNotNull(this.dispatcher, "dispatcher cannot be null.");
   }
 
-  @Nonnull
-  protected abstract Dispatcher addCommands();
+  public CommandGraph init() {
+    return null;
+  }
+
+  @Override
+  public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    String[] split = new String[args.length + 1];
+    System.arraycopy(args, 0, split, 1, args.length);
+    split[0] = command.getName();
+    handleCommand(sender, Joiner.on(" ").join(split));
+    return true;
+  }
+
+  @Override
+  public List<String> onTabComplete(CommandSender sender, Command command, String alias,
+                                    String[] args) {
+    String[] split = new String[args.length + 1];
+    System.arraycopy(args, 0, split, 1, args.length);
+    split[0] = command.getName();
+
+    return handleCommandSuggestion(sender, Joiner.on(" ").join(split));
+  }
 
   /**
    * This method is called when this {@link CommandsManager} is ready to add local objects before
@@ -172,5 +208,9 @@ public abstract class CommandsManager {
 
   public CommandRegistration getDynamicCommands() {
     return dynamicCommands;
+  }
+
+  public DispatcherNode getCommandGraph() {
+    return commandGraph;
   }
 }
