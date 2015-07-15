@@ -10,7 +10,7 @@ import org.bukkit.util.Vector;
 
 import javax.annotation.Nonnull;
 
-import pluginbase.config.annotation.Name;
+import pluginbase.config.annotation.SerializableAs;
 import pluginbase.config.annotation.SerializeWith;
 
 /**
@@ -21,7 +21,7 @@ import pluginbase.config.annotation.SerializeWith;
  * @see #CuboidRegion(Vector, Vector)
  * @since 0.2.3
  */
-@Name("CuboidRegion")
+@SerializableAs("CuboidRegion")
 public class CuboidRegion implements Region {
 
   @SerializeWith(VectorSerializer.class)

@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 
-import pluginbase.config.annotation.Name;
+import pluginbase.config.annotation.SerializableAs;
 import pluginbase.config.annotation.SerializeWith;
 
 /**
@@ -26,7 +26,7 @@ import pluginbase.config.annotation.SerializeWith;
  * @see #Poly2DRegion(Collection, int, int)
  * @since 0.2.3
  */
-@Name("Poly2DRegion")
+@SerializableAs("Poly2DRegion")
 public class Poly2DRegion implements Region {
 
   @SerializeWith(ListVectorSerializer.class)

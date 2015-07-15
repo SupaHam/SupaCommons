@@ -1,6 +1,7 @@
 package com.supaham.commons.bukkit.potion;
 
 import pluginbase.config.annotation.Name;
+import pluginbase.config.annotation.SerializableAs;
 
 /**
  * Represents a minecraft potion, with some custom fields utilized by {@link PotionEffectManager}.
@@ -10,7 +11,7 @@ import pluginbase.config.annotation.Name;
  * @see PotionEffectManager
  * @since 0.2
  */
-@Name("PotionData")
+@SerializableAs("PotionData")
 public class Potion {
 
   // Minecraft values
