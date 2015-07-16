@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  *
  * @since 0.1
  */
-public abstract class TickerTask implements Runnable, Pausable {
+public class TickerTask implements Runnable, Pausable {
 
   private final Plugin plugin;
   private final long delay;
