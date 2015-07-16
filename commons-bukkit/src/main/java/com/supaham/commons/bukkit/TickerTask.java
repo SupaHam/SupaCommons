@@ -57,7 +57,7 @@ public class TickerTask implements Runnable, Pausable {
       return;
     }
     currentTick++;
-    run();
+    this.runnable.run();
     this.lastTickMillis = System.currentTimeMillis();
   }
 
