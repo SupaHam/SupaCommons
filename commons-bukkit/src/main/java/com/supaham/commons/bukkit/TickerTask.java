@@ -9,12 +9,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Represents a ticker task, a task that runs over a set interval. A {@link TickerTask} can be
  * stopped or started at any point in time. As well as paused or resumed at any point in time
- * (assuming the task isn't stopped). This class doesn't implement the actual task call handling, it
- * makes use of Bukkit's {@link BukkitTask}.
+ * (assuming the task isn't stopped). This class doesn't implement the actual task call handling,
+ * it makes use of Bukkit's {@link BukkitTask}.
  *
  * @since 0.1
  */
@@ -23,6 +24,7 @@ public abstract class TickerTask implements Runnable, Pausable {
   private final Plugin plugin;
   private final long delay;
   private final long interval;
+  private final Runnable runnable;
 
   private BukkitTask task;
   private long lastTickMillis;
@@ -31,11 +33,23 @@ public abstract class TickerTask implements Runnable, Pausable {
   private long currentTick;
 
   public TickerTask(@Nonnull Plugin plugin, long delay, long interval) {
+    this(plugin, delay, interval, null);
+  }
+
+  public TickerTask(@Nonnull Plugin plugin, long delay, long interval,
+                    @Nullable Runnable runnable) {
     checkNotNull(plugin, "plugin cannot be null.");
     this.plugin = plugin;
     this.delay = delay;
     this.interval = Math.max(interval, 0);
+    this.runnable = runnable == null ? this : runnable;
   }
+
+  /**
+   * This method does not need to be overridden if a {@link Runnable} was passed to the
+   * constructor. If no runnable was passed to the constructor, this task will do nothing.
+   */
+  @Override public void run() {}
 
   private void _run() {
     totalTicks++;
