@@ -83,7 +83,7 @@ public class SafeFancyMessage {
           }
           break;
         case 2: // New line
-          fancyMessage.then();
+          fancyMessage.then("\n");
           break;
         case 3: // URL
           appendMessage(matcher.end(group));
