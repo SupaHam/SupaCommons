@@ -31,23 +31,23 @@ public class EntityTeleporter extends CommonModule implements Runnable {
 
   private final LinkedHashMap<Entity, Location> queuedTeleports = new LinkedHashMap<>();
   private final TickerTask tickerTask;
-  private final boolean eject;
+  private final boolean ejecting;
 
   public EntityTeleporter(@Nonnull ModuleContainer container) {
     this(container, 1);
   }
 
-  public EntityTeleporter(@Nonnull ModuleContainer container, boolean eject) {
-    this(container, 1, eject);
+  public EntityTeleporter(@Nonnull ModuleContainer container, boolean ejecting) {
+    this(container, 1, ejecting);
   }
 
   public EntityTeleporter(@Nonnull ModuleContainer container, long interval) {
     this(container, interval, true);
   }
   
-  public EntityTeleporter(@Nonnull ModuleContainer container, long interval, boolean eject) {
+  public EntityTeleporter(@Nonnull ModuleContainer container, long interval, boolean ejecting) {
     super(container);
-    this.eject = eject;
+    this.ejecting = ejecting;
     this.tickerTask = new TickerTask(plugin, 0, interval) {
       @Override public void run() {
         EntityTeleporter.this.run();
@@ -60,12 +60,16 @@ public class EntityTeleporter extends CommonModule implements Runnable {
     Iterator<Entry<Entity, Location>> it = queuedTeleports.entrySet().iterator();
     if (it.hasNext()) {
       Entry<Entity, Location> entry = it.next();
-      if (eject && entry.getKey().getVehicle() != null) {
-        entry.getKey().eject();
-      }
-      entry.getKey().teleport(entry.getValue());
+      teleportRun(entry.getKey(), entry.getValue());
       it.remove();
     }
+  }
+  
+  protected void teleportRun(Entity entity, Location location) {
+    if (ejecting && entity.getVehicle() != null) {
+      entity.eject();
+    }
+    entity.teleport(location);
   }
 
   @Override
@@ -99,5 +103,9 @@ public class EntityTeleporter extends CommonModule implements Runnable {
 
   public LinkedHashMap<Entity, Location> getQueuedTeleports() {
     return queuedTeleports;
+  }
+
+  public boolean isEjecting() {
+    return ejecting;
   }
 }
