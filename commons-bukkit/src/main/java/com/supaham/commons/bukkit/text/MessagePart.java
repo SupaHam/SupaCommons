@@ -1,5 +1,6 @@
 package com.supaham.commons.bukkit.text;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.gson.stream.JsonWriter;
 
@@ -320,11 +321,7 @@ public class MessagePart implements Cloneable {
    * @param lines array of String to set
    */
   public void tooltip(final String... lines) {
-    if (lines.length == 1) {
-      onHover("show_text", lines[0]);
-    } else {
-      itemTooltip(makeMultilineTooltip(lines));
-    }
+    onHover("show_text", Joiner.on("\n").skipNulls().join(lines));
   }
 
   /**
