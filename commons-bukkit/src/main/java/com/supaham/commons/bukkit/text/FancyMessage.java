@@ -157,7 +157,7 @@ public class FancyMessage {
   public FancyMessage text(Colors text) throws IllegalStateException {
     return text(Preconditions.checkNotNull(text, "text cannot be null.").toString());
   }
-  
+
   /**
    * Sets the text of the current {@link MessagePart}.
    *
@@ -178,11 +178,11 @@ public class FancyMessage {
   }
 
   /**
-   * Safely appends text to this FancyMessage using {@link SafeFancyMessage#from(String)}. If the 
-   * text is already set for this MessagePart it will clone the {@link MessagePart} to keep styles 
+   * Safely appends text to this FancyMessage using {@link SafeFancyMessage#from(String)}. If the
+   * text is already set for this MessagePart it will clone the {@link MessagePart} to keep styles
    * and colors.
    * <p/>
-   * <b>Note:</b> this method calls {@link ChatColor#translateAlternateColorCodes(char, String)} on 
+   * <b>Note:</b> this method calls {@link ChatColor#translateAlternateColorCodes(char, String)} on
    * the given string, where the {@code char} is &, replacing all ampersands with &sect;.
    *
    * @param text text to append
@@ -420,7 +420,7 @@ public class FancyMessage {
   public FancyMessage tooltip(final Colors text) {
     return tooltip(Preconditions.checkNotNull(text, "text cannot be null.").toString());
   }
-  
+
   /**
    * Displays a tooltip on hover event.
    *
@@ -446,6 +446,7 @@ public class FancyMessage {
     dirty = true;
     return this;
   }
+
   /**
    * Displays a list of lines on hover event.
    *
@@ -574,7 +575,7 @@ public class FancyMessage {
   public String toReadableString() {
     StringBuilder stringBuilder = new StringBuilder();
     for (MessagePart messagePart : this.messageParts) {
-      if(messagePart.getColor() != null) {
+      if (messagePart.getColor() != null) {
         stringBuilder.append(messagePart.getColor());
       }
       for (ChatColor color : messagePart.getStyles()) {
@@ -601,12 +602,35 @@ public class FancyMessage {
     return removed;
   }
 
+  /**
+   * Applies a {@link MessagePart}'s click event data to this {@link FancyMessage}.
+   *
+   * @param messagePart mesasge part to copy
+   *
+   * @return this instance of FancyMessage, for chaining.
+   */
+  public FancyMessage applyClickEvent(MessagePart messagePart) {
+    messagePart.applyClickEvent(this);
+    return this;
+  }
+
+  /**
+   * Applies a {@link MessagePart}'s hover event data to this {@link FancyMessage}.
+   *
+   * @param messagePart mesasge part to copy
+   *
+   * @return this instance of FancyMessage, for chaining.
+   */
+  public FancyMessage applyHoverEvent(MessagePart messagePart) {
+    messagePart.applyHoverEvent(this);
+    return this;
+  }
+
   protected static Class<?> nmsIChatBaseComponent = PackageType.MINECRAFT_SERVER
       .getClassSafe("IChatBaseComponent");
   protected static Class<?> nmsPacketPlayOutChat = PackageType.MINECRAFT_SERVER
       .getClassSafe("PacketPlayOutChat");
   protected static Class<?> nmsChatSerializer;
-
 
   static {
     if (ReflectionUtils.isServer18()) {

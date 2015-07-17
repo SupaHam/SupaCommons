@@ -557,6 +557,14 @@ public class MessagePart implements Cloneable {
   public void setColor(ChatColor color) {
     this.color = color;
   }
+  
+  public void applyClickEvent(FancyMessage fancyMessage) {
+    fancyMessage.onClick(getClickEvent(), getClickEventData());
+  }
+  
+  public void applyHoverEvent(FancyMessage fancyMessage) {
+    fancyMessage.onHover(getHoverEvent(), getHoverEventData());
+  }
 
   public Object getNMSChatObject() {
     try {
