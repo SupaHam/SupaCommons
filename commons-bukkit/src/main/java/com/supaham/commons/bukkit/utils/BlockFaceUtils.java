@@ -9,9 +9,13 @@ import static org.bukkit.block.BlockFace.WEST;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.utils.ArrayUtils;
+
 import org.bukkit.block.BlockFace;
 
 import java.util.Arrays;
+
+import javax.annotation.Nonnull;
 
 /**
  * Utility methods for working with {@link BlockFace} instances. This class contains methods such
@@ -22,7 +26,7 @@ import java.util.Arrays;
  */
 public class BlockFaceUtils {
 
-  private static BlockFace[] adjacents = new BlockFace[]{NORTH, EAST, WEST, SOUTH, UP, DOWN};
+  private static final BlockFace[] adjacents = new BlockFace[]{NORTH, EAST, WEST, SOUTH, UP, DOWN};
 
   /**
    * Returns whether a {@link BlockFace} is vertical. That is, {@link BlockFace#UP} or
@@ -80,18 +84,39 @@ public class BlockFaceUtils {
    * Returns an array of adjacent {@link BlockFace}s. List:
    * <p />
    * <ul>
-   *   <li>{@link BlockFace#NORTH}</li>
-   *   <li>{@link BlockFace#EAST}</li>
-   *   <li>{@link BlockFace#SOUTH}</li>
-   *   <li>{@link BlockFace#WEST}</li>
-   *   <li>{@link BlockFace#UP}</li>
-   *   <li>{@link BlockFace#DOWN}</li>
+   * <li>{@link BlockFace#NORTH}</li>
+   * <li>{@link BlockFace#EAST}</li>
+   * <li>{@link BlockFace#SOUTH}</li>
+   * <li>{@link BlockFace#WEST}</li>
+   * <li>{@link BlockFace#UP}</li>
+   * <li>{@link BlockFace#DOWN}</li>
    * </ul>
    *
    * @return an array
    */
   public static BlockFace[] getAdjacents() {
     return Arrays.copyOf(adjacents, 6);
+  }
+
+  /**
+   * Returns the axis a {@link BlockFace} is on.
+   *
+   * @param blockFace block face to get axis from
+   *
+   * @return axis the {@code blockFace} lies upon
+   */
+  public static Axis getAxis(@Nonnull BlockFace blockFace) {
+    Preconditions.checkNotNull(blockFace, "block face cannot be null.");
+    Preconditions.checkArgument(ArrayUtils.contains(adjacents, blockFace),
+                                "block face has multiple axis.");
+    return blockFace.getModY() != 0 ? Axis.Y : blockFace.getModX() != 0 ? Axis.X : Axis.Z;
+  }
+
+  /**
+   * Represents an axis in a 3D space.
+   */
+  public enum Axis {
+    X, Y, Z
   }
 
   private BlockFaceUtils() {}
