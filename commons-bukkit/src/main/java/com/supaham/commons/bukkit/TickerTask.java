@@ -17,6 +17,11 @@ import javax.annotation.Nullable;
  * (assuming the task isn't stopped). This class doesn't implement the actual task call handling,
  * it makes use of Bukkit's {@link BukkitTask}.
  *
+ * @see #TickerTask(Plugin, long)
+ * @see #TickerTask(Plugin, long, long)
+ * @see #TickerTask(Plugin, long, Runnable)
+ * @see #TickerTask(Plugin, long, long, Runnable)
+ * 
  * @since 0.1
  */
 public class TickerTask implements Runnable, Pausable {
@@ -32,10 +37,59 @@ public class TickerTask implements Runnable, Pausable {
   private long totalTicks;
   private long currentTick;
 
+  /**
+   * Constructs a new TickerTask that runs once after the given delay (in ticks). This is
+   * equivalent to {@link #TickerTask(Plugin, long, long)} with the last {@code runnable} being -1.
+   *
+   * @param plugin plugin to own this task
+   * @param delay delay (in ticks) before this task should initiate
+   *
+   * @see #TickerTask(Plugin, long, long)
+   * @see #TickerTask(Plugin, long, Runnable)
+   */
+  public TickerTask(@Nonnull Plugin plugin, long delay) {
+    this(plugin, delay, null);
+  }
+
+  /**
+   * Constructs a new TickerTask that runs over a set interact after the given delay (in ticks).
+   * This is equivalent to calling {@link #TickerTask(Plugin, long, Runnable)} with the
+   * {@code runnable} as null.
+   *
+   * <b>Note:</b> If the interval is -1 this task will only run once.
+   *
+   * @param plugin plugin to own this task
+   * @param delay delay (in ticks) before this task should initiate
+   * @param interval interval between each run
+   *
+   * @see #TickerTask(Plugin, long, long, Runnable)
+   */
   public TickerTask(@Nonnull Plugin plugin, long delay, long interval) {
     this(plugin, delay, interval, null);
   }
 
+  /**
+   * Constructs a new TickerTask that runs once after the given delay (in ticks). This runnable
+   * constructor exists solely for 1.8 support, providing convenience through lambda usage.
+   *
+   * @param plugin plugin to own this task
+   * @param delay delay (in ticks) before this task should initiate
+   * @param runnable runnable to use for this execution
+   *
+   * @see #TickerTask(Plugin, long)
+   */
+  public TickerTask(@Nonnull Plugin plugin, long delay, @Nullable Runnable runnable) {
+    this(plugin, delay, -1, runnable);
+  }
+
+  /**
+   * Constructs a new TickerTask that runs over a set interact after the given delay (in ticks).
+   *
+   * <b>Note:</b> If the interval is -1 this task will only run once.
+   *
+   * @param plugin plugin to own this task
+   * @param delay delay (in ticks) before this task should initiate
+   */
   public TickerTask(@Nonnull Plugin plugin, long delay, long interval,
                     @Nullable Runnable runnable) {
     checkNotNull(plugin, "plugin cannot be null.");
