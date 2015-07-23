@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
  * @see #TickerTask(Plugin, long, long)
  * @see #TickerTask(Plugin, long, Runnable)
  * @see #TickerTask(Plugin, long, long, Runnable)
- * 
  * @since 0.1
  */
 public class TickerTask implements Runnable, Pausable {
@@ -111,7 +110,11 @@ public class TickerTask implements Runnable, Pausable {
       return;
     }
     currentTick++;
-    this.runnable.run();
+    try {
+      this.runnable.run();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     this.lastTickMillis = System.currentTimeMillis();
   }
 
