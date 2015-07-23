@@ -94,7 +94,7 @@ public class TickerTask implements Runnable, Pausable {
     checkNotNull(plugin, "plugin cannot be null.");
     this.plugin = plugin;
     this.delay = delay;
-    this.interval = Math.max(interval, 0);
+    this.interval = Math.max(interval, -1);
     this.runnable = runnable == null ? this : runnable;
   }
 
