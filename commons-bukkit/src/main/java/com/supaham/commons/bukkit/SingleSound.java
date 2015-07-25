@@ -25,8 +25,20 @@ public class SingleSound extends Sound {
    *
    * @param sound sound name to play
    *
+   * @see #SingleSound(org.bukkit.Sound, float, float)
+   * @see #SingleSound(String)
+   */
+  public SingleSound(@Nonnull org.bukkit.Sound sound) {
+    this(sound, 1f, 1f);
+  }
+
+  /**
+   * Constructs a single sound with a volume of 1 and pitch of 1.
+   *
+   * @param sound sound name to play
+   *
    * @see #SingleSound(String, float, float)
-   * @see OBCUtils#getSound(org.bukkit.Sound)
+   * @see #SingleSound(org.bukkit.Sound)
    */
   public SingleSound(@Nonnull String sound) {
     this(sound, 1f, 1f);
@@ -39,7 +51,20 @@ public class SingleSound extends Sound {
    * @param volume volume to play the sound at
    * @param pitch pitch to play the sound at
    *
-   * @see OBCUtils#getSound(org.bukkit.Sound)
+   * @see #SingleSound(String, float, float)
+   */
+  public SingleSound(@Nonnull org.bukkit.Sound sound, float volume, float pitch) {
+    this(OBCUtils.getSound(sound), volume, pitch);
+  }
+
+  /**
+   * Constructs a single sound.
+   *
+   * @param sound sound name to play
+   * @param volume volume to play the sound at
+   * @param pitch pitch to play the sound at
+   *
+   * @see #SingleSound(org.bukkit.Sound, float, float)
    */
   public SingleSound(@Nonnull String sound, float volume, float pitch) {
     checkNotNull(sound, "sound cannot be null.");
