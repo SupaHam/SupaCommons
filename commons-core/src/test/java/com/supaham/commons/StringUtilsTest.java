@@ -50,4 +50,14 @@ public class StringUtilsTest {
   public void checkNotNullOrEmptyTest3() {
     checkNotNullOrEmpty("");
   }
+
+  @Test
+  public void testAppendIfPlural() throws Exception {
+    assertEquals("school", StringUtils.appendIfPlural(1, "school", false));
+    assertEquals("schools", StringUtils.appendIfPlural(2, "school", false));
+    assertEquals("cries", StringUtils.appendIfPlural(2, "cry", false));
+    assertEquals("crashes", StringUtils.appendIfPlural(2, "crash", false));
+    assertEquals("stitches", StringUtils.appendIfPlural(2, "stitch", false));
+
+  }
 }

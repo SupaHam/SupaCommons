@@ -153,4 +153,28 @@ public final class StringUtils extends org.apache.commons.lang.StringUtils {
     checkArgument(!string.isEmpty(), desc + " cannot be empty.");
     return string;
   }
+
+  /**
+   * This only supports regular nouns such as school, cry, crash, not irregular nouns such as,
+   * woman, child, mouse, leaf.
+   *
+   * @param count integer to decide whether we need to append plural suffix
+   * @param singularTerm singular term to create the plural suffix for
+   * @param uppercase whether the plural suffix should be uppercase
+   *
+   * @return plural term if count is not 1, otherwise the same {@code singularTerm} is returned
+   */
+  public static String appendIfPlural(int count, String singularTerm, boolean uppercase) {
+    if (count == 1) {
+      return singularTerm;
+    }
+    String lcase = singularTerm.toLowerCase();
+    if (lcase.matches(".*([sxz]|ch|sh)$")) {
+      return singularTerm + (uppercase ? "ES" : "es");
+    } else if (lcase.endsWith("y")) {
+      return singularTerm.substring(0, singularTerm.length() - 1) + (uppercase ? "IES" : "ies");
+    } else {
+      return singularTerm + "s";
+    }
+  }
 }
