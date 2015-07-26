@@ -2,6 +2,7 @@ package com.supaham.commons.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import java.util.Random;
@@ -46,7 +47,8 @@ public class RandomUtils {
   }
 
   /**
-   * Returns a pseudorandom, uniformly distributed int value between the given {@link Range}'s lower
+   * Returns a pseudorandom, uniformly distributed int value between the given {@link Range}'s
+   * lower
    * end point and upper end point. This is equivalent to calling {@link #nextInt(Random, Range)}
    * using {@link #getRandom()}.
    *
@@ -59,7 +61,8 @@ public class RandomUtils {
   }
 
   /**
-   * Returns a pseudorandom, uniformly distributed int value between the given {@link Range}'s lower
+   * Returns a pseudorandom, uniformly distributed int value between the given {@link Range}'s
+   * lower
    * end point and upper end point.
    *
    * @param random random instance to use
@@ -70,6 +73,45 @@ public class RandomUtils {
   public static int nextInt(@Nonnull Random random, @Nonnull Range<Integer> range) {
     checkNotNull(range, "range cannot be null.");
     return nextInt(random, range.lowerEndpoint(), range.upperEndpoint());
+  }
+
+  /**
+   * Returns a pseudo-random double between 0 and {@code max}, inclusive. This is equivalent to
+   * calling {@link #nextDouble(double, double)} with the first double as 0.
+   *
+   * @param max max range
+   *
+   * @return random double in the given range.
+   */
+  public static double nextDouble(double max) {
+    return nextDouble(0, max);
+  }
+
+  /**
+   * Returns a pseudo-random double between min and max, inclusive. This is equivalent to calling
+   * {@link #nextDouble(Random, double, double)} with {@link #getRandom()}.
+   *
+   * @param min min range
+   * @param max max range
+   *
+   * @return random double in the given range.
+   */
+  public static double nextDouble(double min, double max) {
+    return nextDouble(random, min, max);
+  }
+
+  /**
+   * Returns a pseudo-random double between min and max, inclusive.
+   *
+   * @param random random instance to use
+   * @param min min range
+   * @param max max range
+   *
+   * @return random double in the given range.
+   */
+  public static double nextDouble(@Nonnull Random random, double min, double max) {
+    Preconditions.checkNotNull(random, "random cannot be null.");
+    return min + (max - min) * random.nextDouble();
   }
 
   /**
@@ -105,7 +147,8 @@ public class RandomUtils {
 
   /**
    * Returns a pseudorandom, uniformly distributed long value between origin (inclusive) and the
-   * bound (exclusive), drawn from this random number generator's sequence. <p/> <b>Note: This piece
+   * bound (exclusive), drawn from this random number generator's sequence. <p/> <b>Note: This
+   * piece
    * of code was copied directly from JDK 1.8 with minor visual changes, but same performance.</b>
    *
    * @param origin the least value, unless greater than bound
@@ -150,18 +193,6 @@ public class RandomUtils {
       }
     }
     return r;
-  }
-
-  /**
-   * Returns a pseudo-random double between min and max, inclusive.
-   *
-   * @param min min range
-   * @param max max range
-   *
-   * @return random double in the given range.
-   */
-  public static double getRandomDouble(double min, double max) {
-    return min + (max - min) * random.nextDouble();
   }
 
   public static Random getRandom() {
