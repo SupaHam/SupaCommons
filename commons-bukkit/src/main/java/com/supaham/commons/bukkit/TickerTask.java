@@ -26,9 +26,9 @@ import javax.annotation.Nullable;
 public class TickerTask implements Runnable, Pausable {
 
   private final Plugin plugin;
-  private final long delay;
-  private final long interval;
   private final Runnable runnable;
+  private long delay;
+  private long interval;
 
   private BukkitTask task;
   private long lastTickMillis;
@@ -94,7 +94,7 @@ public class TickerTask implements Runnable, Pausable {
     checkNotNull(plugin, "plugin cannot be null.");
     this.plugin = plugin;
     this.delay = delay;
-    this.interval = Math.max(interval, -1);
+    setInterval(interval);
     this.runnable = runnable == null ? this : runnable;
   }
 
@@ -197,8 +197,16 @@ public class TickerTask implements Runnable, Pausable {
     return delay;
   }
 
+  public void setDelay(long delay) {
+    this.delay = delay;
+  }
+
   public long getInterval() {
     return interval;
+  }
+
+  public void setInterval(long interval) {
+    this.interval = Math.max(interval, -1);
   }
 
   public BukkitTask getTask() {
