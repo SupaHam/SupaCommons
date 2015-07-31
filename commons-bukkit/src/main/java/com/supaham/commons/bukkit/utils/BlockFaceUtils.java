@@ -112,6 +112,23 @@ public class BlockFaceUtils {
     return blockFace.getModY() != 0 ? Axis.Y : blockFace.getModX() != 0 ? Axis.X : Axis.Z;
   }
 
+  public static float getYaw(@Nonnull BlockFace blockFace) {
+    Preconditions.checkNotNull(blockFace, "block face cannot be null.");
+    Preconditions.checkArgument(isHorizontal(blockFace), "block face must be horizontal.");
+    switch (blockFace) {
+      case SOUTH:
+        return 0;
+      case WEST:
+        return 90;
+      case NORTH:
+        return 180;
+      case EAST:
+        return 270;
+      default:
+        return -1; // impossible
+    }
+  }
+
   /**
    * Represents an axis in a 3D space.
    */
