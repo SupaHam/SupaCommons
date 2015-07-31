@@ -72,6 +72,22 @@ public class Title {
     Preconditions.checkNotNull(subtitle, "subtitle cannot be null.");
     sendTitle(player, null, null, null, null, subtitle);
   }
+  
+  /**
+   * Sends a subtitle message to a {@link Player}.
+   *
+   * @param player player to send the subtitle to
+   * @param subtitle subtitle to send
+   *
+   * @see #sendTimes(Player, int, int, int)
+   * @see #sendTitle(Player, FancyMessage)
+   */
+  public static void sendSubtitle(@Nonnull Player player, @Nonnull FancyMessage title,
+                                  @Nullable FancyMessage subtitle) {
+    Preconditions.checkNotNull(title, "title cannot be null.");
+    Preconditions.checkNotNull(subtitle, "subtitle cannot be null.");
+    sendTitle(player, null, null, null, title, subtitle);
+  }
 
   /**
    * Sends a title message to a {@link Player}.
