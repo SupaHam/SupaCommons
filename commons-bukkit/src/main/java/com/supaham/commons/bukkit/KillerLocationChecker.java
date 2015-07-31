@@ -1,21 +1,17 @@
 package com.supaham.commons.bukkit;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.supaham.commons.bukkit.Language.LocationChecker.OOB_RETURNED;
 import static com.supaham.commons.bukkit.Language.LocationChecker.OOB_WARN;
 
 import com.google.common.base.Supplier;
 
-import com.supaham.commons.bukkit.utils.OBCUtils;
+import com.supaham.commons.bukkit.area.Region;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import javax.annotation.Nonnull;
 
@@ -28,59 +24,27 @@ import javax.annotation.Nonnull;
  *
  * @since 0.1
  */
-public class KillerLocationChecker extends LocationChecker<Player> {
+public class KillerLocationChecker extends WarnableLocationChecker<Player> {
 
-  private final Map<Player, Integer> warnings = new WeakHashMap<>();
-
-  private final int maxWarnings;
   private Sound returnSound;
   private Sound outOfBoundsSound;
 
   /**
-   * Constructs a new location checker.
+   * Constructs a new killer location checker.
    *
    * @param plugin plugin to own this task
-   * @param min minimum point of a cuboid region
-   * @param max maximum point of a cuboid region
+   * @param region region to check for entities in
    * @param supplier supplier of entities to call for each iteration
    * @param maxWarnings maximum amount of warnings (seconds) a player gets before their judgement.
    */
-  public KillerLocationChecker(@Nonnull Plugin plugin, @Nonnull Location min, @Nonnull Location max,
+  public KillerLocationChecker(@Nonnull Plugin plugin, @Nonnull Region region,
                                @Nonnull Supplier<Collection<Player>> supplier, int maxWarnings) {
-    super(plugin, 20, min, max, supplier);
-    checkArgument(maxWarnings > 0, "max warnings cannot be smaller than 1.");
-    this.maxWarnings = maxWarnings;
-    this.returnSound = new SingleSound(OBCUtils.getSound(org.bukkit.Sound.NOTE_PLING), 1F, 1.5F);
-    this.outOfBoundsSound = new SingleSound(OBCUtils.getSound(org.bukkit.Sound.NOTE_BASS), 1F, .5F);
+    super(plugin, 20, region, supplier, maxWarnings);
+    this.returnSound = new SingleSound(org.bukkit.Sound.NOTE_PLING, 1F, 1.5F);
+    this.outOfBoundsSound = new SingleSound(org.bukkit.Sound.NOTE_BASS, 1F, .5F);
   }
 
-  @Override
-  boolean preRun(@Nonnull Player entity) {
-    if (!entity.isOnline() || entity.isDead()) {
-      this.warnings.remove(entity);
-      return false;
-    }
-    return true;
-  }
-
-  @Override
-  void onOutOfBounds(@Nonnull Player entity) {
-    Integer warnings = this.warnings.get(entity);
-    if (warnings == null) {
-      warnings = 0;
-    }
-    warnings++;
-    if (warnings == this.maxWarnings) {
-      reachedMaxWarnings(entity);
-      this.warnings.remove(entity);
-    } else {
-      warn(entity);
-      this.warnings.put(entity, warnings);
-    }
-  }
-
-  @Override
-  void onInBounds(@Nonnull Player entity) {
+  @Override protected void onInBounds(@Nonnull Player entity) {
     boolean returned = this.warnings.remove(entity) != null;
     if (returned) {
       OOB_RETURNED.send(entity);
@@ -88,21 +52,13 @@ public class KillerLocationChecker extends LocationChecker<Player> {
     }
   }
 
-  void reachedMaxWarnings(@Nonnull Player entity) {
+  @Override protected void reachedMaxWarnings(@Nonnull Player entity) {
     entity.setHealth(0D);
   }
 
-  void warn(@Nonnull Player entity) {
+  @Override protected void warn(@Nonnull Player entity, int warnings) {
     OOB_WARN.send(entity);
     this.outOfBoundsSound.play(entity);
-  }
-
-  public Map<Player, Integer> getWarnings() {
-    return warnings;
-  }
-
-  public int getMaxWarnings() {
-    return maxWarnings;
   }
 
   public Sound getReturnSound() {
