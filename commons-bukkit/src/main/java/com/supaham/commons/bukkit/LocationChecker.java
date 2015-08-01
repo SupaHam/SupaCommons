@@ -73,6 +73,17 @@ public abstract class LocationChecker<T extends Entity> extends TickerTask {
    */
   protected abstract void onInBounds(@Nonnull T entity);
 
+  /**
+   * Returns whether an entity is within this checker.
+   *
+   * @param entity entity to check
+   *
+   * @return true if the entity passed the check, meaning 'in bounds'
+   */
+  protected boolean check(T entity) {
+    return this.region.contains(entity.getLocation().toVector());
+  }
+
   @Override
   public void run() {
     Collection<T> entities = this.supplier.get();
@@ -84,7 +95,7 @@ public abstract class LocationChecker<T extends Entity> extends TickerTask {
         continue;
       }
 
-      if (!this.region.contains(entity.getLocation().toVector())) {
+      if (!check(entity)) {
         onOutOfBounds(entity);
       } else {
         onInBounds(entity);
