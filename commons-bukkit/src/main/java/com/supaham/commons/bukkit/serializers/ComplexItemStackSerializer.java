@@ -12,6 +12,8 @@ import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
+import javax.annotation.Nonnull;
+
 import pluginbase.bukkit.config.YamlConfiguration;
 import pluginbase.config.serializers.Serializer;
 import pluginbase.config.serializers.Serializers;
@@ -45,7 +47,7 @@ public class ComplexItemStackSerializer implements Serializer<ItemStack> {
 
   @Nullable
   @Override
-  public ItemStack deserialize(@Nullable Object serialized, Class wantedType)
+  public ItemStack deserialize(@Nullable Object serialized, @Nonnull Class wantedType)
       throws IllegalArgumentException {
     if (serialized == null || !(serialized instanceof String)) {
       return null;

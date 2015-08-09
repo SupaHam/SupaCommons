@@ -64,24 +64,14 @@ public class Bungee extends CommonModule {
     super(container);
     this.plugin.getServer().getMessenger().registerOutgoingPluginChannel(this.plugin, "BungeeCord");
     this.connectCooldown = connectCooldown;
+    registerTask(this.cooldownRemover);
   }
 
-  public boolean setState(State state) throws UnsupportedOperationException {
-    State old = this.state;
+  public boolean setState(@Nonnull State state) throws UnsupportedOperationException {
     boolean change = super.setState(state);
     if (change) {
       switch (state) {
-        case PAUSED:
-          this.cooldownRemover.pause();
-          break;
-        case ACTIVE:
-          if (old == State.PAUSED) { // Only resume if it was previously paused
-            this.cooldownRemover.resume();
-          }
-          this.cooldownRemover.start();
-          break;
         case STOPPED:
-          this.cooldownRemover.stop();
           this.connecting.clear();
           break;
       }

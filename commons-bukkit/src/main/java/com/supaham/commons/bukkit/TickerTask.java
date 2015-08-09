@@ -2,7 +2,11 @@ package com.supaham.commons.bukkit;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Preconditions;
+
 import com.supaham.commons.Pausable;
+import com.supaham.commons.state.State;
+import com.supaham.commons.state.Stateable;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -23,13 +27,14 @@ import javax.annotation.Nullable;
  * @see #TickerTask(Plugin, long, long, Runnable)
  * @since 0.1
  */
-public class TickerTask implements Runnable, Pausable {
+public class TickerTask implements Runnable, Pausable, Stateable {
 
   private final Plugin plugin;
   private final Runnable runnable;
   private long delay;
   private long interval;
 
+  protected State state = State.STOPPED;
   private BukkitTask task;
   private long lastTickMillis;
   private boolean paused = true;
@@ -183,6 +188,35 @@ public class TickerTask implements Runnable, Pausable {
     }
     this.paused = false;
     return true;
+  }
+
+  @Nonnull @Override public State getState() {
+    return this.state;
+  }
+
+  @Override public boolean setState(@Nonnull State state) throws UnsupportedOperationException {
+    Preconditions.checkNotNull(state, "state cannot be null.");
+    State old = this.state;
+    boolean change = this.state.isIdle() != state.isIdle();
+    if (change) {
+      this.state = state;
+      switch (state) {
+        case PAUSED:
+          pause();
+          break;
+        case ACTIVE:
+          if (old == State.PAUSED) { // Only resume if it was previously paused
+            resume();
+          } else {
+            start();
+          }
+          break;
+        case STOPPED:
+          stop();
+          break;
+      }
+    }
+    return change;
   }
 
   public boolean isStarted() {

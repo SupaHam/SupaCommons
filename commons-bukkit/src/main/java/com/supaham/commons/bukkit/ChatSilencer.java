@@ -4,12 +4,10 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.modules.CommonModule;
 import com.supaham.commons.bukkit.modules.ModuleContainer;
-import com.supaham.commons.state.State;
 import com.supaham.commons.utils.StringUtils;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -43,24 +41,7 @@ public class ChatSilencer extends CommonModule {
 
   public ChatSilencer(@Nonnull ModuleContainer container) {
     super(container);
-  }
-
-  @Override
-  public boolean setState(State state) throws UnsupportedOperationException {
-    boolean change = super.setState(state);
-    if (change) {
-      switch (state) {
-        case PAUSED:
-          break;
-        case ACTIVE:
-          this.plugin.registerEvents(this.listener);
-          break;
-        case STOPPED:
-          HandlerList.unregisterAll(this.listener);
-          break;
-      }
-    }
-    return change;
+    registerListener(this.listener);
   }
 
   /**

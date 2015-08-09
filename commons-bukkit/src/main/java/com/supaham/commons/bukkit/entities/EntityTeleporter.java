@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import com.supaham.commons.bukkit.TickerTask;
 import com.supaham.commons.bukkit.modules.CommonModule;
 import com.supaham.commons.bukkit.modules.ModuleContainer;
-import com.supaham.commons.state.State;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -53,6 +52,7 @@ public class EntityTeleporter extends CommonModule implements Runnable {
         EntityTeleporter.this.run();
       }
     };
+    registerTask(this.tickerTask);
   }
 
   @Override
@@ -70,25 +70,6 @@ public class EntityTeleporter extends CommonModule implements Runnable {
       entity.eject();
     }
     entity.teleport(location);
-  }
-
-  @Override
-  public boolean setState(State state) throws UnsupportedOperationException {
-    if (super.setState(state)) {
-      switch (state) {
-        case PAUSED:
-          this.tickerTask.pause();
-          break;
-        case ACTIVE:
-          this.tickerTask.start();
-          break;
-        case STOPPED:
-          this.tickerTask.stop();
-          break;
-      }
-      return true;
-    }
-    return false;
   }
 
   public boolean contains(Entity entity) {

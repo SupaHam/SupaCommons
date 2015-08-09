@@ -14,7 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -85,31 +84,8 @@ public class Freeze extends CommonModule {
     if (pem == null) { // we created our own freeze.
       this.potionEffectManager.setState(State.ACTIVE);
     }
-  }
-
-  @Override
-  public boolean setState(State state) throws UnsupportedOperationException {
-    State old = this.state;
-    boolean change = super.setState(state);
-    if (change) {
-      switch (state) {
-        case PAUSED:
-          this.expiryTask.pause();
-          break;
-        case ACTIVE:
-          if (old == State.PAUSED) { // Only resume if it was previously paused
-            this.expiryTask.resume();
-          }
-          this.plugin.registerEvents(this.listener);
-          this.expiryTask.start();
-          break;
-        case STOPPED:
-          HandlerList.unregisterAll(this.listener);
-          this.expiryTask.stop();
-          break;
-      }
-    }
-    return change;
+    registerTask(this.expiryTask);
+    registerListener(this.listener);
   }
 
   /**

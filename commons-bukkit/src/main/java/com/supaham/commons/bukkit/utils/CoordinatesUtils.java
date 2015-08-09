@@ -169,7 +169,7 @@ public class CoordinatesUtils {
     }
 
     @Nullable @Override
-    public CommonLocation deserialize(@Nullable Object serialized, Class wantedType)
+    public CommonLocation deserialize(@Nullable Object serialized, @Nonnull Class wantedType)
         throws IllegalArgumentException {
       if (serialized == null) {
         return null;

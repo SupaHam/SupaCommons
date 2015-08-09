@@ -60,10 +60,12 @@ public class PotionEffectManager extends CommonModule {
   public PotionEffectManager(@Nonnull ModuleContainer container) {
     super(container);
     this.expiryTask = new ExpiryTask(0, 1);
+    registerTask(this.expiryTask);
+    registerListener(this.listener);
   }
 
   @Override
-  public boolean setState(State state) throws UnsupportedOperationException {
+  public boolean setState(@Nonnull State state) throws UnsupportedOperationException {
     State old = this.state;
     boolean change = super.setState(state);
     if (change) {
@@ -72,21 +74,13 @@ public class PotionEffectManager extends CommonModule {
           for (PotionData data : this.entityEffects.values()) {
             data.pause();
           }
-          this.expiryTask.pause();
           break;
         case ACTIVE:
           if (old == State.PAUSED) { // Only resume if it was previously paused
             for (PotionData data : this.entityEffects.values()) {
               data.resume();
             }
-            this.expiryTask.resume();
           }
-          this.plugin.registerEvents(this.listener);
-          this.expiryTask.start();
-          break;
-        case STOPPED:
-          this.expiryTask.stop();
-          HandlerList.unregisterAll(this.listener);
           break;
       }
     }

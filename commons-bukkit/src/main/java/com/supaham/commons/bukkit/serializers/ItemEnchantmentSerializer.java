@@ -8,6 +8,8 @@ import com.supaham.commons.bukkit.utils.ItemUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+
 import pluginbase.config.serializers.Serializer;
 
 /**
@@ -31,7 +33,7 @@ public class ItemEnchantmentSerializer implements Serializer<ItemEnchantment> {
 
   @Nullable
   @Override
-  public ItemEnchantment deserialize(@Nullable Object serialized, Class wantedType)
+  public ItemEnchantment deserialize(@Nullable Object serialized, @Nonnull Class wantedType)
       throws IllegalArgumentException {
     if (serialized == null) {
       return null;

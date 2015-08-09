@@ -5,12 +5,10 @@ import com.google.common.base.Preconditions;
 import com.supaham.commons.bukkit.TickerTask;
 import com.supaham.commons.bukkit.modules.CommonModule;
 import com.supaham.commons.bukkit.modules.ModuleContainer;
-import com.supaham.commons.state.State;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -38,31 +36,8 @@ public class EntityRemover extends CommonModule {
   public EntityRemover(@Nonnull ModuleContainer container) {
     super(container);
     this.removerTask = new RemoverTask(container.getPlugin(), 0, 1);
-  }
-
-  @Override
-  public boolean setState(State state) throws UnsupportedOperationException {
-    State old = this.state;
-    boolean change = super.setState(state);
-    if (change) {
-      switch (state) {
-        case PAUSED:
-          this.removerTask.pause();
-          break;
-        case ACTIVE:
-          if (old == State.PAUSED) { // Only resume if it was previously paused
-            this.removerTask.resume();
-          }
-          this.plugin.registerEvents(this.listener);
-          this.removerTask.start();
-          break;
-        case STOPPED:
-          HandlerList.unregisterAll(this.listener);
-          this.removerTask.stop();
-          break;
-      }
-    }
-    return change;
+    registerTask(this.removerTask);
+    registerListener(this.listener);
   }
 
   /**
