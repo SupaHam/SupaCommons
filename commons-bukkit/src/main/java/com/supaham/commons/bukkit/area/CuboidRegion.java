@@ -8,6 +8,9 @@ import com.supaham.commons.bukkit.utils.VectorUtils;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import javax.annotation.Nonnull;
 
 import pluginbase.config.annotation.SerializableAs;
@@ -71,5 +74,48 @@ public class CuboidRegion implements Region {
 
   @Override public boolean contains(@Nonnull Vector vector) {
     return VectorUtils.isWithin(vector, this.min, this.max);
+  }
+
+  @Override public Iterator<Vector> iterator() {
+    return new Iterator<Vector>() {
+      private Vector min = CuboidRegion.this.getMinimumPoint();
+      private Vector max = CuboidRegion.this.getMaximumPoint();
+      private int nextX;
+      private int nextY;
+      private int nextZ;
+
+      {
+        this.nextX = this.min.getBlockX();
+        this.nextY = this.min.getBlockY();
+        this.nextZ = this.min.getBlockZ();
+      }
+
+      public boolean hasNext() {
+        return this.nextX != -2147483648;
+      }
+
+      public Vector next() {
+        if(!this.hasNext()) {
+          throw new NoSuchElementException();
+        } else {
+          Vector answer = new Vector(this.nextX, this.nextY, this.nextZ);
+          if(++this.nextX > this.max.getBlockX()) {
+            this.nextX = this.min.getBlockX();
+            if(++this.nextY > this.max.getBlockY()) {
+              this.nextY = this.min.getBlockY();
+              if(++this.nextZ > this.max.getBlockZ()) {
+                this.nextX = -2147483648;
+              }
+            }
+          }
+
+          return answer;
+        }
+      }
+
+      public void remove() {
+        throw new UnsupportedOperationException();
+      }
+    };
   }
 }

@@ -8,7 +8,7 @@ import javax.annotation.Nonnull;
  * Represents an object with a predefined volume using two {@link Vector}s.
  * @since 0.2.3
  */
-public interface Region {
+public interface Region extends Iterable<Vector> {
 
   /**
    * Returns the minimum point of this extent.

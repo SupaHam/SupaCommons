@@ -167,4 +167,8 @@ public class Poly2DRegion implements Region {
     }
     return inside;
   }
+
+  @Override public Iterator<Vector> iterator() {
+    return null; // TODO implement
+  }
 }
