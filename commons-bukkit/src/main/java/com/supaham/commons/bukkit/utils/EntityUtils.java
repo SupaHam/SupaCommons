@@ -7,8 +7,10 @@ import com.google.common.base.Supplier;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -116,6 +118,11 @@ public class EntityUtils {
       entity.removePotionEffect(potionEffect.getType());
     }
     return effects;
+  }
+
+  public static boolean isOnGround(@Nonnull Entity entity) {
+    return !(entity instanceof Player) ? entity.isOnGround() : entity.getLocation().getBlock()
+        .getRelative(BlockFace.DOWN).getType().isSolid();
   }
 
   public static interface EntitySupplier extends Supplier<Entity> {}
