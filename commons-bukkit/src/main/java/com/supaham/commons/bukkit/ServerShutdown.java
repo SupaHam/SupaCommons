@@ -151,8 +151,6 @@ public class ServerShutdown extends CommonModule implements Runnable {
         }
       }
     };
-    registerTask(this.delayedIterator);
-    registerTask(this.rerunTask);
     registerListener(this.listener);
     setKickMessage(null);
   }
@@ -188,6 +186,16 @@ public class ServerShutdown extends CommonModule implements Runnable {
         this.plugin.getServer().broadcastMessage(this.shutdownMessage);
       }
     }
+  }
+
+  @Override public boolean setState(@Nonnull State state) throws UnsupportedOperationException {
+    boolean change = super.setState(state);
+    if (change && !state.equals(State.ACTIVE)) { // rerun cannot be registered because it is 
+      // manually activated.
+      this.delayedIterator.setState(state);
+      this.rerunTask.setState(state);
+    }
+    return change;
   }
 
   /**
