@@ -99,7 +99,7 @@ public final class StringUtils extends org.apache.commons.lang.StringUtils {
     if (str == null) {
       return null;
     }
-    return str.replaceAll("[- ]*", "_").toLowerCase();
+    return str.replaceAll("[- ]+", "_").toLowerCase();
   }
 
   /**

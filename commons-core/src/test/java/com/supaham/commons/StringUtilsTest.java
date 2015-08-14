@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.supaham.commons.utils.StringUtils;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class StringUtilsTest {
@@ -58,6 +59,13 @@ public class StringUtilsTest {
     assertEquals("cries", StringUtils.appendIfPlural(2, "cry", false));
     assertEquals("crashes", StringUtils.appendIfPlural(2, "crash", false));
     assertEquals("stitches", StringUtils.appendIfPlural(2, "stitch", false));
+
+  }
+
+  @Test
+  public void testNormalize() throws Exception {
+    Assert.assertEquals("foo_bar", StringUtils.normalizeString("foo bar"));
+    Assert.assertEquals("foo_bar_abc_def", StringUtils.normalizeString("foo bar_abc def"));
 
   }
 }
