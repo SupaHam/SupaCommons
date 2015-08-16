@@ -9,6 +9,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 
 import com.supaham.commons.utils.RandomUtils;
 import com.supaham.commons.utils.StringUtils;
@@ -27,6 +28,7 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 import javax.annotation.Nonnull;
@@ -287,7 +289,9 @@ public class Players {
 
     @Override
     public Collection<Player> get() {
-      return Collections2.transform(this.world.getEntities(), entityToPlayerFunction());
+      return Collections2.filter(
+          Collections2.transform(this.world.getEntities(), entityToPlayerFunction()),
+          Predicates.notNull());
     }
   }
 
@@ -338,12 +342,12 @@ public class Players {
     }
 
     @Override
-    public ArrayList<? extends Player> get(Location location) {
+    public List<? extends Player> get(Location location) {
       PlayersSupplier supplier = this.supplier == null ? worldPlayers(location.getWorld())
                                                        : this.supplier;
-      ArrayList<? extends Player> players = new ArrayList<>(supplier.get());
-      for (int i = players.size(); i > 0; i--) {
-        if (players.get(i).getLocation().distanceSquared(location) <= radius * radius) {
+      List<Player> players = Lists.reverse(new ArrayList<>(supplier.get()));
+      for (int i = 0; i < players.size(); i++) {
+        if (players.get(i).getLocation().distanceSquared(location) > radius * radius) {
           players.remove(i);
         }
       }
