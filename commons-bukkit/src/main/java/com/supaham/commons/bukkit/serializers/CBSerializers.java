@@ -27,7 +27,7 @@ import pluginbase.config.serializers.Serializer;
  */
 public class CBSerializers {
 
-  static {
+  public static void init() {
     SerializationRegistrar.registerClass(ColorStringSerializer.class);
     SerializationRegistrar.registerClass(ComplexItemStackSerializer.class);
     SerializationRegistrar.registerClass(ItemEnchantmentSerializer.class);

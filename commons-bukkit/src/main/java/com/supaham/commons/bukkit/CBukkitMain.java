@@ -13,8 +13,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import pluginbase.config.SerializationRegistrar;
-
 /**
  * Commons main bukkit class.
  *
@@ -25,9 +23,9 @@ public class CBukkitMain {
   private static CBukkitMain instance = null;
 
   private final Map<String, Plugin> hookedPlugins = new HashMap<>();
-  
+
   static {
-    SerializationRegistrar.registerClass(CBSerializers.class); // init the class
+    CBSerializers.init(); // init the class
   }
 
   /**
@@ -58,7 +56,7 @@ public class CBukkitMain {
 
   public static boolean unhook(@Nonnull Plugin plugin) {
     checkNotNull(plugin, "plugin cannot be null.");
-    return CBukkitMain.instance != null 
+    return CBukkitMain.instance != null
            && instance.hookedPlugins.remove(plugin.getName()) != null;
   }
 
