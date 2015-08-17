@@ -12,6 +12,8 @@ import com.supaham.commons.utils.RandomUtils;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
+import java.util.regex.Pattern;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -25,6 +27,7 @@ import pluginbase.minecraft.location.Coordinates;
  */
 public class VectorUtils {
 
+  private static final Pattern DESERIALIZE = Pattern.compile("\\s+,\\s+");
   /**
    * Deserializes a {@link String} to represent a {@link Vector}. <p>
    * LocationUtils.deserialize("123.0 64.0 124.5") = {@link Vector}(123.0D, 64.0D, 124.5D) <br />
@@ -45,7 +48,7 @@ public class VectorUtils {
   @Nonnull
   public static Vector deserialize(@Nonnull String string) throws NullPointerException {
     checkNotNullOrEmpty(string);
-    String[] split = string.split("\\s+");
+    String[] split = DESERIALIZE.split(string, 3);
     checkArgument(split.length == 3, "string is in an invalid format.");
     return new Vector(parseDouble(split[0]), parseDouble(split[1]), parseDouble(split[2]));
   }
@@ -59,8 +62,8 @@ public class VectorUtils {
    * @return serialized {@code vector}
    */
   public static String serialize(Vector vector) {
-    return roundExact(2, vector.getX()) + " "
-           + roundExact(2, vector.getY()) + " "
+    return roundExact(2, vector.getX()) + ","
+           + roundExact(2, vector.getY()) + ","
            + roundExact(2, vector.getZ());
   }
   
