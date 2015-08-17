@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import pluginbase.bukkit.config.YamlConfiguration;
+import pluginbase.logging.PluginLogger;
 import pluginbase.messages.PluginBaseException;
 
 /**
@@ -30,7 +31,7 @@ public final class SerializationUtils {
    * result, whether it be the defaults or the newly loaded class, to the config and writes to the
    * {@code file}.
    *
-   * @param plugin plugin to debug to
+   * @param logger logger to debug to
    * @param file file to load or create
    * @param defaults defaults to use
    * @param root root yaml object in the file, not null
@@ -39,9 +40,9 @@ public final class SerializationUtils {
    * @return object of type {@link T}
    */
   @Nullable
-  public static <T> T loadOrCreateProperties(@Nonnull CommonPlugin plugin, @Nonnull File file,
+  public static <T> T loadOrCreateProperties(@Nonnull PluginLogger logger, @Nonnull File file,
                                              @Nonnull T defaults, @Nullable String root) {
-    Preconditions.checkNotNull(plugin, "plugin cannot be null.");
+    Preconditions.checkNotNull(logger, "logger cannot be null.");
     Preconditions.checkNotNull(file, "file cannot be null.");
     Preconditions.checkNotNull(defaults, "defaults cannot be null.");
     if (StringUtils.trimToNull(root) == null) {
@@ -56,13 +57,13 @@ public final class SerializationUtils {
       }
       yaml.set(root, result);
       yaml.save(file);
-      plugin.getLog().fine("Successfully loaded " + file.getName() + ".");
+      logger.fine("Successfully loaded " + file.getName() + ".");
     } catch (PluginBaseException e) {
-      plugin.getLog().severe("Error occurred while loading " + file.getName() + "!");
+      logger.severe("Error occurred while loading " + file.getName() + "!");
       e.printStackTrace();
       return null;
     } catch (IOException e) {
-      plugin.getLog().severe("Error occurred while saving " + file.getName() + "!");
+      logger.severe("Error occurred while saving " + file.getName() + "!");
       e.printStackTrace();
       return null;
     }
