@@ -61,9 +61,10 @@ public abstract class WarnableLocationChecker<T extends Entity> extends Location
     }
     if (warnings == this.maxWarnings) {
       reachedMaxWarnings(entity);
-      this.warnings.remove(entity);
     } else {
-      warn(entity, warnings);
+      if (!warn(entity, warnings)) {
+        return;
+      }
       warnings++;
       this.warnings.put(entity, warnings);
     }
@@ -73,9 +74,11 @@ public abstract class WarnableLocationChecker<T extends Entity> extends Location
     this.warnings.remove(entity);
   }
 
-  protected abstract void reachedMaxWarnings(@Nonnull T entity);
+  protected void reachedMaxWarnings(@Nonnull T entity) {
+    this.warnings.remove(entity);
+  }
 
-  protected abstract void warn(@Nonnull T entity, int warnings);
+  protected abstract boolean warn(@Nonnull T entity, int warnings);
 
   public Map<T, Integer> getWarnings() {
     return warnings;

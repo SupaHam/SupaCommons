@@ -56,9 +56,10 @@ public class KillerLocationChecker extends WarnableLocationChecker<Player> {
     entity.setHealth(0D);
   }
 
-  @Override protected void warn(@Nonnull Player entity, int warnings) {
+  @Override protected boolean warn(@Nonnull Player entity, int warnings) {
     OOB_WARN.send(entity);
     this.outOfBoundsSound.play(entity);
+    return true;
   }
 
   public Sound getReturnSound() {
