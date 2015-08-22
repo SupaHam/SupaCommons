@@ -51,7 +51,7 @@ public class PlayerTeleportFix implements Listener {
       PlayersSupplierFor<Location> delegate = Players.playersByRadius(null, radius);
 
       @Override
-      public Collection<? extends Player> get(Player player) {
+      public Collection<Player> get(Player player) {
         return delegate.get(player.getLocation());
       }
     };

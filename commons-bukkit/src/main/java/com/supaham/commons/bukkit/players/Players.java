@@ -257,7 +257,7 @@ public class Players {
    */
   public interface PlayersSupplierFor<T> {
 
-    Collection<? extends Player> get(T t);
+    Collection<Player> get(T t);
   }
 
   private static class ChunkSupplier implements PlayersSupplier {
@@ -342,7 +342,7 @@ public class Players {
     }
 
     @Override
-    public List<? extends Player> get(Location location) {
+    public List<Player> get(Location location) {
       PlayersSupplier supplier = this.supplier == null ? worldPlayers(location.getWorld())
                                                        : this.supplier;
       List<Player> players = Lists.reverse(new ArrayList<>(supplier.get()));
