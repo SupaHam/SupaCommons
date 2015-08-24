@@ -27,6 +27,16 @@ public interface CommonPlugin extends LocalizablePlugin, Plugin {
    */
   @Nonnull
   <T extends Listener> T registerEvents(@Nonnull T listener);
+  
+  /**
+   * Unregisters a {@link Listener} to this plugin.
+   *
+   * @param listener listener to unregister
+   * @param <T> listener type
+   *
+   * @return unregistered listener (that is the given parameter)
+   */
+  @Nonnull <T extends Listener> T unregisterEvents(@Nonnull T listener);
 
   /**
    * Returns this plugin's {@link ModuleContainer}.

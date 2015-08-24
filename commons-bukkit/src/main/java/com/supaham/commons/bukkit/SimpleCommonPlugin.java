@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import com.supaham.commons.bukkit.modules.Module;
 import com.supaham.commons.bukkit.modules.ModuleContainer;
 
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -67,6 +68,11 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
 
   @Nonnull @Override public <L extends Listener> L registerEvents(@Nonnull L listener) {
     getServer().getPluginManager().registerEvents(listener, this);
+    return listener;
+  }
+
+  @Nonnull @Override public <L extends Listener> L unregisterEvents(@Nonnull L listener) {
+    HandlerList.unregisterAll(listener);
     return listener;
   }
 
