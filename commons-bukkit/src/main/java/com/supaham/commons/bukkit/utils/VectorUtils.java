@@ -27,11 +27,12 @@ import pluginbase.minecraft.location.Coordinates;
  */
 public class VectorUtils {
 
-  private static final Pattern DESERIALIZE = Pattern.compile("\\s+,\\s+");
+  private static final Pattern DESERIALIZE = Pattern.compile("\\s*,\\s*");
+
   /**
    * Deserializes a {@link String} to represent a {@link Vector}. <p>
    * LocationUtils.deserialize("123.0 64.0 124.5") = {@link Vector}(123.0D, 64.0D, 124.5D) <br />
-   * 
+   *
    * LocationUtils.deserialize("123.0 64.0") = {@link IllegalArgumentException} too few args
    * <br />
    *
@@ -49,7 +50,7 @@ public class VectorUtils {
   public static Vector deserialize(@Nonnull String string) throws NullPointerException {
     checkNotNullOrEmpty(string);
     String[] split = DESERIALIZE.split(string, 3);
-    checkArgument(split.length == 3, "string is in an invalid format.");
+    checkArgument(split.length == 3, string + " is in an invalid format.");
     return new Vector(parseDouble(split[0]), parseDouble(split[1]), parseDouble(split[2]));
   }
 
@@ -66,19 +67,20 @@ public class VectorUtils {
            + roundExact(2, vector.getY()) + ","
            + roundExact(2, vector.getZ());
   }
-  
+
   public static Vector getRandomVectorWithin(Vector min, Vector max) {
     return new Vector(RandomUtils.nextInt(min.getBlockX(), max.getBlockX()),
                       RandomUtils.nextInt(min.getBlockY(), max.getBlockY()),
                       RandomUtils.nextInt(min.getBlockY(), max.getBlockY()));
   }
-  
+
   /**
    * Checks if a {@link Vector} is within two other {@link Vector}s.
    *
    * @param test vector to test.
-   * @param min  minimum point of a cuboid region.
-   * @param max  maximum point of a cuboid region.
+   * @param min minimum point of a cuboid region.
+   * @param max maximum point of a cuboid region.
+   *
    * @return whether the {@code test} vector is within the {@code min} and {@code max} vectors.
    */
   public static boolean isWithin(Vector test, Vector min, Vector max) {
@@ -94,13 +96,14 @@ public class VectorUtils {
            y >= min.getBlockY() && y < max.getBlockY() + 1 &&
            z >= min.getBlockZ() && z < max.getBlockZ() + 1;
   }
-  
+
   /**
    * Checks if two {@link Vector} instances are within the same block. If both of them are null,
    * true is returned.
    *
-   * @param o  first {@link Coordinates} to check
+   * @param o first {@link Coordinates} to check
    * @param o2 second {@link Coordinates} to check
+   *
    * @return true if {@code o} and {@code o2} are the same block
    */
   public static boolean isSameBlock(@Nullable Vector o, @Nullable Vector o2) {

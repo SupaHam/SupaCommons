@@ -789,7 +789,7 @@ public class ImmutableVector {
 
   public static final class ImmutableVectorSerializer implements Serializer<ImmutableVector> {
 
-    private static final Pattern PATTERN = Pattern.compile("\\s+,\\s+");
+    private static final Pattern PATTERN = Pattern.compile("\\s*,\\s*");
 
     @Nullable @Override
     public Object serialize(@Nullable ImmutableVector object) throws IllegalArgumentException {

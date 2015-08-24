@@ -73,7 +73,7 @@ public class ImmutableBlockVector extends ImmutableVector {
   public static final class ImmutableBlockVectorSerializer
       implements Serializer<ImmutableBlockVector> {
 
-    private static final Pattern PATTERN = Pattern.compile("\\s+,\\s+");
+    private static final Pattern PATTERN = Pattern.compile("\\s*,\\s*");
 
     @Nullable @Override
     public Object serialize(@Nullable ImmutableBlockVector object) throws IllegalArgumentException {
