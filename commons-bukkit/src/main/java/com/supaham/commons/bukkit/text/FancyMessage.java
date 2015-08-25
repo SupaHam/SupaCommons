@@ -542,7 +542,7 @@ public class FancyMessage {
    *
    * @return JSON of this fancy message
    */
-  public String toJSONString() {
+  public String toJSONString(Object... args) {
     if (!dirty && jsonString != null) {
       return jsonString;
     }
@@ -564,7 +564,7 @@ public class FancyMessage {
     }
     jsonString = string.toString();
     dirty = false;
-    return jsonString;
+    return String.format(jsonString, args);
   }
 
   /**
@@ -572,7 +572,7 @@ public class FancyMessage {
    *
    * @return readable string
    */
-  public String toReadableString() {
+  public String toReadableString(Object... args) {
     StringBuilder stringBuilder = new StringBuilder();
     for (MessagePart messagePart : this.messageParts) {
       if (messagePart.getColor() != null) {
@@ -583,7 +583,7 @@ public class FancyMessage {
       }
       stringBuilder.append(messagePart.getText());
     }
-    return stringBuilder.toString();
+    return String.format(stringBuilder.toString(), args);
   }
 
   private MessagePart latest() {
@@ -642,19 +642,19 @@ public class FancyMessage {
   }
 
   /**
-   * Sends this FancyMessage to a {@link CommandSender} by calling {@link #toReadableString()} for
-   * {@link CommandSender#sendMessage(String)}.
+   * Sends this FancyMessage to a {@link CommandSender} by calling {@link
+   * #toReadableString(Object...)} for {@link CommandSender#sendMessage(String)}.
    *
    * @param commandSender command sender to send message to
    *
    * @see #send(Iterable)
    */
-  public void send(@Nonnull CommandSender commandSender) {
+  public void send(@Nonnull CommandSender commandSender, Object... args) {
     Preconditions.checkNotNull(commandSender, "command sender cannot be null.");
     if (commandSender instanceof Player) {
       send(((Player) commandSender));
     } else {
-      commandSender.sendMessage(toReadableString());
+      commandSender.sendMessage(toReadableString(args));
     }
   }
 
@@ -665,11 +665,11 @@ public class FancyMessage {
    *
    * @see #send(Iterable)
    */
-  public void send(@Nonnull Player player) {
+  public void send(@Nonnull Player player, Object... args) {
     Preconditions.checkNotNull(player, "player cannot be null.");
     try {
       Object packet = nmsPacketPlayOutChat.getConstructor(nmsIChatBaseComponent)
-          .newInstance(getNMSChatObject());
+          .newInstance(getNMSChatObject(args));
       ReflectionUtils.sendPacket(player, packet);
     } catch (Exception e) {
       e.printStackTrace();
@@ -683,11 +683,11 @@ public class FancyMessage {
    *
    * @see #send(Player)
    */
-  public void send(@Nonnull final Iterable<Player> players) {
+  public void send(@Nonnull final Iterable<Player> players, Object... args) {
     Preconditions.checkNotNull(players, "players cannot be null.");
     try {
       Object packet = nmsPacketPlayOutChat.getConstructor(nmsIChatBaseComponent)
-          .newInstance(getNMSChatObject());
+          .newInstance(getNMSChatObject(args));
       for (final Player player : players) {
         ReflectionUtils.sendPacket(player, packet);
       }
@@ -696,10 +696,10 @@ public class FancyMessage {
     }
   }
 
-  public Object getNMSChatObject() {
+  public Object getNMSChatObject(Object... args) {
     try {
       return ReflectionUtils.getMethod(nmsChatSerializer, "a", String.class)
-          .invoke(null, toJSONString());
+          .invoke(null, toJSONString(args));
     } catch (Exception e) {
       e.printStackTrace();
       return null;
