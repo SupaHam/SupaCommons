@@ -3,6 +3,7 @@ package com.supaham.commons.bukkit;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.items.ItemEnchantment;
+import com.supaham.commons.bukkit.utils.EnchantmentUtils;
 
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -193,6 +194,33 @@ public class ItemBuilder {
     }
     return this;
   }
+
+  /**
+   * Sets the item's color using {@link DyeColor}.
+   *
+   * @param color dye to color this item with
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder dye(@Nullable DyeColor color) {
+    try {
+      if (color == null) {
+        this.itemStack.setDurability((short) 0);
+        return this;
+      }
+      if (this.itemStack.getType() == Material.INK_SACK) {
+        this.itemStack.setDurability((short) color.getDyeData());
+      } else {
+        this.itemStack.setDurability((short) color.getData());
+      }
+    } catch (Exception e) {
+      if (!this.failSilently) {
+        e.printStackTrace();
+      }
+    }
+    return this;
+  }
+
   /**
    * Sets the item's display name.
    *
@@ -221,7 +249,7 @@ public class ItemBuilder {
     }
     return this;
   }
-  
+
   /**
    * Adds lore to this item.
    *
@@ -342,6 +370,16 @@ public class ItemBuilder {
       }
     }
     return this;
+  }
+
+  /**
+   * Adds the {@link EnchantmentUtils#GLOW_ENCHANTMENT} to this item, making it glow as enchanted,
+   * without the enchantment label.
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder glow() {
+    return enchant(EnchantmentUtils.GLOW_ENCHANTMENT, 1, true);
   }
 
   /**
@@ -471,7 +509,7 @@ public class ItemBuilder {
   public ItemBuilder bookTitle(@Nullable Colors title) {
     return bookTitle(title == null ? null : title.toString());
   }
-  
+
   /**
    * Sets this book's title, assuming it is a book.
    * <p />
@@ -528,6 +566,7 @@ public class ItemBuilder {
     }
     return this;
   }
+
   /**
    * Sets this a page index in this book, assuming it is a book.
    * <p />
@@ -564,7 +603,7 @@ public class ItemBuilder {
     }
     return this;
   }
-  
+
   /**
    * Sets this book's pages, assuming it is a book.
    * <p />
