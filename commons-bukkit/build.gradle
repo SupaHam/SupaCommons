@@ -11,9 +11,6 @@ dependencies {
     compile group: 'com.sk89q', name: 'squirrelid', version: '0.1.0'
 //    compile group: 'com.dumptruckman.minecraft.pluginbase', name: 'Serializable-Config-Bukkit', version: '0.1-SNAPSHOT'
     compile group: 'com.dumptruckman.minecraft.pluginbase', name: 'Plugin-Bukkit', version: '1.5-SNAPSHOT'
-    compile (group: 'com.sk89q', name: 'worldguard', version: '6.0.0-SNAPSHOT') {
-        exclude module: 'worldedit'
-    }
     compile group: 'com.sk89q.worldedit', name: 'worldedit-core', version: '6.0.2-SNAPSHOT'
     compile (group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '6.0.2-SNAPSHOT') {
         exclude module: 'org.sk89q.bukkit:bukkit-classloader-check'
