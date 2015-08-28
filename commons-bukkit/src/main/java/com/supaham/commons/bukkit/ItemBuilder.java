@@ -112,6 +112,28 @@ public class ItemBuilder {
   }
 
   /**
+   * Makes a complete copy of an {@link ItemBuilder} with its latest changes.
+   *
+   * @param itemBuilder item builder to copy
+   */
+  public ItemBuilder(ItemBuilder itemBuilder) {
+    this.itemStack = new ItemStack(itemBuilder.itemStack.getType(),
+                                   itemBuilder.itemStack.getAmount(),
+                                   itemBuilder.itemStack.getDurability());
+    this.itemMeta = itemBuilder.itemMeta.clone();
+    this.failSilently = itemBuilder.failSilently;
+  }
+
+  /**
+   * Returns a complete copy of this {@link ItemBuilder} instance.
+   *
+   * @return new item builder instance
+   */
+  public ItemBuilder copy() {
+    return new ItemBuilder(this);
+  }
+
+  /**
    * Builds this item builder, producing an {@link ItemStack}.
    *
    * @return the built itemstack
