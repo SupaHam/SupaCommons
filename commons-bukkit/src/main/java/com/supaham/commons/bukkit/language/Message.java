@@ -14,8 +14,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import lombok.NonNull;
-
 /**
  * Represents a message ({@link String}) represented by a node ({@link String}) that supports
  * multiple {@link Locale}s.
@@ -29,9 +27,10 @@ public class Message {
   private final String node;
   private final Map<Locale, String> messages = new HashMap<>();
 
-  public Message(@NonNull MessageManager manager, @NonNull String node, @NonNull String message) {
-    this.manager = manager;
-    this.node = node;
+  public Message(@Nonnull MessageManager manager, @Nonnull String node, @Nonnull String message) {
+    this.manager = Preconditions.checkNotNull(manager, "manager cannot be null.");
+    this.node = Preconditions.checkNotNull(node, "node cannot be null.");
+    Preconditions.checkNotNull(message, "message cannot be null.");
     this.messages.put(DEFAULT_LOCALE, message);
   }
 
@@ -42,7 +41,8 @@ public class Message {
    *
    * @return whether the {@code locale} is supported.
    */
-  public boolean supports(@NonNull Locale locale) {
+  public boolean supports(@Nonnull Locale locale) {
+    Preconditions.checkNotNull(locale, "locale cannot be null.");
     return this.messages.containsKey(locale);
   }
 
@@ -62,7 +62,8 @@ public class Message {
    *
    * @return message belonging to {@code locale}, nullable.
    */
-  public String getMessage(@NonNull Locale locale) {
+  public String getMessage(@Nonnull Locale locale) {
+    Preconditions.checkNotNull(locale, "locale cannot be null.");
     return this.messages.get(locale);
   }
 
@@ -74,7 +75,7 @@ public class Message {
    *
    * @return the old message belonging to the {@code locale}
    */
-  public String addLocale(@NonNull Locale locale, @NonNull String message) {
+  public String addLocale(@Nonnull Locale locale, @Nonnull String message) {
     return this.messages.put(locale, message);
   }
 
@@ -84,7 +85,8 @@ public class Message {
    * @param sender command sender to send this {@link Message} to
    * @param args the arguments to pass to this message
    */
-  public void send(@NonNull CommandSender sender, Object... args) {
+  public void send(@Nonnull CommandSender sender, Object... args) {
+    Preconditions.checkNotNull(sender, "sender cannot be null.");
     send(sender, DEFAULT_LOCALE, args);
   }
 
@@ -95,8 +97,9 @@ public class Message {
    * @param locals locals to provide for the placeholder functions
    * @param args the arguments to pass to this message
    */
-  public void send(@NonNull CommandSender sender, @Nullable Map<Object, Object> locals,
+  public void send(@Nonnull CommandSender sender, @Nullable Map<Object, Object> locals,
                    Object... args) {
+    Preconditions.checkNotNull(sender, "sender cannot be null.");
     send(sender, DEFAULT_LOCALE, locals, args);
   }
 
@@ -107,7 +110,8 @@ public class Message {
    * @param locale locale to get message for
    * @param args the arguments to pass to this message
    */
-  public void send(@NonNull CommandSender sender, Locale locale, Object... args) {
+  public void send(@Nonnull CommandSender sender, Locale locale, Object... args) {
+    Preconditions.checkNotNull(sender, "sender cannot be null.");
     send(sender, locale, null, args);
   }
 
@@ -118,8 +122,9 @@ public class Message {
    * @param locale locale to get message for
    * @param args the arguments to pass to this message
    */
-  public void send(@NonNull CommandSender sender, Locale locale,
+  public void send(@Nonnull CommandSender sender, Locale locale,
                    @Nullable Map<Object, Object> locals, Object... args) {
+    Preconditions.checkNotNull(sender, "sender cannot be null.");
     sender.sendMessage(getParsedMessage(locale, locals, args));
   }
 
@@ -127,7 +132,8 @@ public class Message {
     broadcast(DEFAULT_LOCALE, args);
   }
 
-  public void broadcast(@NonNull Locale locale, Object... args) {
+  public void broadcast(@Nonnull Locale locale, Object... args) {
+    Preconditions.checkNotNull(locale, "locale cannot be null.");
     broadcast(locale, null, args);
   }
 
@@ -135,8 +141,9 @@ public class Message {
     broadcast(DEFAULT_LOCALE, locals, args);
   }
 
-  public void broadcast(@NonNull Locale locale, @Nullable Map<Object, Object> locals,
+  public void broadcast(@Nonnull Locale locale, @Nullable Map<Object, Object> locals,
                         Object... args) {
+    Preconditions.checkNotNull(locale, "locale cannot be null.");
     ArrayList<CommandSender> receivers = new ArrayList<CommandSender>(Bukkit.getOnlinePlayers());
     receivers.add(Bukkit.getConsoleSender());
     broadcast(receivers, locale, locals, args);
@@ -148,7 +155,8 @@ public class Message {
    * @param receivers command receivers to send this {@link Message} to.
    * @param args the arguments to pass to this message.
    */
-  public void broadcast(@NonNull Collection<CommandSender> receivers, Object... args) {
+  public void broadcast(@Nonnull Collection<CommandSender> receivers, Object... args) {
+    Preconditions.checkNotNull(receivers, "receivers cannot be null.");
     broadcast(receivers, null, args);
   }
 
@@ -158,8 +166,9 @@ public class Message {
    * @param receivers command receivers to send this {@link Message} to.
    * @param args the arguments to pass to this message.
    */
-  public void broadcast(@NonNull Collection<CommandSender> receivers,
+  public void broadcast(@Nonnull Collection<CommandSender> receivers,
                         @Nullable Map<Object, Object> locals, Object... args) {
+    Preconditions.checkNotNull(receivers, "receivers cannot be null.");
     broadcast(receivers, DEFAULT_LOCALE, locals, args);
   }
 
@@ -197,7 +206,7 @@ public class Message {
       locale = DEFAULT_LOCALE;
     }
     String message = getMessage(locale);
-    Preconditions.checkNotNull(message, "Could not find message for locale " 
+    Preconditions.checkNotNull(message, "Could not find message for locale "
                                         + locale.toLanguageTag());
     return _getParsedMessage(message, locals, args);
   }

@@ -20,6 +20,7 @@
 package com.supaham.commons.yaml;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.io.Files;
 
 import org.yaml.snakeyaml.DumperOptions;
@@ -43,7 +44,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import lombok.NonNull;
+import javax.annotation.Nonnull;
+
 import pluginbase.config.ConfigSerializer;
 import pluginbase.config.SerializationRegistrar;
 
@@ -145,8 +147,10 @@ public class YAMLProcessor extends YAMLNode {
    * @param writeDefaults whether to write defaults to this {@link YAMLProcessor}
    * @param format {@link YAMLFormat} to use with this configuration
    */
-  public YAMLProcessor(@NonNull File file, boolean writeDefaults, @NonNull YAMLFormat format) {
+  public YAMLProcessor(@Nonnull File file, boolean writeDefaults, @Nonnull YAMLFormat format) {
     super(new LinkedHashMap<String, Object>(), writeDefaults);
+    Preconditions.checkNotNull(file, "file cannot be null.");
+    Preconditions.checkNotNull(format, "format cannot be null.");
     this.file = file;
     this.format = format;
 
@@ -300,6 +304,7 @@ public class YAMLProcessor extends YAMLNode {
    * Returns a root-level comment.
    *
    * @param key the property key
+   *
    * @return the comment or {@code null}
    */
   public String getComment(String key) {
@@ -319,7 +324,7 @@ public class YAMLProcessor extends YAMLNode {
    *
    * @param key the property key
    * @param comments the comment. May be {@code null}, in which case the comment
-   *   is removed.
+   * is removed.
    */
   public void setComment(String key, String... comments) {
     if (comments != null && comments.length > 0) {

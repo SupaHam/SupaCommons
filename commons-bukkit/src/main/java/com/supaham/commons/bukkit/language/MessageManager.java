@@ -11,8 +11,6 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import lombok.Getter;
-
 /**
  * Represents a {@link Message} manager.
  *
@@ -20,7 +18,6 @@ import lombok.Getter;
  */
 public class MessageManager {
 
-  @Getter
   private Map<String, Message> messages = new HashMap<>();
 
   private final Map<Character, Theme> themes;
@@ -114,5 +111,9 @@ public class MessageManager {
 
   public void setPlaceholderSet(@Nullable PlaceholderSet<? extends Placeholder> set) {
     this.placeholderSet = set;
+  }
+
+  public Map<String, Message> getMessages() {
+    return messages;
   }
 }

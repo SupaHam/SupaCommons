@@ -1,13 +1,10 @@
 package com.supaham.commons.geo;
 
-import lombok.Getter;
-
 /**
  * Represents a Geographical location.
  *
  * @since 0.1
  */
-@Getter
 public class GeoLocation {
 
   /**
@@ -33,5 +30,13 @@ public class GeoLocation {
   public GeoLocation(float latitude, float longitude) {
     this.latitude = latitude;
     this.longitude = longitude;
+  }
+
+  public float getLatitude() {
+    return latitude;
+  }
+
+  public float getLongitude() {
+    return longitude;
   }
 }
