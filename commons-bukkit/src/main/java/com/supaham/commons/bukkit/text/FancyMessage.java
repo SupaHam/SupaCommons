@@ -543,7 +543,7 @@ public class FancyMessage {
    * @return JSON of this fancy message
    */
   public String toJSONString(Object... args) {
-    if (!dirty && jsonString != null) {
+    if (args.length == 0 && !dirty && jsonString != null) {
       return jsonString;
     }
     StringWriter string = new StringWriter();
@@ -562,8 +562,10 @@ public class FancyMessage {
     } catch (Exception e) {
       throw new RuntimeException("invalid message", e);
     }
-    jsonString = string.toString();
-    dirty = false;
+    if (args.length == 0) { // Only cache the JSON if no arguments were given.
+      jsonString = string.toString(); 
+      dirty = false;
+    }
     return String.format(jsonString, args);
   }
 
@@ -647,7 +649,7 @@ public class FancyMessage {
    *
    * @param commandSender command sender to send message to
    *
-   * @see #send(Iterable)
+   * @see #send(Iterable, Object...)
    */
   public void send(@Nonnull CommandSender commandSender, Object... args) {
     Preconditions.checkNotNull(commandSender, "command sender cannot be null.");
@@ -663,7 +665,7 @@ public class FancyMessage {
    *
    * @param player player to send message to
    *
-   * @see #send(Iterable)
+   * @see #send(Iterable, Object...)
    */
   public void send(@Nonnull Player player, Object... args) {
     Preconditions.checkNotNull(player, "player cannot be null.");
@@ -681,7 +683,7 @@ public class FancyMessage {
    *
    * @param players players to send this message to
    *
-   * @see #send(Player)
+   * @see #send(Player, Object...)
    */
   public void send(@Nonnull final Iterable<Player> players, Object... args) {
     Preconditions.checkNotNull(players, "players cannot be null.");
