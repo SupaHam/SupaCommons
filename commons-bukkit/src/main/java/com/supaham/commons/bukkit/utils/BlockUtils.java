@@ -2,6 +2,10 @@ package com.supaham.commons.bukkit.utils;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.bukkit.CommonPlugin;
+import com.supaham.commons.bukkit.SingleSound;
+import com.supaham.commons.bukkit.TickerTask;
+
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.block.Banner;
@@ -230,6 +234,51 @@ public final class BlockUtils {
     bannerState.setBaseColor(bannerMeta.getBaseColor());
     bannerState.setPatterns(bannerMeta.getPatterns());
     bannerState.update(true, false);
+  }
+
+  public static boolean pressPressurePlate(@Nonnull CommonPlugin plugin, @Nonnull Block block) {
+    return pressPressurePlate(plugin, block, true);
+  }
+
+  public static boolean pressPressurePlate(@Nonnull CommonPlugin plugin, @Nonnull Block block,
+                                        boolean playSound) {
+    return pressPressurePlate(plugin, block, 10, playSound);
+  }
+
+  public static boolean pressPressurePlate(@Nonnull CommonPlugin plugin, @Nonnull final Block block,
+                                        int pressedTicks) {
+    return pressPressurePlate(plugin, block, pressedTicks, true);
+  }
+
+  public static boolean pressPressurePlate(@Nonnull CommonPlugin plugin, @Nonnull final Block block,
+                                        int pressedTicks, final boolean playSound) {
+    Preconditions.checkNotNull(plugin, "plugin cannot be null.");
+    Preconditions.checkNotNull(block, "block cannot be null.");
+    Preconditions.checkArgument(pressedTicks >= 0, "pressed ticks cannot be less than 0.");
+
+    if (!MaterialUtils.equals(block.getType(), Material.GOLD_PLATE, Material.IRON_AXE,
+                             Material.WOOD_PLATE, Material.STONE_PLATE)) {
+      return false;
+    }
+    
+    block.setData((byte) 1, false);
+    if (playSound) {
+      new SingleSound("random.click", 0.3f, 0.5f)
+          .play(block.getWorld(), block.getLocation().add(0.5, 0.1, 0.5));
+    }
+    new TickerTask(plugin, pressedTicks) {
+      @Override public void run() {
+        if (MaterialUtils.equals(block.getType(), Material.GOLD_PLATE, Material.IRON_AXE,
+                                 Material.WOOD_PLATE, Material.STONE_PLATE)) {
+          block.setData((byte) 0, false);
+          if (playSound) {
+            new SingleSound("random.click", 0.3f, 0.5f)
+                .play(block.getWorld(), block.getLocation().add(0.5, 0.1, 0.5));
+          }
+        }
+      }
+    }.start();
+    return true;
   }
 
   private BlockUtils() {}
