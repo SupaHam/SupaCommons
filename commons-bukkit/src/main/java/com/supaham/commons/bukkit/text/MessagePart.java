@@ -312,7 +312,7 @@ public class MessagePart implements Cloneable {
    * @param lines lines to display
    */
   public void tooltip(final List<String> lines) {
-    tooltip((String[]) lines.toArray());
+    tooltip(lines.toArray(new String[lines.size()]));
   }
 
   /**
