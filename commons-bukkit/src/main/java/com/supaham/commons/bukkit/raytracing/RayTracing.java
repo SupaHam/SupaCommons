@@ -2,6 +2,8 @@ package com.supaham.commons.bukkit.raytracing;
 
 import static com.supaham.commons.bukkit.utils.ReflectionUtils.toNMSVec3D;
 
+import com.google.common.base.Preconditions;
+
 import com.supaham.commons.bukkit.utils.ReflectionUtils;
 import com.supaham.commons.bukkit.utils.ReflectionUtils.PackageType;
 
@@ -11,6 +13,7 @@ import org.bukkit.util.Vector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -30,6 +33,23 @@ public class RayTracing {
     rayTraceMethod = ReflectionUtils.getMethod(worldClazz, "rayTrace", nms.getClassSafe("Vec3D"),
                                                nms.getClassSafe("Vec3D"), boolean.class,
                                                boolean.class, boolean.class);
+  }
+
+  /**
+   * Returns a {@link MovingObjectPosition} as a result of a ray trace from two {@link Vector}s.
+   * This is equivalent to calling {@link #rayTraceBlocks(World, Vector, Vector, boolean, boolean,
+   * boolean)} with the respective booleans provided by the {@link RayTraceData}.
+   *
+   * @param data ray tracing data
+   *
+   * @return {@link MovingObjectPosition}, nullable
+   */
+  @Nullable
+  public static MovingObjectPosition rayTraceBlocks(@Nonnull RayTraceData data) {
+    Preconditions.checkNotNull(data, "data cannot be null.");
+    return rayTraceBlocks(data.getWorld(), data.getStart().toVector(), data.getEnd().toVector(),
+                          data.isStopOnLiquid(), data.isIgnoreBoundingBox(),
+                          data.isReturnLastCollidableBlock());
   }
 
   /**
