@@ -13,6 +13,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,6 +124,15 @@ public class EntityUtils {
   public static boolean isOnGround(@Nonnull Entity entity) {
     return !(entity instanceof Player) ? entity.isOnGround() : entity.getLocation().getBlock()
         .getRelative(BlockFace.DOWN).getType().isSolid();
+  }
+
+  public static Vector getDirection(LivingEntity entity, boolean eye) {
+    return getDirection(entity, eye, 1);
+  }
+  
+  public static Vector getDirection(LivingEntity entity, boolean eye, double multiply) {
+    return (eye ? entity.getEyeLocation() : entity.getLocation()).toVector()
+        .add(entity.getLocation().getDirection().multiply(multiply));
   }
 
   public static interface EntitySupplier extends Supplier<Entity> {}
