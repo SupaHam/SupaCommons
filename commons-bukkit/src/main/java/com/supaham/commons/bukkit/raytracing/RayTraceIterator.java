@@ -44,6 +44,8 @@ public abstract class RayTraceIterator {
     defaults();
   }
 
+  protected abstract boolean next(RayTraceIteratorEntry next);
+
   private void defaults() {
     Vector distance = data.getEnd().subtract(data.getStart()).toVector();
     this.rayLength = distance.length();
@@ -69,7 +71,8 @@ public abstract class RayTraceIterator {
       }
       RayTraceIteratorEntry next = new RayTraceIteratorEntry(new ImmutableVector(_lastVector),
                                                              new ImmutableVector(newVector),
-                                                             mop, step++);
+                                                             mop,
+                                                             step++);
       if (next(next)) {
         defaults();
         return next;
@@ -85,8 +88,6 @@ public abstract class RayTraceIterator {
                                      data.isIgnoreBoundingBox(),
                                      data.isReturnLastCollidableBlock());
   }
-
-  protected abstract boolean next(RayTraceIteratorEntry next);
 
   public RayTraceData getData() {
     return data;
@@ -105,7 +106,8 @@ public abstract class RayTraceIterator {
 
     public RayTraceIteratorEntry(ImmutableVector lastVector,
                                  ImmutableVector newVector,
-                                 MovingObjectPosition movingObjectPosition, int step) {
+                                 MovingObjectPosition movingObjectPosition,
+                                 int step) {
       this.lastVector = lastVector;
       this.newVector = newVector;
       this.movingObjectPosition = movingObjectPosition;
