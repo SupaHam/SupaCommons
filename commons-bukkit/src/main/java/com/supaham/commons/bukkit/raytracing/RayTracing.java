@@ -113,7 +113,7 @@ public class RayTracing {
       Object result = rayTraceMethod.invoke(ReflectionUtils.getHandle(world), toNMSVec3D(start),
                                             toNMSVec3D(end), stopOnLiquid, ignoreBoundingBox,
                                             returnLastCollidableBlock);
-      return MovingObjectPosition.from(result);
+      return result == null ? null : MovingObjectPosition.from(result);
     } catch (IllegalAccessException | InvocationTargetException e) {
       e.printStackTrace();
       return null;
