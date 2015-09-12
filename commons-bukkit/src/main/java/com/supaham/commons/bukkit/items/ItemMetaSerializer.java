@@ -137,6 +137,10 @@ public class ItemMetaSerializer {
       map.put("glow", true);
     }
     
+    if (im.spigot().isUnbreakable()) {
+      map.put("unbreakable", true);
+    }
+    
     if (im.getItemFlags().size() > 0) {
       Set<ItemFlag> flags = im.getItemFlags();
       map.put("flags", flags.size() == 1 ? Iterables.get(flags, 0) : flags);
