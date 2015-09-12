@@ -213,9 +213,6 @@ public class ItemMetaSerializer {
     for (Entry<String, Object> entry : map.entrySet()) {
       Object val = entry.getValue();
       switch (entry.getKey()) {
-        case "glow":
-          builder.glow();
-          break;
         case "name":
           builder.name(ChatColorUtils.deserialize(val.toString()));
           break;
@@ -231,6 +228,9 @@ public class ItemMetaSerializer {
           } else {
             throw new UnsupportedOperationException("lore is of type " + val.getClass());
           }
+          break;
+        case "glow":
+          builder.glow(Boolean.valueOf(val.toString()));
           break;
         case "enchants":
           ItemEnchantmentSerializer serializer = Serializers
