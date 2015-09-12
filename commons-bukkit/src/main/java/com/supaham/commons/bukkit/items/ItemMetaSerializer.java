@@ -21,7 +21,6 @@ import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,13 +108,11 @@ import pluginbase.config.serializers.Serializers;
 public class ItemMetaSerializer {
 
   /**
-   * Deserializes a {@link Map} of Strings and Objects which represents a serialized {@link
-   * ItemMeta} metadata, which is later applied to the given {@link ItemStack}.
+   * Serializes an {@link ItemStack} into a {@link Map} of {@link String} and {@link Object}s.
    *
-   * @param item item to append deserialized data to
-   * @param map serialized metadata
+   * @param item itemstack to serialize
    *
-   * @return {@link ItemBuilder#build()}
+   * @return map of serialized data
    *
    * @see #deserialize(ItemBuilder, Map)
    */
