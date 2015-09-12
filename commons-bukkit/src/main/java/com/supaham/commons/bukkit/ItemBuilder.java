@@ -401,7 +401,23 @@ public class ItemBuilder {
    * @return this item builder instance, for chaining
    */
   public ItemBuilder glow() {
-    return enchant(EnchantmentUtils.GLOW_ENCHANTMENT, 1, true);
+    return glow(true);
+  }
+
+  /**
+   * Sets whether this item is to glow using {@link EnchantmentUtils#GLOW_ENCHANTMENT}, making it
+   * glow as enchanted, without the enchantment label.
+   *
+   * @param glow whether this item should glow
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder glow(boolean glow) {
+    if (glow) {
+      return enchant(EnchantmentUtils.GLOW_ENCHANTMENT, 1, true);
+    } else {
+      return removeEnchant(EnchantmentUtils.GLOW_ENCHANTMENT);
+    }
   }
 
   /**
