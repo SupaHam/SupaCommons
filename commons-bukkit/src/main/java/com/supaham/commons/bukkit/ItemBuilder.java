@@ -11,6 +11,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.BookMeta;
@@ -527,6 +528,24 @@ public class ItemBuilder {
   public ItemBuilder repairCost(int cost) {
     try {
       ((Repairable) this.itemMeta).setRepairCost(cost);
+    } catch (Exception e) {
+      if (!this.failSilently) {
+        e.printStackTrace();
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Adds {@link ItemFlag}s to this item.
+   *
+   * @param itemFlags item flags to add to this item
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder flag(ItemFlag... itemFlags) {
+    try {
+      this.itemMeta.addItemFlags(itemFlags);
     } catch (Exception e) {
       if (!this.failSilently) {
         e.printStackTrace();
