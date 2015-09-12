@@ -239,6 +239,17 @@ public class ItemMetaSerializer {
         case "unbreakable":
           builder.unbreakable(Boolean.valueOf(val.toString()));
           break;
+        case "flags":
+          if (val instanceof String) {
+            builder.flag(ItemFlag.valueOf(val.toString().toUpperCase()));
+          } else if (val instanceof List) {
+            for (Object o : ((List) val)) {
+              builder.flag(ItemFlag.valueOf(o.toString()));
+            }
+          } else {
+            throw new UnsupportedOperationException("flags is of type " + val.getClass());
+          }
+          break;
         case "enchants":
           ItemEnchantmentSerializer serializer = Serializers
               .getSerializer(ItemEnchantmentSerializer.class);
