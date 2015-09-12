@@ -1,6 +1,7 @@
 package com.supaham.commons.bukkit.items;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 
 import com.supaham.commons.bukkit.ItemBuilder;
 import com.supaham.commons.bukkit.serializers.ItemEnchantmentSerializer;
@@ -12,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -25,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import pluginbase.config.serializers.Serializer;
 import pluginbase.config.serializers.Serializers;
@@ -129,12 +132,16 @@ public class ItemMetaSerializer {
       }
       map.put("lore", result.size() == 1 ? result.get(0) : result);
     }
+    
     if (im.hasEnchant(EnchantmentUtils.GLOW_ENCHANTMENT)) {
       map.put("glow", true);
     }
+    
     if (im.getItemFlags().size() > 0) {
-      map.put("flags", im.getItemFlags());
+      Set<ItemFlag> flags = im.getItemFlags();
+      map.put("flags", flags.size() == 1 ? Iterables.get(flags, 0) : flags);
     }
+    
     {
       ItemEnchantmentSerializer ser = Serializers.getSerializer(ItemEnchantmentSerializer.class);
       List<Object> result = new ArrayList<>();
