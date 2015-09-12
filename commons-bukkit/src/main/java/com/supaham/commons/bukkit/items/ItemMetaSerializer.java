@@ -4,12 +4,11 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.ItemBuilder;
 import com.supaham.commons.bukkit.serializers.ItemEnchantmentSerializer;
-import com.supaham.commons.bukkit.text.xml.tags.S;
 import com.supaham.commons.bukkit.utils.ChatColorUtils;
+import com.supaham.commons.bukkit.utils.EnchantmentUtils;
 import com.supaham.commons.bukkit.utils.OBCUtils;
 
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -122,6 +121,9 @@ public class ItemMetaSerializer {
   public static Map<String, Object> serialize(ItemStack item) {
     Map<String, Object> map = new HashMap<>();
     ItemMeta im = item.getItemMeta();
+    if (im.hasEnchant(EnchantmentUtils.GLOW_ENCHANTMENT)) {
+      map.put("glow", true);
+    }
     if (im.hasDisplayName()) {
       map.put("name", ChatColorUtils.serialize(im.getDisplayName()));
     }
@@ -203,6 +205,9 @@ public class ItemMetaSerializer {
     for (Entry<String, Object> entry : map.entrySet()) {
       Object val = entry.getValue();
       switch (entry.getKey()) {
+        case "glow":
+          builder.glow();
+          break;
         case "name":
           builder.name(ChatColorUtils.deserialize(val.toString()));
           break;
