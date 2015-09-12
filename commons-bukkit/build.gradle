@@ -13,7 +13,7 @@ dependencies {
     compile group: 'com.dumptruckman.minecraft.pluginbase', name: 'Plugin-Bukkit', version: '1.5-SNAPSHOT'
     compile group: 'com.sk89q.worldedit', name: 'worldedit-core', version: '6.0.2-SNAPSHOT'
     compile (group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '6.0.2-SNAPSHOT') {
-        exclude module: 'org.sk89q.bukkit:bukkit-classloader-check'
+        exclude module: 'bukkit-classloader-check'
     }
     
     testCompile group: 'org.mockito', name: 'mockito-core', version: '1.9.0-rc1'
