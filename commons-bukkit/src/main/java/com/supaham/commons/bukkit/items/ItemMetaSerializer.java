@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -119,11 +120,8 @@ public class ItemMetaSerializer {
    * @see #deserialize(ItemBuilder, Map)
    */
   public static Map<String, Object> serialize(ItemStack item) {
-    Map<String, Object> map = new HashMap<>();
+    Map<String, Object> map = new LinkedHashMap<>();
     ItemMeta im = item.getItemMeta();
-    if (im.hasEnchant(EnchantmentUtils.GLOW_ENCHANTMENT)) {
-      map.put("glow", true);
-    }
     if (im.hasDisplayName()) {
       map.put("name", ChatColorUtils.serialize(im.getDisplayName()));
     }
@@ -133,6 +131,9 @@ public class ItemMetaSerializer {
         result.add(ChatColorUtils.serialize(s));
       }
       map.put("lore", result.size() == 1 ? result.get(0) : result);
+    }
+    if (im.hasEnchant(EnchantmentUtils.GLOW_ENCHANTMENT)) {
+      map.put("glow", true);
     }
     {
       ItemEnchantmentSerializer ser = Serializers.getSerializer(ItemEnchantmentSerializer.class);
