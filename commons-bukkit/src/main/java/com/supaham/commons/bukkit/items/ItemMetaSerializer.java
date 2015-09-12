@@ -59,6 +59,18 @@ import pluginbase.config.serializers.Serializers;
  * <td>String<br>List&lt;String&gt;</td>
  * </tr>
  * <tr>
+ * <td>glow</td>
+ * <td>boolean</td>
+ * </tr>
+ * <tr>
+ * <td>unbreakable</td>
+ * <td>boolean</td>
+ * </tr>
+ * <tr>
+ * <td>flags</td>
+ * <td>String<br>List&lt;String&gt;<br>See: {@link ItemFlag#valueOf(String)}</td>
+ * </tr>
+ * <tr>
  * <td>enchant<br>enchants</td>
  * <td>String<br>List&lt;String&gt;<br>See: {@link ItemEnchantmentSerializer}</td>
  * </tr>
