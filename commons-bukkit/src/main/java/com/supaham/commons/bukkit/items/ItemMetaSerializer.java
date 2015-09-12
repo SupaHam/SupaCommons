@@ -232,6 +232,9 @@ public class ItemMetaSerializer {
         case "glow":
           builder.glow(Boolean.valueOf(val.toString()));
           break;
+        case "unbreakable":
+          builder.unbreakable(Boolean.valueOf(val.toString()));
+          break;
         case "enchants":
           ItemEnchantmentSerializer serializer = Serializers
               .getSerializer(ItemEnchantmentSerializer.class);
