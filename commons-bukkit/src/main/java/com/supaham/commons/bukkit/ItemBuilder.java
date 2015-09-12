@@ -555,6 +555,33 @@ public class ItemBuilder {
   }
 
   /**
+   * Sets this item to be unbreakable.
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder unbreakable() {
+    return unbreakable(true);
+  }
+
+  /**
+   * Sets whether this item is to be unbreakable.
+   *
+   * @param unbreakable whether this item should be unbreakable
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder unbreakable(boolean unbreakable) {
+    try {
+      this.itemMeta.spigot().setUnbreakable(unbreakable);
+    } catch (Exception e) {
+      if (!this.failSilently) {
+        e.printStackTrace();
+      }
+    }
+    return this;
+  }
+
+  /**
    * Sets this book's title, assuming it is a book.
    * <p />
    * <b>UNSAFE</b>
