@@ -132,6 +132,9 @@ public class ItemMetaSerializer {
     if (im.hasEnchant(EnchantmentUtils.GLOW_ENCHANTMENT)) {
       map.put("glow", true);
     }
+    if (im.getItemFlags().size() > 0) {
+      map.put("flags", im.getItemFlags());
+    }
     {
       ItemEnchantmentSerializer ser = Serializers.getSerializer(ItemEnchantmentSerializer.class);
       List<Object> result = new ArrayList<>();
