@@ -50,6 +50,7 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends P
 
   @Override public void onLoad() {
     this.log = PluginLogger.getLogger(this);
+    getLog().setParent(getLogger());
   }
 
   @Override public void onEnable() {
