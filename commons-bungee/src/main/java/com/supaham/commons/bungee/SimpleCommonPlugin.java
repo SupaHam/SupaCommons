@@ -49,6 +49,7 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends P
   }
 
   @Override public void onLoad() {
+    CBungeeMain.hook(this);
     this.log = PluginLogger.getLogger(this);
     getLog().setParent(getLogger());
   }
