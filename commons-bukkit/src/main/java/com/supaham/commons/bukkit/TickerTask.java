@@ -124,7 +124,8 @@ public class TickerTask implements Runnable, Pausable, Stateable {
   }
 
   /**
-   * Starts this {@link TickerTask}. If this task is already started the call is terminated.
+   * Starts this {@link TickerTask} synchronously. If this task is already started the call is
+   * terminated.
    *
    * @return true if the task's state was changed to started
    */
@@ -138,6 +139,26 @@ public class TickerTask implements Runnable, Pausable, Stateable {
         _run();
       }
     }.runTaskTimer(plugin, delay, interval);
+    this.paused = false;
+    return true;
+  }
+
+  /**
+   * Starts this {@link TickerTask} asynchronously. If this task is already started the call is
+   * terminated.
+   *
+   * @return true if the task's state was changed to started
+   */
+  public boolean startAsync() {
+    if (isStarted()) {
+      return false;
+    }
+    this.task = new BukkitRunnable() {
+      @Override
+      public void run() {
+        _run();
+      }
+    }.runTaskTimerAsynchronously(plugin, delay, interval);
     this.paused = false;
     return true;
   }
