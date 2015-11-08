@@ -9,7 +9,6 @@ import com.supaham.commons.state.State;
 import com.supaham.commons.state.Stateable;
 
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import javax.annotation.Nonnull;
@@ -33,6 +32,7 @@ public class TickerTask implements Runnable, Pausable, Stateable {
   private final Runnable runnable;
   private long delay;
   private long interval;
+  private boolean async;
 
   protected State state = State.STOPPED;
   private BukkitTask task;
@@ -133,12 +133,18 @@ public class TickerTask implements Runnable, Pausable, Stateable {
     if (isStarted()) {
       return false;
     }
-    this.task = new BukkitRunnable() {
+    Runnable runnable = new Runnable() {
       @Override
       public void run() {
         _run();
       }
-    }.runTaskTimer(plugin, delay, interval);
+    };
+    if (isAsync()) { // Asynchronous
+      this.task = plugin.getServer().getScheduler()
+          .runTaskTimerAsynchronously(plugin, runnable, delay, interval);
+    } else { // Synchronous
+      this.task = plugin.getServer().getScheduler().runTaskTimer(plugin, runnable, delay, interval);
+    }
     this.paused = false;
     return true;
   }
@@ -153,14 +159,23 @@ public class TickerTask implements Runnable, Pausable, Stateable {
     if (isStarted()) {
       return false;
     }
-    this.task = new BukkitRunnable() {
-      @Override
-      public void run() {
-        _run();
-      }
-    }.runTaskTimerAsynchronously(plugin, delay, interval);
-    this.paused = false;
-    return true;
+    setAsync();
+    start();
+    return start();
+  }
+
+  /**
+   * Starts this {@link TickerTask} synchronously. If this task is already started the call is
+   * terminated.
+   *
+   * @return true if the task's state was changed to started
+   */
+  public boolean startSync() {
+    if (isStarted()) {
+      return false;
+    }
+    setAsync(false);
+    return start();
   }
 
   /**
@@ -262,6 +277,20 @@ public class TickerTask implements Runnable, Pausable, Stateable {
 
   public void setInterval(long interval) {
     this.interval = Math.max(interval, -1);
+  }
+
+  public boolean isAsync() {
+    return async;
+  }
+
+  public TickerTask setAsync() {
+    return setAsync(true);
+  }
+
+  public TickerTask setAsync(boolean async) {
+    Preconditions.checkState(!isStarted(), "task is already started.");
+    this.async = async;
+    return this;
   }
 
   public BukkitTask getTask() {
