@@ -1,15 +1,14 @@
 package com.supaham.commons.database;
 
 /**
- * Represents an {@link Integer} type extension of the {@link DBID} interface.
+ * Represents a database object represented by an {@link Integer}.
  *
  * @since 0.1
  */
-public interface DBIntegerID extends DBID<Integer> {
+public interface DBIntegerID {
 
   /**
-   * {@inheritDoc}
+   * Unique auto incremental id supplied through the database.
    */
-  @Override
-  Integer getDatabaseId();
+  int getDatabaseId();
 }
