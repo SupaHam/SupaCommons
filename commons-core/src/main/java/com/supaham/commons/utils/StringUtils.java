@@ -4,8 +4,14 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 
 import org.jetbrains.annotations.Contract;
+
+import java.util.Iterator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -176,5 +182,25 @@ public final class StringUtils extends org.apache.commons.lang.StringUtils {
     } else {
       return singularTerm + "s";
     }
+  }
+
+  /**
+   * Transforms an {@link Iterable} using a {@link Function} and string-joins it using a
+   * {@link Joiner}. Useful if the {@code part}'s {@code toString()} method outputs something else.
+   *
+   * @param joiner joiner to call {@link Joiner#join(Iterator)} with
+   * @param parts parts to join, argument passed to {@link Joiner#join(Iterator)}
+   * @param function function that transforms the parts into string
+   *
+   * @return the same exact {@code string} returned for chaining.
+   *
+   * @throws NullPointerException thrown if any of the parameters are null
+   */
+  public static <T> String joinerFunction(@Nonnull Joiner joiner, @Nonnull Iterable<T> parts,
+                                          @Nonnull Function<T, String> function) {
+    Preconditions.checkNotNull(joiner, "joiner cannot be null.");
+    Preconditions.checkNotNull(parts, "parts cannot be null.");
+    Preconditions.checkNotNull(function, "function cannot be null.");
+    return joiner.join(Iterables.transform(parts, function));
   }
 }
