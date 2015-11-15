@@ -195,6 +195,7 @@ public final class StringUtils extends org.apache.commons.lang.StringUtils {
    * @return the same exact {@code string} returned for chaining.
    *
    * @throws NullPointerException thrown if any of the parameters are null
+   * @see com.supaham.commons.Joiner
    */
   public static <T> String joinerFunction(@Nonnull Joiner joiner, @Nonnull Iterable<T> parts,
                                           @Nonnull Function<T, String> function) {
