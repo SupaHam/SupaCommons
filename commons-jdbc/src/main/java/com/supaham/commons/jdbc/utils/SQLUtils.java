@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Collections;
 
 import javax.annotation.Nonnull;
 import javax.sql.DataSource;
@@ -82,5 +83,20 @@ public class SQLUtils {
       e.printStackTrace();
     }
     return false;
+  }
+
+  /**
+   * Returns a comma-separated placeholder string of the given {@code length}.
+   * <p />
+   * If the {@code length} is <b>2</b>, the string is ?,?
+   * <br />
+   * If the {@code length} is <b>4</b>, the string is ?,?,?,? 
+   *
+   * @param length length of placeholder to generate
+   *
+   * @return placeholders string
+   */
+  public static String preparePlaceHolders(int length) {
+    return String.join(",", Collections.nCopies(length, "?"));
   }
 }
