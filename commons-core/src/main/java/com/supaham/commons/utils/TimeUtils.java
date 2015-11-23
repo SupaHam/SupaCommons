@@ -139,6 +139,9 @@ public class TimeUtils {
   public static long parseDurationMs(@Nonnull CharSequence text) throws DurationParseException {
     checkNotNull(text, "text cannot be null.");
     checkArgument(text.length() > 0, "text cannot be empty.");
+    if (text.equals("0")) {
+      return 0;
+    }
 
     Matcher matcher = PATTERN.matcher(text);
     long sum = -1;
