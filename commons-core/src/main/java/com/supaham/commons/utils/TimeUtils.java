@@ -43,10 +43,8 @@ public class TimeUtils {
    */
   public static final int SECONDS_PER_DAY = SECONDS_PER_HOUR * HOURS_PER_DAY;
 
-  public static final Pattern PATTERN =
-      Pattern.compile("(?=\\b\\d+[DHMS])(?:([0-9]+)D)?(?:([0-9]+)H)?(?:([0-9]+)M)?(?:([0-9]+)S)?",
-                      Pattern.CASE_INSENSITIVE);
-  
+  public static final Pattern PATTERN = Pattern.compile("(\\d+)(ms|[dhms])");
+
   /**
    * Checks whether a certain amount of milliseconds have elapsed a given time in  milliseconds.
    * This method simply subtracts the given duration from the current time in milliseconds and
@@ -98,7 +96,7 @@ public class TimeUtils {
 
   /**
    * Parses a {@link CharSequence} into a {@code long} duration represented as seconds.
-   * The pattern used to parse the duration is {@link DurationUtils#PATTERN}. In short, 1d2h3m4s is
+   * The pattern used to parse the duration is {@link TimeUtils#PATTERN}. In short, 1d2h3m4s is
    * valid, whereas 1x is not.
    * <pre>
    *   DurationUtils.parseDuration("1s") is <b>valid</b>
@@ -115,31 +113,79 @@ public class TimeUtils {
    *
    * @throws DurationParseException thrown if the text failed to parse
    */
-  public static long parseDuration(@Nonnull CharSequence text)
-      throws DurationParseException {
+  public static long parseDuration(@Nonnull CharSequence text) throws DurationParseException {
+    return parseDurationMs(text) / 1000;
+  }
+
+  /**
+   * Parses a {@link CharSequence} into a {@code long} duration represented as milliseconds.
+   * The pattern used to parse the duration is {@link TimeUtils#PATTERN}. In short, 1d2h3m4s5ms is
+   * valid, whereas 1x is not.
+   * <pre>
+   *   DurationUtils.parseDuration("1s1ms") is <b>valid</b>
+   *   DurationUtils.parseDuration("1m1s2ms") is <b>valid</b>
+   *   DurationUtils.parseDuration("1h1m1s3ms") is <b>valid</b>
+   *   DurationUtils.parseDuration("1d1h1m1s4ms") is <b>valid</b>
+   *   DurationUtils.parseDuration("1d1h1m1s1x5ms") is <b>valid</b>
+   *   DurationUtils.parseDuration("1x") is <b>invalid</b>
+   * </pre>
+   *
+   * @param text text to parse
+   *
+   * @return the milliseconds duration
+   *
+   * @throws DurationParseException thrown if the text failed to parse
+   */
+  public static long parseDurationMs(@Nonnull CharSequence text) throws DurationParseException {
     checkNotNull(text, "text cannot be null.");
     checkArgument(text.length() > 0, "text cannot be empty.");
 
     Matcher matcher = PATTERN.matcher(text);
-    if (matcher.matches()) {
-      String dayMatch = matcher.group(1);
-      String hourMatch = matcher.group(2);
-      String minuteMatch = matcher.group(3);
-      String secondMatch = matcher.group(4);
-      if (dayMatch != null || hourMatch != null || minuteMatch != null || secondMatch != null) {
-        long daysAsSecs = parseNumber(dayMatch, TimeUtils.SECONDS_PER_DAY, "days");
-        long hoursAsSecs = parseNumber(hourMatch, TimeUtils.SECONDS_PER_HOUR, "hours");
-        long minsAsSecs = parseNumber(minuteMatch, TimeUtils.SECONDS_PER_MINUTE, "minutes");
-        long seconds = parseNumber(secondMatch, 1, "seconds");
-        try {
-          return daysAsSecs + hoursAsSecs + minsAsSecs + seconds;
-        } catch (ArithmeticException ex) {
-          throw (DurationParseException) new DurationParseException(
-              "Text cannot be parsed to a Duration: overflow").initCause(ex);
-        }
+    long sum = -1;
+    while (matcher.find()) {
+      if (sum < 0) {
+        sum = 0;
+      }
+      String d = matcher.group(1);
+      String u = StringUtils.lowerCase(matcher.group(2));
+      int multiplier;
+      String unitString;
+      switch (u) {
+        case "d":
+          multiplier = TimeUtils.SECONDS_PER_DAY * 1000;
+          unitString = "days";
+          break;
+        case "h":
+          multiplier = TimeUtils.SECONDS_PER_HOUR * 1000;
+          unitString = "hours";
+          break;
+        case "m":
+          multiplier = TimeUtils.SECONDS_PER_MINUTE * 1000;
+          unitString = "minutes";
+          break;
+        case "s":
+          multiplier = 1000;
+          unitString = "seconds";
+          break;
+        case "ms":
+          multiplier = 1;
+          unitString = "milliseconds";
+          break;
+        default:
+          continue;
+      }
+
+      try {
+        sum += parseNumber(d, multiplier, unitString);
+      } catch (ArithmeticException ex) {
+        throw (DurationParseException) new DurationParseException(
+            "Text cannot be parsed to a Duration: overflow").initCause(ex);
       }
     }
-    throw new DurationParseException("Text cannot be parsed to a Duration");
+    if (sum < 0) {
+      throw new DurationParseException("Text cannot be parsed to a Duration");
+    }
+    return sum;
   }
 
   private static long parseNumber(String parsed, int multiplier, String errorText) {
