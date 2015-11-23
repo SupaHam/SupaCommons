@@ -9,6 +9,8 @@ import com.google.common.base.Preconditions;
 import com.supaham.commons.Uuidable;
 import com.supaham.commons.bukkit.language.Message;
 import com.supaham.commons.bukkit.text.FancyMessage;
+import com.supaham.commons.bukkit.text.MessagePart;
+import com.supaham.commons.bukkit.title.Title;
 
 import org.bukkit.entity.Player;
 
@@ -26,7 +28,7 @@ import javax.annotation.Nonnull;
 public class CommonPlayer implements Uuidable {
 
   protected final UUID uuid;
-  
+
   private String name;
   private WeakReference<Player> player = new WeakReference<>(null);
   PlayerStatus status = PlayerStatus.OFFLINE;
@@ -82,18 +84,18 @@ public class CommonPlayer implements Uuidable {
       fancyMessage.send(getPlayer());
     }
   }
-  
+
   protected void connect() {
     checkState(!isOnline(), "player is already online.");
     this.status = PlayerStatus.CONNECTING;
   }
-  
+
   protected void join() {
     checkState(!isOnline(), "player is already online.");
     this.status = PlayerStatus.ONLINE;
-    
+
   }
-  
+
   protected void disconnect() {
     checkState(isOnline(), "player is already offline.");
     this.status = PlayerStatus.DISCONNECTING;
@@ -133,5 +135,40 @@ public class CommonPlayer implements Uuidable {
   protected void setStatus(@Nonnull PlayerStatus status) {
     Preconditions.checkNotNull(status, "status cannot be null.");
     this.status = status;
+  }
+
+  /**
+   * @see Title#sendActionBarMessage(Player, MessagePart)
+   */
+  public void sendActionBar(@Nonnull MessagePart messagePart) {
+    Title.sendActionBarMessage(getPlayer(), messagePart);
+  }
+
+  /**
+   * @see Title#sendTimes(Player, int, int, int)
+   */
+  public void sendTitleTimes(int fadeIn, int stay, int fadeOut) {
+    Title.sendTimes(getPlayer(), fadeIn, stay, fadeOut);
+  }
+
+  /**
+   * @see Title#sendTitle(Player, FancyMessage)
+   */
+  public void sendTitle(@Nonnull FancyMessage title) {
+    Title.sendTitle(getPlayer(), title);
+  }
+
+  /**
+   * @see Title#sendSubtitle(Player, FancyMessage)
+   */
+  public void sendSubtitle(@Nonnull FancyMessage subtitle) {
+    Title.sendSubtitle(getPlayer(), subtitle);
+  }
+
+  /**
+   * @see Title#sendSubtitle(Player, FancyMessage, FancyMessage)
+   */
+  public void sendSubtitle(@Nonnull FancyMessage title, @Nonnull FancyMessage subtitle) {
+    Title.sendSubtitle(getPlayer(), title, subtitle);
   }
 }
