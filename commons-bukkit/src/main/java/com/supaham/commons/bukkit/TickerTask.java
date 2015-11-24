@@ -104,6 +104,27 @@ public class TickerTask implements Runnable, Pausable, Stateable {
   }
 
   /**
+   * Creates a new {@link TickerTask} by shallow copying another {@link TickerTask}.
+   *
+   * @param task task to clone
+   */
+  public TickerTask(@Nonnull TickerTask task) {
+    Preconditions.checkNotNull(task, "task cannot be null.");
+    this.plugin = task.plugin;
+    this.runnable = task.runnable;
+    this.delay = task.delay;
+    this.interval = task.interval;
+    this.async = task.async;
+
+    this.state = task.state;
+    this.task = task.task;
+    this.lastTickMillis = task.lastTickMillis;
+    this.paused = task.paused;
+    this.totalTicks = task.totalTicks;
+    this.currentTick = task.currentTick;
+  }
+
+  /**
    * This method does not need to be overridden if a {@link Runnable} was passed to the
    * constructor. If no runnable was passed to the constructor, this task will do nothing.
    */
