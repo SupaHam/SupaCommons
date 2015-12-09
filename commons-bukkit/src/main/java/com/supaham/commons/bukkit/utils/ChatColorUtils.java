@@ -155,12 +155,12 @@ public class ChatColorUtils {
     return CollectionUtils.getRandomElement(result);
   }
 
-  public static String serialize(String string) {
-    return ((String) Serializers.getSerializer(ColorStringSerializer.class).serialize(string));
+  public static Object serialize(String string) {
+    return SerializationUtils.serialize(string, ColorStringSerializer.class);
   }
 
   public static String deserialize(String string) {
-    return Serializers.getSerializer(ColorStringSerializer.class).deserialize(string, String.class);
+    return SerializationUtils.deserializeWith(string, ColorStringSerializer.class);
   }
 
   public static ChatColor getFirstColorFromString(String string) {

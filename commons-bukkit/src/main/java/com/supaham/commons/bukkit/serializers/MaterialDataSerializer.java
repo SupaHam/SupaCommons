@@ -7,7 +7,10 @@ import org.bukkit.material.MaterialData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 
 /**
  * A {@link MaterialData} serializer that serializes as "x:y" where x is {@link
@@ -19,16 +22,14 @@ public class MaterialDataSerializer implements Serializer<MaterialData> {
 
   @Nullable
   @Override
-  public Object serialize(@Nullable MaterialData object) {
-    if (object == null) {
-      return null;
-    }
-    return object.getItemType() + ":" + object.getData();
+  public Object serialize(@Nullable MaterialData object, @Nonnull SerializerSet serializerSet) {
+    return object == null ? null : object.getItemType() + ":" + object.getData();
   }
 
   @Nullable
   @Override
-  public MaterialData deserialize(@Nullable Object serialized, @NotNull Class wantedType)
+  public MaterialData deserialize(@Nullable Object serialized, @NotNull Class wantedType,
+                                  @Nonnull SerializerSet serializerSet)
       throws IllegalArgumentException {
     if (serialized == null) {
       return null;

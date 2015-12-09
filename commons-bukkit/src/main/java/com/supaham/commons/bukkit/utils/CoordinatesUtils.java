@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import pluginbase.config.annotation.NoTypeKey;
 import pluginbase.config.annotation.SerializeWith;
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 import pluginbase.minecraft.location.Coordinates;
 import pluginbase.minecraft.location.FacingCoordinates;
 import pluginbase.minecraft.location.Locations;
@@ -25,7 +26,7 @@ import pluginbase.minecraft.location.Locations;
  * @since 0.2.9.1
  */
 public class CoordinatesUtils {
-  
+
   @Nonnull
   public static Object serialize(Coordinates coordinates) {
     if (coordinates == null) {
@@ -44,8 +45,8 @@ public class CoordinatesUtils {
     }
     return sb.toString();
   }
-  
-  public static Coordinates deserialize(@Nullable Object serialized) throws 
+
+  public static Coordinates deserialize(@Nullable Object serialized) throws
                                                                      IllegalArgumentException {
     if (serialized instanceof String) {
       String[] split = serialized.toString().split(" ");
@@ -163,13 +164,15 @@ public class CoordinatesUtils {
 
   public static class CommonLocationSerializer implements Serializer<CommonLocation> {
 
-    @Nullable @Override public Object serialize(CommonLocation object)
+    @Nullable @Override
+    public Object serialize(CommonLocation object, @Nonnull SerializerSet serializerSet)
         throws IllegalArgumentException {
       return object == null ? null : CoordinatesUtils.serialize(object.getCoordinates());
     }
 
     @Nullable @Override
-    public CommonLocation deserialize(@Nullable Object serialized, @Nonnull Class wantedType)
+    public CommonLocation deserialize(@Nullable Object serialized, @Nonnull Class wantedType,
+                                      @Nonnull SerializerSet serializerSet)
         throws IllegalArgumentException {
       if (serialized == null) {
         return null;

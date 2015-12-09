@@ -15,6 +15,7 @@ import com.supaham.commons.bukkit.CommonPlugin;
 import com.supaham.commons.bukkit.Language;
 import com.supaham.commons.bukkit.Language.WorldEdit;
 import com.supaham.commons.bukkit.serializers.MaterialDataSerializer;
+import com.supaham.commons.bukkit.utils.SerializationUtils;
 import com.supaham.commons.bukkit.utils.WorldEditUtils;
 
 import org.bukkit.World;
@@ -23,8 +24,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
 
 import javax.annotation.Nonnull;
-
-import pluginbase.config.serializers.Serializers;
 
 /**
  * @since 0.1
@@ -101,9 +100,9 @@ public class CBinding extends BindingHelper {
       consumedCount = 1)
   public MaterialData getMaterialData(ArgumentStack context) throws ParameterException {
     String input = _checkNotNull(context.next(), "Please specify a material data.");
-    MaterialDataSerializer serializer = Serializers.getSerializer(MaterialDataSerializer.class);
-    return _checkNotNull(serializer.deserialize(input, MaterialData.class),
-                         "'" + input + "' is not a valid arena.");
+    MaterialData serializer =
+        SerializationUtils.deserializeWith(input, MaterialDataSerializer.class);
+    return _checkNotNull(serializer, "'" + input + "' is not a valid arena.");
   }
 
   /**
@@ -145,7 +144,7 @@ public class CBinding extends BindingHelper {
   /* ================================
    * >> WORLDEDIT
    * ================================ */
-  
+
   /**
    * Gets a selection from a {@link ArgumentStack}.
    *
@@ -176,7 +175,8 @@ public class CBinding extends BindingHelper {
       for (Class<? extends com.sk89q.worldedit.bukkit.selections.Selection> clazz :
           selection.value()) {
         if (!sel.getClass().isAssignableFrom(clazz)) {
-          throw new CommonBukkitException(WorldEdit.SELECTION_NOT_SUPPORTED, sel.getRegionSelector().getTypeName());
+          throw new CommonBukkitException(WorldEdit.SELECTION_NOT_SUPPORTED,
+                                          sel.getRegionSelector().getTypeName());
         }
       }
     }

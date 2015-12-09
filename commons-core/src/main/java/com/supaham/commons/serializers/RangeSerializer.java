@@ -5,7 +5,10 @@ import com.google.common.collect.Range;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 
 /**
  * A {@link Range} {@link Serializer} that serializes as "x" or "x y", where x is the lowerEndPoint
@@ -18,7 +21,7 @@ public class RangeSerializer implements Serializer<Range> {
 
   @Override
   @Nullable
-  public Object serialize(@Nullable final Range range) {
+  public Object serialize(@Nullable final Range range, @Nonnull SerializerSet serializerSet) {
     if (range == null) {
       return null;
     }
@@ -29,7 +32,8 @@ public class RangeSerializer implements Serializer<Range> {
 
   @Override
   @Nullable
-  public Range deserialize(@Nullable Object serialized, @NotNull Class wantedType)
+  public Range deserialize(@Nullable Object serialized, @NotNull Class wantedType, 
+                           @Nonnull SerializerSet serializerSet)
       throws IllegalArgumentException {
     if (serialized == null || !(serialized instanceof String)) {
       return null;

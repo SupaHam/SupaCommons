@@ -4,13 +4,13 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import pluginbase.config.annotation.Name;
+import pluginbase.config.annotation.SerializableAs;
 import pluginbase.config.properties.PropertiesWrapper;
 
 /**
  * Represents a MySQL configuration data class.
  */
-@Name("SQLConfig")
+@SerializableAs("SQLConfig")
 public class SQLConfig extends PropertiesWrapper {
 
   private String file;

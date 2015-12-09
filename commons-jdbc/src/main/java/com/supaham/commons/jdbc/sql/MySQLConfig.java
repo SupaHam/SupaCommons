@@ -4,24 +4,25 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import pluginbase.config.annotation.Name;
+import pluginbase.config.annotation.SerializableAs;
 
 /**
  * Represents a MySQL configuration data class.
  */
-@Name("MySQLConfig")
+@SerializableAs("MySQLConfig")
 public class MySQLConfig extends SQLConfig {
+
   private transient String file;
   private String ip;
   private int port;
   private String username;
   private String password;
   private String database;
-  
+
   public MySQLConfig() {
     super();
   }
-  
+
   public MySQLConfig(@Nonnull String ip, int port, @Nonnull String username,
                      @Nonnull String password, @Nonnull String database,
                      @Nonnull Map<String, String> tables) {

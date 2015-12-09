@@ -4,7 +4,10 @@ import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 
 /**
  * A {@link String} {@link Serializer} that specifically serializes minecraft color codes as
@@ -16,7 +19,7 @@ public class ColorStringSerializer implements Serializer<String> {
 
   @Override
   @Nullable
-  public Object serialize(@Nullable final String string) {
+  public Object serialize(@Nullable final String string, @Nonnull SerializerSet serializerSet) {
     if (string == null) {
       return null;
     }
@@ -25,7 +28,8 @@ public class ColorStringSerializer implements Serializer<String> {
 
   @Override
   @Nullable
-  public String deserialize(@Nullable Object serialized, @NotNull Class wantedType)
+  public String deserialize(@Nullable Object serialized, @NotNull Class wantedType,
+                            @Nonnull SerializerSet serializerSet)
       throws IllegalArgumentException {
     if (serialized == null || !(serialized instanceof String)) {
       return null;

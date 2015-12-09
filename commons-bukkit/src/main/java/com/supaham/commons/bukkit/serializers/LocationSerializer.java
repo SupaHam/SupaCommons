@@ -6,7 +6,10 @@ import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 
 /**
  * A {@link Location} serializer that simply calls {@link LocationUtils#serialize(Location)} in
@@ -18,7 +21,7 @@ public class LocationSerializer implements Serializer<Location> {
 
   @Nullable
   @Override
-  public Object serialize(@Nullable Location object) {
+  public Object serialize(@Nullable Location object, @Nonnull SerializerSet serializerSet) {
     if (object == null) {
       return null;
     }
@@ -27,7 +30,8 @@ public class LocationSerializer implements Serializer<Location> {
 
   @Nullable
   @Override
-  public Location deserialize(@Nullable Object serialized, @NotNull Class wantedType)
+  public Location deserialize(@Nullable Object serialized, @NotNull Class wantedType,
+                              @Nonnull SerializerSet serializerSet)
       throws IllegalArgumentException {
     if (serialized == null) {
       return null;

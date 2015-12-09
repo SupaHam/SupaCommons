@@ -1,10 +1,6 @@
 package com.supaham.commons.bukkit.serializers;
 
-import com.supaham.commons.bukkit.area.CuboidRegion;
-import com.supaham.commons.bukkit.area.Poly2DRegion;
 import com.supaham.commons.bukkit.items.ItemEnchantment;
-import com.supaham.commons.bukkit.potion.Potion;
-import com.supaham.commons.bukkit.utils.CoordinatesUtils.CommonLocationSerializer;
 import com.supaham.commons.serializers.ListSerializer;
 
 import org.bukkit.ChatColor;
@@ -16,8 +12,8 @@ import org.bukkit.util.Vector;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import pluginbase.config.SerializationRegistrar;
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 
 /**
  * Contains Bukkit {@link Serializer} classes such as {@link ListColorStringSerializer}, {@link
@@ -27,46 +23,19 @@ import pluginbase.config.serializers.Serializer;
  */
 public class CBSerializers {
 
-  public static void init() {
-    SerializationRegistrar.registerClass(ColorStringSerializer.class);
-    SerializationRegistrar.registerClass(ComplexItemStackSerializer.class);
-    SerializationRegistrar.registerClass(ItemEnchantmentSerializer.class);
-    SerializationRegistrar.registerClass(LocationSerializer.class);
-    SerializationRegistrar.registerClass(MaterialDataSerializer.class);
-    SerializationRegistrar.registerClass(VectorSerializer.class);
-    SerializationRegistrar.registerClass(CommonLocationSerializer.class);
-    SerializationRegistrar.registerClass(FriendlyChatColor.class);
-
-    SerializationRegistrar.registerClass(ListColorStringSerializer.class);
-    SerializationRegistrar.registerClass(ListComplexItemStackSerializer.class);
-    SerializationRegistrar.registerClass(ListItemEnchantmentSerializer.class);
-    SerializationRegistrar.registerClass(ListLocationSerializer.class);
-    SerializationRegistrar.registerClass(ListMaterialDataSerializer.class);
-    SerializationRegistrar.registerClass(ListVectorSerializer.class);
-
-    SerializationRegistrar.registerClass(Potion.class);
-    SerializationRegistrar.registerClass(CuboidRegion.class);
-    SerializationRegistrar.registerClass(Poly2DRegion.class);
-
-    // PluginBase
-    SerializationRegistrar.registerClass(CoordinatesSerializer.class);
-  }
-
   /**
    * Serializes the section sign character produced by {@link ChatColor} as an ampersand {@code &}.
    */
   public static class FriendlyChatColor implements Serializer<ChatColor> {
 
-    @Nullable @Override public Object serialize(ChatColor object) throws IllegalArgumentException {
-      if (object == null) {
-        return null;
-      }
-      return "&" + object.getChar();
+    @Nullable @Override public Object serialize(ChatColor object,
+                                                @Nonnull SerializerSet serializerSet) {
+      return object == null ? null : "&" + object.getChar();
     }
 
     @Nullable @Override
-    public ChatColor deserialize(@Nullable Object serialized, @Nonnull Class wantedType)
-        throws IllegalArgumentException {
+    public ChatColor deserialize(@Nullable Object serialized, @Nonnull Class wantedType,
+                                 @Nonnull SerializerSet serializerSet) {
       if (serialized == null) {
         return null;
       }
@@ -80,43 +49,43 @@ public class CBSerializers {
 
   public static class ListColorStringSerializer extends ListSerializer<String> {
 
-    @Override public Class<ColorStringSerializer> getSerializerClass() {
-      return ColorStringSerializer.class;
+    @Override public Class<String> getTypeClass() {
+      return String.class;
     }
   }
 
   public static class ListComplexItemStackSerializer extends ListSerializer<ItemStack> {
 
-    @Override public Class<ComplexItemStackSerializer> getSerializerClass() {
-      return ComplexItemStackSerializer.class;
+    @Override public Class<ItemStack> getTypeClass() {
+      return ItemStack.class;
     }
   }
 
-  public static class ListItemEnchantmentSerializer extends ListSerializer<ItemEnchantment> {
+  public static class ItemEnchantment extends ListSerializer<ItemEnchantment> {
 
-    @Override public Class<ItemEnchantmentSerializer> getSerializerClass() {
-      return ItemEnchantmentSerializer.class;
+    @Override public Class<ItemEnchantment> getTypeClass() {
+      return ItemEnchantment.class;
     }
   }
 
   public static class ListLocationSerializer extends ListSerializer<Location> {
 
-    @Override public Class<LocationSerializer> getSerializerClass() {
-      return LocationSerializer.class;
+    @Override public Class<Location> getTypeClass() {
+      return Location.class;
     }
   }
 
   public static class ListMaterialDataSerializer extends ListSerializer<MaterialData> {
 
-    @Override public Class<MaterialDataSerializer> getSerializerClass() {
-      return MaterialDataSerializer.class;
+    @Override public Class<MaterialData> getTypeClass() {
+      return MaterialData.class;
     }
   }
 
   public static class ListVectorSerializer extends ListSerializer<Vector> {
 
-    @Override public Class<VectorSerializer> getSerializerClass() {
-      return VectorSerializer.class;
+    @Override public Class<Vector> getTypeClass() {
+      return Vector.class;
     }
   }
 }

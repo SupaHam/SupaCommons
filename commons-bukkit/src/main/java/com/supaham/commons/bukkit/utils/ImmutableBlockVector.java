@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 
 import pluginbase.config.annotation.SerializeWith;
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 
 /**
  * Represents an immutable version of Bukkit's {@link BlockVector} class; providing stability in
@@ -76,7 +77,8 @@ public class ImmutableBlockVector extends ImmutableVector {
     private static final Pattern PATTERN = Pattern.compile("\\s*,\\s*");
 
     @Nullable @Override
-    public Object serialize(@Nullable ImmutableBlockVector object) throws IllegalArgumentException {
+    public Object serialize(@Nullable ImmutableBlockVector object,
+                            @Nonnull SerializerSet serializerSet) throws IllegalArgumentException {
       if (object == null) {
         return null;
       }
@@ -84,7 +86,8 @@ public class ImmutableBlockVector extends ImmutableVector {
     }
 
     @Nullable @Override
-    public ImmutableBlockVector deserialize(@Nullable Object serialized, @Nonnull Class wantedType)
+    public ImmutableBlockVector deserialize(@Nullable Object serialized, @Nonnull Class wantedType,
+                                            @Nonnull SerializerSet serializerSet)
         throws IllegalArgumentException {
       if (serialized == null) {
         return null;

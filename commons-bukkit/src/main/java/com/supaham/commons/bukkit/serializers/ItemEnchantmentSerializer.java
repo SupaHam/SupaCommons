@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 
 /**
  * An {@link ItemEnchantment} serializer that serializes as "x:y" where x is {@link
@@ -23,7 +24,7 @@ public class ItemEnchantmentSerializer implements Serializer<ItemEnchantment> {
 
   @Nullable
   @Override
-  public Object serialize(ItemEnchantment object) throws IllegalArgumentException {
+  public Object serialize(ItemEnchantment object, @Nonnull SerializerSet serializerSet) {
     if (object == null) {
       return null;
     }
@@ -33,8 +34,8 @@ public class ItemEnchantmentSerializer implements Serializer<ItemEnchantment> {
 
   @Nullable
   @Override
-  public ItemEnchantment deserialize(@Nullable Object serialized, @Nonnull Class wantedType)
-      throws IllegalArgumentException {
+  public ItemEnchantment deserialize(@Nullable Object serialized, @Nonnull Class wantedType, 
+                                     @Nonnull SerializerSet serializerSet) {
     if (serialized == null) {
       return null;
     }

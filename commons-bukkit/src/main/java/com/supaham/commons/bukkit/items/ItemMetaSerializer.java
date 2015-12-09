@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 import pluginbase.config.serializers.Serializers;
 
 /**
@@ -140,29 +141,31 @@ public class ItemMetaSerializer {
     if (im.hasLore()) {
       List<String> result = new ArrayList<>();
       for (String s : im.getLore()) {
-        result.add(ChatColorUtils.serialize(s));
+        result.add(ChatColorUtils.serialize(s).toString());
       }
       map.put("lore", result.size() == 1 ? result.get(0) : result);
     }
-    
+
     if (im.hasEnchant(EnchantmentUtils.GLOW_ENCHANTMENT)) {
       map.put("glow", true);
     }
-    
+
     if (im.spigot().isUnbreakable()) {
       map.put("unbreakable", true);
     }
-    
+
     if (im.getItemFlags().size() > 0) {
       Set<ItemFlag> flags = im.getItemFlags();
       map.put("flags", flags.size() == 1 ? Iterables.get(flags, 0) : flags);
     }
-    
+
     {
-      ItemEnchantmentSerializer ser = Serializers.getSerializer(ItemEnchantmentSerializer.class);
+      ItemEnchantmentSerializer ser =
+          Serializers.getSerializerInstance(ItemEnchantmentSerializer.class);
       List<Object> result = new ArrayList<>();
       for (Entry<Enchantment, Integer> entry : im.getEnchants().entrySet()) {
-        result.add(ser.serialize(new ItemEnchantment(entry.getKey(), entry.getValue())));
+        result.add(ser.serialize(new ItemEnchantment(entry.getKey(), entry.getValue()),
+                                 SerializerSet.defaultSet()));
       }
       if (!result.isEmpty()) {
         map.put("enchants", result.size() == 1 ? result.get(0) : result);
@@ -264,12 +267,14 @@ public class ItemMetaSerializer {
           break;
         case "enchants":
           ItemEnchantmentSerializer serializer = Serializers
-              .getSerializer(ItemEnchantmentSerializer.class);
+              .getSerializerInstance(ItemEnchantmentSerializer.class);
           if (val instanceof String) {
-            builder.enchant(serializer.deserialize(val.toString(), ItemEnchantment.class));
+            builder.enchant(serializer.deserialize(val.toString(), ItemEnchantment.class,
+                                                   SerializerSet.defaultSet()));
           } else if (val instanceof List) {
             for (String str : ((List<String>) val)) {
-              builder.enchant(serializer.deserialize(str, ItemEnchantment.class));
+              builder.enchant(serializer.deserialize(str, ItemEnchantment.class,
+                                                     SerializerSet.defaultSet()));
             }
           } else {
             throw new UnsupportedOperationException("enchants is of type " + val.getClass());

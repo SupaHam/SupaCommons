@@ -20,8 +20,8 @@ public class CSerializers {
   public static class ListDurationSerializer extends ListSerializer<Duration> {
 
     @Override
-    public Class<DurationSerializer> getSerializerClass() {
-      return DurationSerializer.class;
+    public Class<Duration> getTypeClass() {
+      return Duration.class;
     }
   }
 
@@ -31,8 +31,8 @@ public class CSerializers {
   public static class ListRangeSerializer extends ListSerializer<Range> {
 
     @Override
-    public Class<RangeSerializer> getSerializerClass() {
-      return RangeSerializer.class;
+    public Class<Range> getTypeClass() {
+      return Range.class;
     }
   }
 }

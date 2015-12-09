@@ -24,10 +24,6 @@ public class CBukkitMain {
 
   private final Map<String, Plugin> hookedPlugins = new HashMap<>();
 
-  static {
-    CBSerializers.init(); // init the class
-  }
-
   /**
    * Gets the instance of this singleton class.
    *

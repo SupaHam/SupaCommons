@@ -1,6 +1,7 @@
 package com.supaham.commons.bukkit.serializers;
 
 import com.supaham.commons.bukkit.ItemBuilder;
+import com.supaham.commons.bukkit.utils.SerializationUtils;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -13,6 +14,7 @@ public class ComplexItemStackSerializerTest {
   public void testName() throws Exception {
     ItemStack item = ItemBuilder.builder(Material.APPLE).name("Xorgon is so smelly right now")
         .lore("Ha. Ha. Ha.").build();
-    System.out.println(new ComplexItemStackSerializer().serialize(item));
+    System.out.println(new ComplexItemStackSerializer()
+                           .serialize(item, SerializationUtils.SERIALIZER_SET));
   }
 }

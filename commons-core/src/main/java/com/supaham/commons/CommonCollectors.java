@@ -1,4 +1,4 @@
-package com.supaham.commons.java8;
+package com.supaham.commons;
 
 import com.google.common.collect.Lists;
 
