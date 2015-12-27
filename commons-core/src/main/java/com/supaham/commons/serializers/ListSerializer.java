@@ -1,6 +1,7 @@
 package com.supaham.commons.serializers;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +10,6 @@ import javax.annotation.Nullable;
 
 import pluginbase.config.serializers.Serializer;
 import pluginbase.config.serializers.SerializerSet;
-import pluginbase.config.serializers.Serializers;
 
 /**
  * Represents an abstract {@link Serializer} that takes a {@link List} of a specific type, used to
@@ -49,7 +49,11 @@ public abstract class ListSerializer<T> implements Serializer<List<T>> {
     }
 
     Serializer<T> ser = serializerSet.getSerializer(getTypeClass());
-    return ((List<T>) serialized).stream()
-        .map(s -> ser.deserialize(s, wantedType, serializerSet)).collect(Collectors.toList());
+    if (serialized instanceof List) {
+      return ((List<T>) serialized).stream()
+          .map(s -> ser.deserialize(s, wantedType, serializerSet)).collect(Collectors.toList());
+    } else {
+      return Arrays.asList(ser.deserialize(serialized, wantedType, serializerSet));
+    }
   }
 }
