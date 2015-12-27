@@ -92,11 +92,6 @@ public final class SerializationUtils {
       yaml.save(result);
       logger.fine("Successfully loaded " + file.getName() + ".");
     } catch (PluginBaseException e) {
-      logger.severe("Error occurred while loading " + file.getName() + "!");
-      e.printStackTrace();
-      return null;
-    } catch (IOException e) {
-      logger.severe("Error occurred while saving " + file.getName() + "!");
       e.printStackTrace();
       return null;
     }
@@ -144,8 +139,7 @@ public final class SerializationUtils {
     return getSerializer(serializerClass).deserialize(serialized, typeClass, serializerSet);
   }
 
-  public static <T> T loadToObject(Object value, T destination, SerializerSet serializerSet)
-      throws IOException {
+  public static <T> T loadToObject(Object value, T destination, SerializerSet serializerSet) {
     if (value == null) {
       return null;
     }
