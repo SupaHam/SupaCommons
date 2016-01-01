@@ -6,8 +6,8 @@ SupaHam's Commons contains a bunch of utilities. This software is always being a
         ...
         <repositories>
             <repository>
-                <id>elmakers</id>
-                <url>http://maven.elmakers.com/repository/</url>
+                <id>drtshock-repo</id>
+                <url>http://ci.drtshock.net/plugin/repository/</url>
             </repository>
         </repositories>
         <dependencies>
@@ -27,7 +27,6 @@ SupaHam's Commons contains a bunch of utilities. This software is always being a
                     <artifactSet>
                         <includes>
                             <include>com.supaham.commons:commons-core</include>
-                            <include>joda-time:joda-time</include>
                         </includes>
                     </artifactSet>
                 </configuration>
@@ -43,7 +42,6 @@ SupaHam's Commons contains a bunch of utilities. This software is always being a
     shadowJar {
         dependencies {
             include(dependency('com.supaham.commons:commons-core'))
-            include(dependency('joda-time:joda-time'))
         }
     }
 

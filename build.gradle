@@ -36,7 +36,7 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     group = 'com.supaham.commons'
-    version = '0.4-SNAPSHOT'
+    version = '0.4.1-SNAPSHOT'
     def nexusRepoUrl
     
     if (!version.endsWith("-SNAPSHOT")) {
@@ -49,8 +49,8 @@ subprojects {
         mavenLocal()
         mavenCentral()
         maven { url = "http://repo.onarandombox.com/content/groups/public/" }
-        // Thanks NathanWolf <3
-        maven { url = "http://maven.elmakers.com/repository/" }
+        // Thanks drtshock <3
+        maven { url = "http://ci.drtshock.net/plugin/repository/" }
     }
     
     ext.internalVersion = version
