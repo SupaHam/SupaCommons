@@ -1,7 +1,6 @@
 package com.supaham.commons.serializers;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,7 @@ public abstract class ListSerializer<T> implements Serializer<List<T>> {
     if (list == null) {
       return null;
     }
-    Serializer<T> ser = serializerSet.getSerializer(getTypeClass());
+    Serializer<T> ser = serializerSet.getClassSerializer(getTypeClass());
     return list.stream().map(t -> ser.serialize(t, serializerSet)).collect(Collectors.toList());
   }
 
@@ -48,7 +47,7 @@ public abstract class ListSerializer<T> implements Serializer<List<T>> {
       return null;
     }
 
-    Serializer<T> ser = serializerSet.getSerializer(getTypeClass());
+    Serializer<T> ser = serializerSet.getClassSerializer(getTypeClass());
     if (serialized instanceof List) {
       return ((List<T>) serialized).stream()
           .map(s -> ser.deserialize(s, wantedType, serializerSet)).collect(Collectors.toList());

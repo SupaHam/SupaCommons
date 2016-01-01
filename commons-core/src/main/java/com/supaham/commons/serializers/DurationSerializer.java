@@ -2,7 +2,7 @@ package com.supaham.commons.serializers;
 
 import com.supaham.commons.utils.DurationUtils;
 
-import org.joda.time.Duration;
+import java.time.Duration;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

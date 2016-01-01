@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 
 import pluginbase.config.annotation.SerializeWith;
 import pluginbase.config.serializers.Serializer;
+import pluginbase.config.serializers.SerializerSet;
 
 /**
  * Represents an immutable version of Bukkit's {@link Vector} class; providing stability in
@@ -792,7 +793,8 @@ public class ImmutableVector {
     private static final Pattern PATTERN = Pattern.compile("\\s*,\\s*");
 
     @Nullable @Override
-    public Object serialize(@Nullable ImmutableVector object) throws IllegalArgumentException {
+    public Object serialize(@Nullable ImmutableVector object, 
+                            @Nonnull SerializerSet serializerSet) {
       if (object == null) {
         return null;
       }
@@ -802,8 +804,8 @@ public class ImmutableVector {
     }
 
     @Nullable @Override
-    public ImmutableVector deserialize(@Nullable Object serialized, @Nonnull Class wantedType)
-        throws IllegalArgumentException {
+    public ImmutableVector deserialize(@Nullable Object serialized, @Nonnull Class wantedType, 
+                                       @Nonnull SerializerSet serializerSet) {
       if (serialized == null) {
         return null;
       }

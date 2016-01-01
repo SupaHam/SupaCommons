@@ -2,25 +2,32 @@ package com.supaham.commons.bukkit.utils;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.bukkit.serializers.ColorSerializer;
+import com.supaham.commons.serializers.DurationSerializer;
+
+import org.bukkit.Color;
+
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import pluginbase.config.SerializableConfig;
+import pluginbase.config.datasource.DataSource;
 import pluginbase.config.datasource.yaml.YamlDataSource;
 import pluginbase.config.field.FieldMapper;
 import pluginbase.config.serializers.Serializer;
 import pluginbase.config.serializers.SerializerSet;
-import pluginbase.config.serializers.Serializers;
-import pluginbase.logging.PluginLogger;
+import pluginbase.config.serializers.SerializerSet.Builder;
 import pluginbase.messages.PluginBaseException;
 
 /**
  * Utility methods for working with PluginBase serialization. This class contains methods such as
- * {@link #loadOrCreateProperties(PluginLogger, File, Object, String)}, and more.
+ * {@link #loadOrCreateProperties(Logger, DataSource, Object, String)}, and more.
  *
  * @since 0.3.2
  */
@@ -29,7 +36,21 @@ public final class SerializationUtils {
   public static final SerializerSet SERIALIZER_SET;
 
   static {
-    SERIALIZER_SET = SerializerSet.defaultSet();
+    Builder builder = SerializerSet.builder(SerializerSet.defaultSet());
+    _add(builder, Duration.class, new DurationSerializer());
+    _add(builder, Color.class, new ColorSerializer());
+    SERIALIZER_SET = builder.build();
+  }
+
+  private static final <T> Builder _add(Builder builder, Class<T> clazz, Serializer<T> serializer) {
+    return builder.addSerializer(clazz, () -> serializer);
+  }
+
+  public static YamlDataSource.Builder yaml(File file) throws IOException {
+    if (!file.exists()) {
+      file.createNewFile();
+    }
+    return YamlDataSource.builder().setFile(file).setIndent(2);
   }
 
   /**
@@ -40,16 +61,17 @@ public final class SerializationUtils {
    * defaults or the newly loaded class, to the config and writes to the {@code file}.
    *
    * @param logger logger to debug to
-   * @param file file to load or create
+   * @param dataSource data source to load from
    * @param defaults defaults to use
    * @param <T> type of properties
    *
    * @return object of type {@link T}
    */
   @Nullable
-  public static <T> T loadOrCreateProperties(@Nonnull PluginLogger logger, @Nonnull File file,
+  public static <T> T loadOrCreateProperties(@Nonnull Logger logger,
+                                             @Nonnull DataSource dataSource,
                                              @Nonnull T defaults) {
-    return loadOrCreateProperties(logger, file, defaults, null);
+    return loadOrCreateProperties(logger, dataSource, defaults, null);
   }
 
   /**
@@ -61,7 +83,7 @@ public final class SerializationUtils {
    * {@code file}.
    *
    * @param logger logger to debug to
-   * @param file file to load or create
+   * @param dataSource data source to load from
    * @param defaults defaults to use
    * @param root root yaml object in the file, not null
    * @param <T> type of properties
@@ -69,28 +91,45 @@ public final class SerializationUtils {
    * @return object of type {@link T}
    */
   @Nullable
-  public static <T> T loadOrCreateProperties(@Nonnull PluginLogger logger, @Nonnull File file,
-                                             @Nonnull T defaults, @Nullable String root) {
+  public static <T> T loadOrCreateProperties(@Nonnull Logger logger,
+                                             @Nonnull DataSource dataSource, @Nonnull T defaults,
+                                             @Nullable String root) {
+    return loadOrCreateProperties(logger, dataSource, defaults, root, SERIALIZER_SET);
+  }
+
+  /**
+   * Loads or creates a default properties class built on PluginBase. If the {@code file} does not
+   * exist, it is created. Then, when loading, comments option is set to true, causing comment
+   * output in the {@code file}. Then, the file is searched for {@code root} yaml object, if it
+   * does not exist, it is written to using the {@code defaults}. Finally, the yaml writes the
+   * result, whether it be the defaults or the newly loaded class, to the config and writes to the
+   * {@code file}.
+   *
+   * @param logger logger to debug to
+   * @param dataSource data source to load from
+   * @param defaults defaults to use
+   * @param root root yaml object in the file, not null
+   * @param <T> type of properties
+   *
+   * @return object of type {@link T}
+   */
+  @Nullable
+  public static <T> T loadOrCreateProperties(@Nonnull Logger logger,
+                                             @Nonnull DataSource dataSource, @Nonnull T defaults,
+                                             @Nullable String root, SerializerSet serializerSet) {
     Preconditions.checkNotNull(logger, "logger cannot be null.");
-    Preconditions.checkNotNull(file, "file cannot be null.");
+    Preconditions.checkNotNull(dataSource, "dataSource cannot be null.");
     Preconditions.checkNotNull(defaults, "defaults cannot be null.");
     T result = defaults;
 
     try {
-      YamlDataSource yaml = YamlDataSource.builder().setFile(file).doComments(true).build();
-      if (root == null) {
-        result = yaml.loadToObject(defaults);
-      } else {
-        final Object loadedObject = yaml.load();
-        if (loadedObject != null) {
-          result = loadToObject(loadedObject, defaults, SERIALIZER_SET);
-        }
+      final Object loadedObject = dataSource.load();
+      if (loadedObject != null) {
+        result = loadToObject(loadedObject, defaults, serializerSet);
       }
       if (result == null) {
         result = defaults;
       }
-      yaml.save(result);
-      logger.fine("Successfully loaded " + file.getName() + ".");
     } catch (PluginBaseException e) {
       e.printStackTrace();
       return null;
@@ -98,8 +137,12 @@ public final class SerializationUtils {
     return result;
   }
 
-  public static <T> Serializer<T> getSerializer(Class<? extends Serializer<T>> serializerClass) {
-    return Serializers.getSerializerInstance(serializerClass);
+  public static <T extends Serializer> T getSerializer(Class<T> serializerClass) {
+    return SERIALIZER_SET.getSerializerInstance(serializerClass);
+  }
+
+  public static <T> Serializer<T> getClassSerializer(Class<T> serializerClass) {
+    return (Serializer<T>) SERIALIZER_SET.getClassSerializer(serializerClass);
   }
 
   public static <T> Object serialize(T object) {

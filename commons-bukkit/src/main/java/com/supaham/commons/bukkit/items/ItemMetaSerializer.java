@@ -8,6 +8,7 @@ import com.supaham.commons.bukkit.serializers.ItemEnchantmentSerializer;
 import com.supaham.commons.bukkit.utils.ChatColorUtils;
 import com.supaham.commons.bukkit.utils.EnchantmentUtils;
 import com.supaham.commons.bukkit.utils.OBCUtils;
+import com.supaham.commons.bukkit.utils.SerializationUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Color;
@@ -31,7 +32,6 @@ import java.util.Set;
 
 import pluginbase.config.serializers.Serializer;
 import pluginbase.config.serializers.SerializerSet;
-import pluginbase.config.serializers.Serializers;
 
 /**
  * This is not an actual {@link Serializer}, merely a deserializer for {@link ItemMeta} with
@@ -161,7 +161,7 @@ public class ItemMetaSerializer {
 
     {
       ItemEnchantmentSerializer ser =
-          Serializers.getSerializerInstance(ItemEnchantmentSerializer.class);
+          SerializationUtils.getSerializer(ItemEnchantmentSerializer.class);
       List<Object> result = new ArrayList<>();
       for (Entry<Enchantment, Integer> entry : im.getEnchants().entrySet()) {
         result.add(ser.serialize(new ItemEnchantment(entry.getKey(), entry.getValue()),
@@ -266,8 +266,8 @@ public class ItemMetaSerializer {
           }
           break;
         case "enchants":
-          ItemEnchantmentSerializer serializer = Serializers
-              .getSerializerInstance(ItemEnchantmentSerializer.class);
+          ItemEnchantmentSerializer serializer =
+              SerializationUtils.getSerializer(ItemEnchantmentSerializer.class);
           if (val instanceof String) {
             builder.enchant(serializer.deserialize(val.toString(), ItemEnchantment.class,
                                                    SerializerSet.defaultSet()));

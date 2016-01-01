@@ -2,7 +2,7 @@ package com.supaham.commons.serializers;
 
 import com.google.common.collect.Range;
 
-import org.joda.time.Duration;
+import java.time.Duration;
 
 import pluginbase.config.serializers.Serializer;
 

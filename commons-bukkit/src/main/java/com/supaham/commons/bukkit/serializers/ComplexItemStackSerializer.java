@@ -16,7 +16,6 @@ import javax.annotation.Nonnull;
 
 import pluginbase.config.serializers.Serializer;
 import pluginbase.config.serializers.SerializerSet;
-import pluginbase.config.serializers.Serializers;
 
 /**
  * An {@link ItemStack} serializer that currently does not serialize fully, but deserializes

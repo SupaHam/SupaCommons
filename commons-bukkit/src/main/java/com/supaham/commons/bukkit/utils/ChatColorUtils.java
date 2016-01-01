@@ -30,8 +30,6 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import pluginbase.config.serializers.Serializers;
-
 /**
  * Utility methods for working with {@link ChatColor} instances. This class contains methods such
  * as {@link #randomChatColorExcept(char...)}, {@link #randomChatColorExcept(ChatColor...)},

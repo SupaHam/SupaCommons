@@ -1,13 +1,11 @@
 package com.supaham.commons.utils;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Preconditions;
 
 import com.supaham.commons.exceptions.DurationParseException;
 
-import org.joda.time.Duration;
-
+import java.time.Duration;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
@@ -20,8 +18,8 @@ import javax.annotation.Nonnull;
 public class DurationUtils {
 
   /**
-   * Parses a {@link CharSequence} into a {@link Duration}. The pattern used to parse the duration
-   * is {@link DurationUtils#PATTERN}. In short, 1d2h3m4s is valid, whereas 1x is not.
+   * Parses a {@link CharSequence} into a {@link Duration} using {@link
+   * TimeUtils#parseDurationMs(CharSequence)}. In short, 1d2h3m4s is valid, whereas 1x is not.
    * <pre>
    *   DurationUtils.parseDuration("1s") is <b>valid</b>
    *   DurationUtils.parseDuration("1m1s") is <b>valid</b>
@@ -36,11 +34,10 @@ public class DurationUtils {
    * @return the {@link Duration}
    *
    * @throws DurationParseException thrown if the text failed to parse
-   * 
    * @see TimeUtils#parseDuration(CharSequence)
    */
   public static Duration parseDuration(@Nonnull CharSequence text) throws DurationParseException {
-    return Duration.standardSeconds(TimeUtils.parseDuration(text));
+    return Duration.ofMillis(TimeUtils.parseDurationMs(text));
   }
 
   /**
@@ -61,7 +58,7 @@ public class DurationUtils {
    * @see TimeUtils#toString(long, boolean)
    */
   public static String toString(@Nonnull Duration duration, boolean simple) {
-    return TimeUtils.toString(duration.getStandardSeconds(), simple);
+    return TimeUtils.toString(duration.getSeconds(), simple);
   }
 
   /**
@@ -89,10 +86,10 @@ public class DurationUtils {
    */
   public static Duration randomDuration(@Nonnull Random random, @Nonnull Duration d1,
                                         @Nonnull Duration d2) {
-    checkNotNull(d1, "first duration cannot be null");
-    checkNotNull(d2, "second duration cannot be null");
-    long diff = Math.abs(d1.getMillis() - d2.getMillis());
-    return new Duration(RandomUtils.nextLong(random, diff));
+    Preconditions.checkNotNull(d1, "first duration cannot be null");
+    Preconditions.checkNotNull(d2, "second duration cannot be null");
+    long diff = Math.abs(d1.toMillis() - d2.toMillis());
+    return Duration.ofMillis(RandomUtils.nextLong(random, diff));
   }
 
   private DurationUtils() {}
