@@ -1,4 +1,4 @@
-# Supa Commons
+# Supa Commons [![Build Status](https://ci.drtshock.net/buildStatus/icon?job=SupaCommons)](https://ci.drtshock.net/job/SupaCommons/)
 SupaHam's Commons contains a bunch of utilities. This software is always being added to.
 
 # Maven
