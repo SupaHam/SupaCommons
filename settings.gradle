@@ -1,5 +1,0 @@
-rootProject.name = 'commons'
-
-include 'commons-core', 'commons-bukkit', 'commons-jdbc'
-include 'commons-bungee'
-
