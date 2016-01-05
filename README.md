@@ -7,7 +7,7 @@ SupaHam's Commons contains a bunch of utilities. This software is always being a
         <repositories>
             <repository>
                 <id>drtshock-repo</id>
-                <url>http://ci.drtshock.net/plugin/repository/</url>
+                <url>http://ci.drtshock.net/plugin/repository/everything</url>
             </repository>
         </repositories>
         <dependencies>
