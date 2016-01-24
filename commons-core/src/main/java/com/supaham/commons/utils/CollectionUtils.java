@@ -42,4 +42,22 @@ public final class CollectionUtils {
   public static <T> T getRandomElement(T[] array) {
     return ArrayUtils.getRandomElement(array);
   }
+
+  /**
+   * Returns whether a case-insensitive String is contained within a {@link Collection}.
+   *
+   * @param collection collection to operate in
+   * @param string string to look for
+   *
+   * @return true if {@code string} is in {@code collection}
+   */
+  public static boolean containsIgnoreCase(Collection<String> collection, String string) {
+    string = string.toLowerCase();
+    for (String e : collection) {
+      if (e.toLowerCase().equals(string)) {
+        return true;
+      }
+    }
+    return false;
+  }
 }
