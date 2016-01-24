@@ -55,7 +55,7 @@ public class LocationUtils {
   @Nonnull
   public static Location deserialize(@Nonnull String string) throws NullPointerException {
     checkNotNullOrEmpty(string);
-    String[] split = string.split("\\s+");
+    String[] split = string.split("\\s+|,");
     checkArgument(split.length >= 4 && split.length <= 6, "string is in an invalid format.");
     World world = Bukkit.getWorld(split[0]);
     checkNotNull(world, "world '" + split[0] + "' doesn't exist.");
@@ -124,10 +124,10 @@ public class LocationUtils {
   public static String serialize(Location location, boolean yaw, boolean pitch) {
     pitch = pitch && location.getPitch() > 0;
     yaw = pitch || (yaw && location.getYaw() > 0);
-    return location.getWorld().getName() + " "
+    return location.getWorld().getName() + ","
            + VectorUtils.serialize(location.toVector()) // x y z
-           + (yaw ? " " + roundExact(3, location.getYaw()) : "")
-           + (pitch ? " " + roundExact(3, location.getPitch()) : "");
+           + (yaw ?   "," + roundExact(3, location.getYaw()) : "")
+           + (pitch ? "," + roundExact(3, location.getPitch()) : "");
   }
 
   /**

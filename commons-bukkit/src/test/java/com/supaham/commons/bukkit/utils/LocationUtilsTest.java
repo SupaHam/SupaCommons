@@ -20,18 +20,18 @@ public class LocationUtilsTest {
     
     // test with no direction
     String serialize = serialize(new Location(world, 123D, 64D, 123.5D));
-    Assert.assertEquals("world 123,64,123.5", serialize);
+    Assert.assertEquals("world,123,64,123.5", serialize);
     
     // test yaw
     serialize = serialize(new Location(world, 123D, 64D, 123.5D, 1F, 0F));
-    Assert.assertEquals("world 123,64,123.5 1", serialize);
+    Assert.assertEquals("world,123,64,123.5,1", serialize);
     
     // test yaw with pitch
     serialize = serialize(new Location(world, 123D, 64D, 123.5D, 1F, 123F));
-    Assert.assertEquals("world 123,64,123.5 1 123", serialize);
+    Assert.assertEquals("world,123,64,123.5,1,123", serialize);
     
     // Test with no yaw and pitch
     serialize = serialize(new Location(world, 123D, 64D, 123.5D, 0F, 123F));
-    Assert.assertEquals("world 123,64,123.5 0 123", serialize);
+    Assert.assertEquals("world,123,64,123.5,0,123", serialize);
   }
 }
