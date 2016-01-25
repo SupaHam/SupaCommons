@@ -44,7 +44,7 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
   protected final ModuleContainer moduleContainer = new ModuleContainer(this);
 
   private SimpleCommonPlugin() {
-    throw new AssertionError("No, you may not.");
+    throw new AssertionError(getClass().getName() + " must override the empty constructor.");
   }
 
   public SimpleCommonPlugin(@Nonnull Class<T> pluginClass, @Nonnull String commandPrefix) {
