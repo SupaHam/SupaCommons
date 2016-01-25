@@ -7,6 +7,7 @@
         <groupId>com.supaham.commons</groupId>
         <version>0.4.1-SNAPSHOT</version>
     </parent>
+    <version>${commons-version}</version>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>commons-bukkit</artifactId>
 
@@ -25,6 +26,10 @@
         <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/repo/</url>
+        </repository>
+        <repository>
+            <id>ellune</id>
+            <url>http://repo.ellune.net/content/groups/public/</url>
         </repository>
     </repositories>
 
@@ -50,20 +55,14 @@
             <version>${squirrelid-version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-core</artifactId>
-            <version>${worldedit-version}</version>
+            <groupId>com.sk89q.intake</groupId>
+            <artifactId>intake</artifactId>
+            <version>4.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.sk89q.worldedit</groupId>
-            <artifactId>worldedit-bukkit</artifactId>
-            <version>${worldedit-version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>bukkit-classloader-check</artifactId>
-                    <groupId>org.sk89q.bukkit</groupId>
-                </exclusion>
-            </exclusions>
+            <groupId>lc.vq</groupId>
+            <artifactId>exhaust-bukkit</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -83,6 +82,8 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.supaham.commons:commons-core</include>
+                                    <include>lc.vq:exhaust-bukkit</include>
+                                    <include>com.sk89q.intake:intake</include>
                                     <include>com.sk89q:squirrelid</include>
                                 </includes>
                             </artifactSet>

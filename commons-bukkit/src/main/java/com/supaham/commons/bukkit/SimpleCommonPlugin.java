@@ -2,9 +2,12 @@ package com.supaham.commons.bukkit;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.bukkit.commands.CommonCommandsManager;
 import com.supaham.commons.bukkit.modules.Module;
 import com.supaham.commons.bukkit.modules.ModuleContainer;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,6 +53,8 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
     this.pluginAgent = BukkitPluginAgent.getPluginAgent(pluginClass, this, commandPrefix);
   }
 
+  protected abstract CommonCommandsManager getCommandsManager();
+
   @Nonnull public PluginBase<T> getPluginBase() {
     return pluginAgent.getPluginBase();
   }
@@ -82,5 +87,10 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
 
   @Nonnull @Override public PluginLogger getLog() {
     return getPluginBase().getLog();
+  }
+  
+  @Override
+  public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
+    return getCommandsManager().getDefaultExecutor().onCommand(sender, command, alias, args);
   }
 }

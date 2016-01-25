@@ -1,9 +1,8 @@
-package com.supaham.commons.bukkit.worldedit;
+package com.supaham.commons.bukkit.commands;
 
-import com.sk89q.minecraft.util.commands.CommandException;
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.util.command.parametric.ExceptionConverterHelper;
-import com.sk89q.worldedit.util.command.parametric.ExceptionMatch;
+import com.sk89q.intake.CommandException;
+import com.sk89q.intake.parametric.handler.ExceptionConverterHelper;
+import com.sk89q.intake.parametric.handler.ExceptionMatch;
 import com.supaham.commons.exceptions.CommonException;
 import com.supaham.commons.bukkit.CommonPlugin;
 
@@ -35,11 +34,6 @@ public class CommonExceptionConverter extends ExceptionConverterHelper {
     } else {
       throw new CommandException("Number expected; string given.");
     }
-  }
-
-  @ExceptionMatch
-  public void convert(IncompleteRegionException e) throws CommandException {
-    throw new CommandException("Make a region selection first.");
   }
 
   @ExceptionMatch
