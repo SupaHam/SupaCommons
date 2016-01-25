@@ -15,7 +15,7 @@
         <module>commons-jdbc</module>
     </modules>
     <properties>
-        <commons-version>0.5.0-SNAPSHOT</commons-version>
+        <commons-version>0.5.1-SNAPSHOT</commons-version>
     </properties>
 
     <repositories>
