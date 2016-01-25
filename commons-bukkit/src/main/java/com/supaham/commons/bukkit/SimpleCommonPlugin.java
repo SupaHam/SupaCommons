@@ -5,18 +5,24 @@ import com.google.common.base.Preconditions;
 import com.supaham.commons.bukkit.commands.CommonCommandsManager;
 import com.supaham.commons.bukkit.modules.Module;
 import com.supaham.commons.bukkit.modules.ModuleContainer;
+import com.supaham.commons.bukkit.utils.SerializationUtils;
+import com.supaham.commons.state.State;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
-import pluginbase.bukkit.BukkitPluginAgent;
+import pluginbase.config.datasource.yaml.YamlDataSource;
 import pluginbase.logging.PluginLogger;
-import pluginbase.plugin.PluginBase;
+import pluginbase.messages.messaging.SendablePluginBaseException;
 
 /**
  * Represents a simple implementation of {@link CommonPlugin}. This class throws an
@@ -26,10 +32,10 @@ import pluginbase.plugin.PluginBase;
  * This class does the following tasks:
  * <br />
  * <ol>
- * <li>Offers two protected fields:
- * <ul><li>pluginAgent: {@link BukkitPluginAgent}; used to hook into the PluginBase framework.</li>
- * <li>moduleContainer; {@link ModuleContainer}; used to assign {@link Module}s to this
- * class</li></ul>
+ * <li>Offers the following protected fields:
+ * <ul>
+ * <li>moduleContainer; {@link ModuleContainer}; used to assign {@link Module}s to this class</li>
+ * </ul>
  * </li>
  * <li>Within the only available constructor, this plugin is hooked into {@link CBukkitMain}.</li>
  * <li>During onLoad, onEnable, onDisable, they call the {@code pluginAgent} in their respective
@@ -40,57 +46,179 @@ import pluginbase.plugin.PluginBase;
 public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends JavaPlugin
     implements CommonPlugin {
 
-  protected final BukkitPluginAgent<T> pluginAgent;
+  private State state = State.STOPPED;
+
+  private final PluginLogger pluginLogger = PluginLogger.getLogger(this);
   protected final ModuleContainer moduleContainer = new ModuleContainer(this);
+  private final SettingsContainer settingsContainer = new SettingsContainer();
+  private final FirstRunContainer firstRunContainer = new FirstRunContainer();
 
-  private SimpleCommonPlugin() {
-    throw new AssertionError(getClass().getName() + " must override the empty constructor.");
-  }
+  @Nonnull private CommonCommandsManager commandsManager = new CommonCommandsManager(this);
 
-  public SimpleCommonPlugin(@Nonnull Class<T> pluginClass, @Nonnull String commandPrefix) {
-    Preconditions.checkNotNull(commandPrefix, "command prefix cannot be null.");
+  public SimpleCommonPlugin() {
     CBukkitMain.hook(this);
-    this.pluginAgent = BukkitPluginAgent.getPluginAgent(pluginClass, this, commandPrefix);
   }
 
-  protected abstract CommonCommandsManager getCommandsManager();
-
-  @Nonnull public PluginBase<T> getPluginBase() {
-    return pluginAgent.getPluginBase();
+  @Override
+  public void onLoad() {
+    this.settingsContainer.init();
   }
 
-  @Override public void onLoad() {
-    this.pluginAgent.loadPluginBase();
+  @Override
+  public void onEnable() {
+    
+    reloadSettings();
+    SimpleCommonPlugin.this.firstRunContainer.init(); // FirstRun runs after reloadSettings
+    
+    this.state = State.ACTIVE;
   }
 
-  @Override public void onEnable() {
-    this.pluginAgent.enablePluginBase();
+  @Override
+  public void onDisable() {
+    this.state = State.STOPPED;
   }
 
-  @Override public void onDisable() {
-    this.pluginAgent.disablePluginBase();
-  }
-
-  @Nonnull @Override public <L extends Listener> L registerEvents(@Nonnull L listener) {
-    getServer().getPluginManager().registerEvents(listener, this);
-    return listener;
-  }
-
-  @Nonnull @Override public <L extends Listener> L unregisterEvents(@Nonnull L listener) {
-    HandlerList.unregisterAll(listener);
-    return listener;
-  }
-
-  @Nonnull @Override public ModuleContainer getModuleContainer() {
+  @Nonnull
+  @Override
+  public ModuleContainer getModuleContainer() {
     return this.moduleContainer;
   }
 
-  @Nonnull @Override public PluginLogger getLog() {
-    return getPluginBase().getLog();
+  @Nonnull
+  @Override
+  public PluginLogger getLog() {
+    return this.pluginLogger;
   }
-  
+
+  /*
+   * onCommand is overridden in order for bukkit to relay all command calls to our own executor.
+   */
   @Override
   public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
     return getCommandsManager().getDefaultExecutor().onCommand(sender, command, alias, args);
+  }
+
+  @Nonnull
+  @Override
+  public CommonCommandsManager getCommandsManager() {
+    return this.commandsManager;
+  }
+  
+  protected void setCommandsManager(@Nonnull CommonCommandsManager commandsManager) {
+    Preconditions.checkState(this.state.isIdle(), "cannot change CommonCommandsManager when plugin is enabled.");
+    Preconditions.checkNotNull(commandsManager, "commandsManager cannot be null.");
+    this.commandsManager = commandsManager;
+  }
+
+  @Override
+  public CommonSettings getSettings() {
+    return this.settingsContainer.settings;
+  }
+
+  protected void setSettings(Supplier<CommonSettings> settingsSupplier) {
+    this.settingsContainer.settingsSupplier = settingsSupplier;
+  }
+
+  @Nonnull
+  @Override
+  public File getSettingsFile() {
+    return this.settingsContainer.settingsFile;
+  }
+
+  protected void setSettingsFile(@Nonnull File file) {
+    Preconditions.checkNotNull(file, "file cannot be null.");
+    this.settingsContainer.settingsFile = file;
+  }
+
+  @Override
+  public boolean reloadSettings() {
+    return this.settingsContainer.load();
+  }
+
+  @Override
+  public boolean saveSettings() {
+    return this.settingsContainer.save();
+  }
+
+  @Override
+  public boolean isFirstRun() {
+    return this.firstRunContainer.firstRun;
+  }
+  
+  public boolean hasFirstRunRunnable(@Nonnull Runnable runnable) {
+    Preconditions.checkNotNull(runnable, "runnable cannot be null.");
+    return this.firstRunContainer.firstRunRunnables.contains(runnable);
+  }
+
+  public boolean addFirstRunRunnable(@Nonnull Runnable runnable) {
+    Preconditions.checkNotNull(runnable, "runnable cannot be null.");
+    return this.firstRunContainer.firstRunRunnables.add(runnable);
+  }
+
+  public boolean removeFirstRunRunnable(@Nonnull Runnable runnable) {
+    Preconditions.checkNotNull(runnable, "runnable cannot be null.");
+    return this.firstRunContainer.firstRunRunnables.remove(runnable);
+  }
+
+  private final class SettingsContainer {
+
+    private Supplier<CommonSettings> settingsSupplier = () -> new CommonSettings(SimpleCommonPlugin.this);
+    private File settingsFile = new File(getDataFolder(), "config.yml");
+    private CommonSettings settings;
+    private YamlDataSource yaml;
+
+    private void isEnabled() {
+      if (settingsSupplier == null) {
+        throw new IllegalStateException("Settings are nullified.");
+      }
+    }
+
+    private boolean init() {
+      isEnabled();
+      this.settings = settingsSupplier.get();
+      return true;
+    }
+
+    private boolean load() {
+      isEnabled();
+
+      try {
+        yaml = SerializationUtils.yaml(this.settingsFile).build();
+        SerializationUtils.loadOrCreateProperties(getLog(), this.yaml, this.settings);
+        save();
+        return true;
+      } catch (IOException e) {
+        e.printStackTrace();
+        return false;
+      }
+    }
+
+    public boolean save() {
+      isEnabled();
+
+      try {
+        this.yaml.save(this.settings);
+        return true;
+      } catch (SendablePluginBaseException e) {
+        e.printStackTrace();
+        return false;
+      }
+    }
+  }
+
+  private final class FirstRunContainer {
+    private List<Runnable> firstRunRunnables = new ArrayList<>();
+    private boolean firstRun = false;
+    
+    private void init() {
+      if (getSettings().isFirstRun()) {
+        getLog().fine(getName() + " first run");
+        this.firstRun = true;
+        this.firstRunRunnables.forEach(Runnable::run);
+        getSettings().setFirstRun(false);
+        saveSettings();
+      }
+      this.firstRunRunnables = null;
+    }
   }
 }

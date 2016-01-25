@@ -17,8 +17,6 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import pluginbase.minecraft.location.Coordinates;
-
 /**
  * Utility methods for working with {@link Vector} instances. This class contains methods such as
  * {@link #deserialize(String)}, {@link #serialize(Vector)}, and more.
@@ -101,8 +99,8 @@ public class VectorUtils {
    * Checks if two {@link Vector} instances are within the same block. If both of them are null,
    * true is returned.
    *
-   * @param o first {@link Coordinates} to check
-   * @param o2 second {@link Coordinates} to check
+   * @param o first {@link Vector} to check
+   * @param o2 second {@link Vector} to check
    *
    * @return true if {@code o} and {@code o2} are the same block
    */

@@ -2,13 +2,16 @@ package com.supaham.commons.bukkit.commands;
 
 import com.google.common.base.Preconditions;
 
-import com.sk89q.intake.fluent.CommandGraph;
-import com.sk89q.intake.fluent.DispatcherNode;
+import com.sk89q.intake.parametric.ParametricException;
 import com.supaham.commons.bukkit.CommonPlugin;
+import com.supaham.commons.bukkit.commands.utils.CommandUtils;
+import com.supaham.commons.bukkit.commands.utils.CommonCommandData;
+
+import net.ellune.exhaust.bukkit.command.CommandManager;
+
+import java.lang.reflect.Method;
 
 import javax.annotation.Nonnull;
-
-import lc.vq.exhaust.bukkit.command.CommandManager;
 
 /**
  * Handles the registration and invocation of commands.
@@ -29,5 +32,10 @@ public class CommonCommandsManager extends CommandManager {
 
   public CommonPlugin getPlugin() {
     return plugin;
+  }
+
+  public void registerMethod(CommonCommandData.Builder dataBuilder) throws ParametricException {
+    dataBuilder.manager(this);
+    CommandUtils.registerMethod(dataBuilder.build());
   }
 }
