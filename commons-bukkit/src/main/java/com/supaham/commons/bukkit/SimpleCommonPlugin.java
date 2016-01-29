@@ -55,6 +55,8 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
 
   @Nonnull private CommonCommandsManager commandsManager = new CommonCommandsManager(this);
 
+  private Metrics metrics;
+
   public SimpleCommonPlugin() {
     CBukkitMain.hook(this);
   }
@@ -66,16 +68,17 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
 
   @Override
   public void onEnable() {
-    
+
     reloadSettings();
     SimpleCommonPlugin.this.firstRunContainer.init(); // FirstRun runs after reloadSettings
-    
+
     this.state = State.ACTIVE;
   }
 
   @Override
   public void onDisable() {
     this.state = State.STOPPED;
+    disableMetrics(); // Automatically disable metrics if it is enabled, convenience method.
   }
 
   @Nonnull
@@ -103,7 +106,7 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
   public CommonCommandsManager getCommandsManager() {
     return this.commandsManager;
   }
-  
+
   protected void setCommandsManager(@Nonnull CommonCommandsManager commandsManager) {
     Preconditions.checkState(this.state.isIdle(), "cannot change CommonCommandsManager when plugin is enabled.");
     Preconditions.checkNotNull(commandsManager, "commandsManager cannot be null.");
@@ -144,7 +147,7 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
   public boolean isFirstRun() {
     return this.firstRunContainer.firstRun;
   }
-  
+
   public boolean hasFirstRunRunnable(@Nonnull Runnable runnable) {
     Preconditions.checkNotNull(runnable, "runnable cannot be null.");
     return this.firstRunContainer.firstRunRunnables.contains(runnable);
@@ -158,6 +161,40 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
   public boolean removeFirstRunRunnable(@Nonnull Runnable runnable) {
     Preconditions.checkNotNull(runnable, "runnable cannot be null.");
     return this.firstRunContainer.firstRunRunnables.remove(runnable);
+  }
+
+  protected boolean enableMetrics() {
+    if (this.metrics != null) {
+      return false;
+    }
+    try {
+      this.metrics = new Metrics(this);
+      this.metrics.enable();
+      return true;
+    } catch (IOException e) {
+      getLog().severe("Failed to reach Metrics server: " + e.getMessage());
+      if (getLog().getDebugLevel() > 0) {
+        e.printStackTrace();
+      }
+      return false;
+    }
+  }
+
+  protected boolean disableMetrics() {
+    if (this.metrics == null) {
+      return false;
+    }
+    try {
+      this.metrics.disable();
+      this.metrics = null;
+      return true;
+    } catch (IOException e) {
+      getLog().severe("Failed to reach Metrics server: " + e.getMessage());
+      if (getLog().getDebugLevel() > 0) {
+        e.printStackTrace();
+      }
+      return false;
+    }
   }
 
   private final class SettingsContainer {
@@ -207,9 +244,10 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
   }
 
   private final class FirstRunContainer {
+
     private List<Runnable> firstRunRunnables = new ArrayList<>();
     private boolean firstRun = false;
-    
+
     private void init() {
       if (getSettings().isFirstRun()) {
         getLog().fine(getName() + " first run");
