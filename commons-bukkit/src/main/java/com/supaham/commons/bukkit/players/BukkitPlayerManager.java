@@ -204,9 +204,9 @@ public class BukkitPlayerManager<T extends CommonPlayer> {
      */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
-      CommonPlayer aeviumPlayer = getPlayer(event.getPlayer());
-      if (aeviumPlayer != null) {
-        aeviumPlayer.disconnect();
+      CommonPlayer commonPlayer = getPlayer(event.getPlayer());
+      if (commonPlayer != null) {
+        commonPlayer.disconnect();
       }
     }
 
