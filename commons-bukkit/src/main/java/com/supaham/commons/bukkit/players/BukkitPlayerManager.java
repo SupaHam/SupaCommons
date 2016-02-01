@@ -82,7 +82,7 @@ public class BukkitPlayerManager<T extends CommonPlayer> {
    *
    * @throws PlayerCreationException thrown if constructor invocation failed
    */
-  private T createPlayer(Player player) throws PlayerCreationException {
+  protected T createPlayer(Player player) throws PlayerCreationException {
     T cPlayer = getPlayer(player);
     if (cPlayer == null) {
       try {
@@ -99,7 +99,7 @@ public class BukkitPlayerManager<T extends CommonPlayer> {
     return cPlayer;
   }
 
-  private void addPlayer(@Nonnull T cPlayer) {
+  protected void addPlayer(@Nonnull T cPlayer) {
     this.players.put(cPlayer.getUuid(), cPlayer);
     this.namesToUUID.put(cPlayer.getName().toLowerCase(), cPlayer.getUuid());
   }
