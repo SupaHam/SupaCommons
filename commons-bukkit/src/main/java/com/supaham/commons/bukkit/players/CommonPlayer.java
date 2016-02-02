@@ -117,8 +117,7 @@ public class CommonPlayer implements Uuidable {
   public void setPlayer(@Nonnull Player player) {
     Preconditions.checkNotNull(player, "player cannot be null.");
     if (player != getPlayer()) { // Only set if we have to
-      checkArgument(!player.getUniqueId().equals(this.uuid),
-                    "UUID of this player and the given Player do not match.");
+      checkArgument(player.getUniqueId().equals(this.uuid), "UUID of this player and the given Player do not match.");
       this.player = new WeakReference<>(player);
       this.name = player.getName();
     }
