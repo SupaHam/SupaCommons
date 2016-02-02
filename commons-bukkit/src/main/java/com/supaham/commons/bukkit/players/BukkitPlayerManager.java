@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.supaham.commons.Uuidable;
 import com.supaham.commons.bukkit.CommonPlugin;
+import com.supaham.commons.utils.ThrowableUtils;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -90,8 +91,7 @@ public class BukkitPlayerManager<T extends CommonPlayer> {
         cPlayer = ctor.newInstance(this, player);
       } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
           | InstantiationException e) {
-        e.printStackTrace();
-        throw (PlayerCreationException) new PlayerCreationException(player).initCause(e);
+        throw (PlayerCreationException) new PlayerCreationException(player).initCause(ThrowableUtils.getCause(e));
       }
       addPlayer(cPlayer);
     }
