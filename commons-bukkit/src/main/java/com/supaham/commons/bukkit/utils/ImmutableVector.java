@@ -88,8 +88,7 @@ public class ImmutableVector {
       return false;
     }
     ImmutableVector o = (ImmutableVector) obj;
-    return Math.abs(x - o.x) < EPSILON && Math.abs(y - o.y) < EPSILON && Math.abs(z - o.z) < EPSILON
-           && (this.getClass().equals(o.getClass()));
+    return Math.abs(x - o.x) < EPSILON && Math.abs(y - o.y) < EPSILON && Math.abs(z - o.z) < EPSILON;
   }
 
   public boolean equals(Vector o) {
@@ -793,7 +792,7 @@ public class ImmutableVector {
     private static final Pattern PATTERN = Pattern.compile("\\s*,\\s*");
 
     @Nullable @Override
-    public Object serialize(@Nullable ImmutableVector object, 
+    public Object serialize(@Nullable ImmutableVector object,
                             @Nonnull SerializerSet serializerSet) {
       if (object == null) {
         return null;
@@ -804,7 +803,7 @@ public class ImmutableVector {
     }
 
     @Nullable @Override
-    public ImmutableVector deserialize(@Nullable Object serialized, @Nonnull Class wantedType, 
+    public ImmutableVector deserialize(@Nullable Object serialized, @Nonnull Class wantedType,
                                        @Nonnull SerializerSet serializerSet) {
       if (serialized == null) {
         return null;
