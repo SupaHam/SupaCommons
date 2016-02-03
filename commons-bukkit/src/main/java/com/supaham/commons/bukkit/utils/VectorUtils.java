@@ -46,7 +46,7 @@ public class VectorUtils {
   @Nonnull
   public static Vector deserialize(@Nonnull String string) throws NullPointerException {
     checkNotNullOrEmpty(string);
-    String[] split = DESERIALIZE.split(string);
+    String[] split = DESERIALIZE.split(string, 4);
     checkArgument(split.length == 3, string + " is in an invalid format.");
     return new Vector(parseDouble(split[0]), parseDouble(split[1]), parseDouble(split[2]));
   }
@@ -144,7 +144,7 @@ public class VectorUtils {
   @Nonnull
   public static RelativeVector deserializeRelative(@Nonnull String string) throws NullPointerException {
     checkNotNullOrEmpty(string);
-    String[] split = DESERIALIZE.split(string);
+    String[] split = DESERIALIZE.split(string, 4);
     checkArgument(split.length == 3, string + " is in an invalid format.");
 
     boolean xRel = split[0].startsWith("~");
