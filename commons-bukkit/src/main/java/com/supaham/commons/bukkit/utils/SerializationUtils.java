@@ -4,13 +4,11 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.serializers.ColorSerializer;
 import com.supaham.commons.serializers.DurationSerializer;
-import com.supaham.commons.utils.ThrowableUtils;
 
 import org.bukkit.Color;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Map;
@@ -22,7 +20,6 @@ import javax.annotation.Nullable;
 import pluginbase.config.SerializableConfig;
 import pluginbase.config.datasource.DataSource;
 import pluginbase.config.datasource.yaml.YamlDataSource;
-import pluginbase.config.field.FieldMapper;
 import pluginbase.config.serializers.Serializer;
 import pluginbase.config.serializers.SerializerSet;
 import pluginbase.config.serializers.SerializerSet.Builder;
@@ -145,7 +142,7 @@ public final class SerializationUtils {
   }
 
   public static <T> Serializer<T> getClassSerializer(Class<T> serializerClass) {
-    return (Serializer<T>) SERIALIZER_SET.getClassSerializer(serializerClass);
+    return SERIALIZER_SET.getClassSerializer(serializerClass);
   }
 
   public static <T> Object serialize(T object) {
@@ -184,22 +181,6 @@ public final class SerializationUtils {
     }
     return getSerializer(serializerClass).deserialize(serialized, typeClass, serializerSet);
   }
-  
-  // See https://github.com/dumptruckman/PluginBase/issues/24 for more information
-  private static Method METHOD;
-  private static Method METHOD2;
-
-  static {
-    try {
-      METHOD = Class.forName("pluginbase.config.serializers.DefaultSerializer")
-          .getDeclaredMethod("deserializeToObject", Map.class, Object.class, SerializerSet.class);
-      METHOD.setAccessible(true);
-      METHOD2 = SerializerSet.class.getDeclaredMethod("getFallbackSerializer");
-      METHOD2.setAccessible(true);
-    } catch (NoSuchMethodException | ClassNotFoundException e) {
-      e.printStackTrace();
-    }
-  }
 
   public static <T> T loadToObject(Object value, T destination, SerializerSet serializerSet) {
     if (value == null) {
@@ -216,13 +197,7 @@ public final class SerializationUtils {
     }
 
     if (source != null) {
-      try {
-        // WORKING CODE VIA REFLECTION
-        return (T) METHOD.invoke(METHOD2.invoke(serializerSet), value, destination, serializerSet);
-      } catch (IllegalAccessException | InvocationTargetException e) {
-        ThrowableUtils.getCause(e).printStackTrace();
-        return null;
-      }
+      return (T) serializerSet.getFallbackSerializer().deserializeToObject((Map)value, destination, serializerSet);
     } else {
       return null;
     }
