@@ -4,11 +4,14 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.serializers.ColorSerializer;
 import com.supaham.commons.serializers.DurationSerializer;
+import com.supaham.commons.utils.ThrowableUtils;
 
 import org.bukkit.Color;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -181,6 +184,22 @@ public final class SerializationUtils {
     }
     return getSerializer(serializerClass).deserialize(serialized, typeClass, serializerSet);
   }
+  
+  // See https://github.com/dumptruckman/PluginBase/issues/24 for more information
+  private static Method METHOD;
+  private static Method METHOD2;
+
+  static {
+    try {
+      METHOD = Class.forName("pluginbase.config.serializers.DefaultSerializer")
+          .getDeclaredMethod("deserializeToObject", Map.class, Object.class, SerializerSet.class);
+      METHOD.setAccessible(true);
+      METHOD2 = SerializerSet.class.getDeclaredMethod("getFallbackSerializer");
+      METHOD2.setAccessible(true);
+    } catch (NoSuchMethodException | ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
 
   public static <T> T loadToObject(Object value, T destination, SerializerSet serializerSet) {
     if (value == null) {
@@ -197,8 +216,13 @@ public final class SerializationUtils {
     }
 
     if (source != null) {
-      destination = FieldMapper.mapFields(source, destination);
-      return destination;
+      try {
+        // WORKING CODE VIA REFLECTION
+        return (T) METHOD.invoke(METHOD2.invoke(serializerSet), value, destination, serializerSet);
+      } catch (IllegalAccessException | InvocationTargetException e) {
+        ThrowableUtils.getCause(e).printStackTrace();
+        return null;
+      }
     } else {
       return null;
     }
