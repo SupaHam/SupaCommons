@@ -1,6 +1,6 @@
 package com.supaham.commons.bukkit.serializers;
 
-import com.supaham.commons.bukkit.items.ItemEnchantment;
+import com.supaham.commons.bukkit.utils.RelativeVector;
 import com.supaham.commons.serializers.ListSerializer;
 
 import org.bukkit.ChatColor;
@@ -86,6 +86,14 @@ public class CBSerializers {
 
     @Override public Class<Vector> getTypeClass() {
       return Vector.class;
+    }
+  }
+
+  public static class ListRelativeVectorSerializer extends ListSerializer<RelativeVector> {
+
+    @Override
+    public Class<RelativeVector> getTypeClass() {
+      return RelativeVector.class;
     }
   }
 }
