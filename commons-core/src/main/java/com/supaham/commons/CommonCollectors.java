@@ -7,6 +7,7 @@ import com.supaham.commons.utils.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
@@ -38,12 +39,12 @@ public class CommonCollectors {
    *
    * @return random element
    */
-  public static <T> Collector<T, List<T>, T> singleRandom() {
+  public static <T> Collector<T, List<T>, Optional<T>> singleRandom() {
     // TODO make this more efficient by not having to create a list and add.
     return Collector.of(ArrayList::new, List::add, (l, r) -> {
       l.addAll(r);
       return l;
-    }, CollectionUtils::getRandomElement);
+    }, l -> l.isEmpty() ? Optional.empty() : Optional.ofNullable(CollectionUtils.getRandomElement(l)));
   }
 
   private CommonCollectors() {
