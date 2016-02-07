@@ -64,14 +64,12 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
   @Override
   public void onLoad() {
     this.settingsContainer.init();
+    reloadSettings();
+    SimpleCommonPlugin.this.firstRunContainer.init(); // FirstRun runs after reloadSettings
   }
 
   @Override
   public void onEnable() {
-
-    reloadSettings();
-    SimpleCommonPlugin.this.firstRunContainer.init(); // FirstRun runs after reloadSettings
-
     this.state = State.ACTIVE;
   }
 
