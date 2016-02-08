@@ -12,6 +12,7 @@ import com.google.common.collect.Iterables;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Iterator;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -203,5 +204,14 @@ public final class StringUtils extends org.apache.commons.lang.StringUtils {
     Preconditions.checkNotNull(parts, "parts cannot be null.");
     Preconditions.checkNotNull(function, "function cannot be null.");
     return joiner.join(Iterables.transform(parts, function));
+  }
+
+  public static Optional<Boolean> parseBoolean(String string) {
+    if (string == null) {
+      return Optional.empty();
+    }
+    string = string.toLowerCase();
+    return "false".equals(string) || "true".equals(string) ? Optional.of(Boolean.parseBoolean(string))
+                                                           : Optional.empty();
   }
 }
