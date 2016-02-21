@@ -150,9 +150,9 @@ public class VectorUtils {
     boolean xRel = split[0].startsWith("~");
     boolean yRel = split[1].startsWith("~");
     boolean zRel = split[2].startsWith("~");
-    double x = parseDouble(split[0].substring(xRel ? 1 : 0));
-    double y = parseDouble(split[1].substring(yRel ? 1 : 0));
-    double z = parseDouble(split[2].substring(zRel ? 1 : 0));
+    double x = parseDouble(StringUtils.defaultIfEmpty(split[0].substring(xRel ? 1 : 0), "0"));
+    double y = parseDouble(StringUtils.defaultIfEmpty(split[1].substring(yRel ? 1 : 0), "0"));
+    double z = parseDouble(StringUtils.defaultIfEmpty(split[2].substring(zRel ? 1 : 0), "0"));
     return new RelativeVector(x, y, z, xRel, yRel, zRel);
   }
 
