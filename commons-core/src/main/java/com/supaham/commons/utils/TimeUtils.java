@@ -8,6 +8,7 @@ import com.google.common.math.LongMath;
 
 import com.supaham.commons.exceptions.DurationParseException;
 
+import java.math.BigInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +43,9 @@ public class TimeUtils {
    * Seconds per day.
    */
   public static final int SECONDS_PER_DAY = SECONDS_PER_HOUR * HOURS_PER_DAY;
+
+  public static final long NANOS_PER_SECOND = 1000_000_000L;
+  public static final BigInteger BI_NANOS_PER_SECOND = BigInteger.valueOf(NANOS_PER_SECOND);
 
   public static final Pattern PATTERN = Pattern.compile("(-?\\d+)(ms|[dhms])");
 
