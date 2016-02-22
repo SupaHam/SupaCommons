@@ -8,6 +8,8 @@ import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import pluginbase.config.annotation.SerializeWith;
+
 /**
  * Represents a class for relativity with {@link Number} types. This feature and class should not be used in a
  * predictable environment. To clarify, this class is only meant to be used when some maths is to be done by the work
@@ -28,6 +30,7 @@ import javax.annotation.Nullable;
  * @see ArithmeticOperator
  * @see RelativeNumberSerializer
  */
+@SerializeWith(RelativeNumberSerializer.class)
 public final class RelativeNumber implements Function<Number, Double> {
 
   /**
