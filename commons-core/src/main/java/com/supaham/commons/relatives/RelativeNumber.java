@@ -44,12 +44,84 @@ public final class RelativeNumber implements Function<Number, Double> {
   private final boolean wholeNumber;
   private final boolean relative;
 
+  /**
+   * Deserialization in the form of {@link #toString()}. The following table shows the valid and invalid serialized
+   * forms:
+   * <table>
+   * <thead>
+   * <tr>
+   * <th>Valid</th>
+   * <th>Invalid</th>
+   * </tr>
+   * </thead>
+   *
+   * <tbody>
+   * <tr>
+   * <td>1</td>
+   * <td>1asd</td>
+   * </tr>
+   * <tr>
+   * <td>+1</td>
+   * <td>+1asd</td>
+   * </tr>
+   * <tr>
+   * <td>-1</td>
+   * <td>-1asd</td>
+   * </tr>
+   * <tr>
+   * <td></td>
+   * <td>*1asd</td>
+   * </tr>
+   *
+   * <tr>
+   * <td>~1</td>
+   * <td>~1asd</td>
+   * </tr>
+   *
+   * <tr>
+   * <td>~+1</td>
+   * <td>~1+</td>
+   * </tr>
+   *
+   * <tr>
+   * <td>~-1</td>
+   * <td>~1-</td>
+   * </tr>
+   *
+   * <tr>
+   * <td>~*1</td>
+   * <td>~1*</td>
+   * </tr>
+   *
+   * <tr>
+   * <td>~/1</td>
+   * <td>~1/</td>
+   * </tr>
+   *
+   * <tr>
+   * <td>~%1</td>
+   * <td>~1%</td>
+   * </tr>
+   *
+   * <tr>
+   * <td>~^1</td>
+   * <td>~1^</td>
+   * </tr>
+   * </tbody>
+   * </table>
+   *
+   * @param string string to deserialize
+   *
+   * @return deserialized string in the form of {@link RelativeNumber}
+   */
   public static RelativeNumber fromString(@Nonnull String string) {
+    Preconditions.checkNotNull(string, "string cannot be null.");
     boolean relative = false;
     double number;
     boolean wholeNumber;
     ArithmeticOperator operator;
 
+    string = string.trim();
     // Make sure the string isn't just "" or "~".
     if (string.isEmpty() || string.equals("~")) {
       return ZERO;
@@ -57,14 +129,14 @@ public final class RelativeNumber implements Function<Number, Double> {
 
     if (string.startsWith("~")) {
       relative = true;
-      string = string.substring(1);
+      string = string.substring(1).trim();
     }
 
     if (Character.isDigit(string.charAt(0))) {
       operator = ArithmeticOperator.ADDITION;
     } else {
       operator = ArithmeticOperator.fromChar(string.charAt(0));
-      string = string.substring(1);
+      string = string.substring(1).trim();
     }
     try {
       number = Integer.parseInt(string);
@@ -78,6 +150,7 @@ public final class RelativeNumber implements Function<Number, Double> {
       }
     }
 
+    Preconditions.checkNotNull(operator, "operator cannot be null.");
     return new RelativeNumber(operator, number, wholeNumber, relative);
   }
 
@@ -109,9 +182,7 @@ public final class RelativeNumber implements Function<Number, Double> {
     this(operator, number, wholeNumber, true);
   }
 
-  protected RelativeNumber(ArithmeticOperator operator, Number number, boolean wholeNumber, boolean relative) {
-    Preconditions.checkNotNull(operator, "operator cannot be null.");
-    Preconditions.checkNotNull(number, "number cannot be null.");
+  private RelativeNumber(ArithmeticOperator operator, Number number, boolean wholeNumber, boolean relative) {
     this.operator = operator;
     this.number = number.doubleValue();
     this.wholeNumber = wholeNumber;
@@ -119,8 +190,8 @@ public final class RelativeNumber implements Function<Number, Double> {
   }
 
   /**
-   * Applies a {@link Number} to this {@link RelativeNumber} for mathematical operation. If the given {@code number} is
-   * null, {@link #getNumber()} is returned.
+   * Applies a {@link Number} to this {@link RelativeNumber} for mathematical operation based on {@link
+   * #getOperator()}. If the given {@code number} is null, {@link #getNumber()} is returned.
    *
    * @param number number to apply to the operator, nullable
    *
