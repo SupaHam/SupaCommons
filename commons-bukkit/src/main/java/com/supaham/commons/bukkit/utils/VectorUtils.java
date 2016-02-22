@@ -8,6 +8,7 @@ import static java.lang.Double.parseDouble;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.utils.RandomUtils;
+import com.supaham.commons.utils.StringUtils;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
