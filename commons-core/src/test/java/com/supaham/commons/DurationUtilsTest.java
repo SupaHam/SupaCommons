@@ -18,12 +18,17 @@ public class DurationUtilsTest {
   public void testParse() throws Exception {
     Duration duration = parseDuration("1h");
     Assert.assertEquals(3600, duration.getSeconds());
+    Duration negativeDuration = parseDuration("-1h");
+    Assert.assertEquals(-3600, negativeDuration.getSeconds());
   }
 
   @Test
   public void testToString() throws Exception {
     Assert.assertEquals("1h", DurationUtils.toString(Duration.ofSeconds(3600), true));
     Assert.assertEquals("1 hour", DurationUtils.toString(Duration.ofSeconds(3600), false));
+    
+    Assert.assertEquals("-1h", DurationUtils.toString(Duration.ofSeconds(-3600), true));
+    Assert.assertEquals("-1 hour", DurationUtils.toString(Duration.ofSeconds(-3600), false));
   }
 
   @Test

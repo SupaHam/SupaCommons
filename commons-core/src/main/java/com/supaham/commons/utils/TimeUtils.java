@@ -43,7 +43,7 @@ public class TimeUtils {
    */
   public static final int SECONDS_PER_DAY = SECONDS_PER_HOUR * HOURS_PER_DAY;
 
-  public static final Pattern PATTERN = Pattern.compile("(\\d+)(ms|[dhms])");
+  public static final Pattern PATTERN = Pattern.compile("(-?\\d+)(ms|[dhms])");
 
   /**
    * Checks whether a certain amount of milliseconds have elapsed a given time in  milliseconds.
@@ -144,11 +144,8 @@ public class TimeUtils {
     }
 
     Matcher matcher = PATTERN.matcher(text);
-    long sum = -1;
+    long sum = 0;
     while (matcher.find()) {
-      if (sum < 0) {
-        sum = 0;
-      }
       String d = matcher.group(1);
       String u = StringUtils.lowerCase(matcher.group(2));
       int multiplier;
@@ -185,9 +182,6 @@ public class TimeUtils {
             "Text cannot be parsed to a Duration: overflow").initCause(ex);
       }
     }
-    if (sum < 0) {
-      throw new DurationParseException("Text cannot be parsed to a Duration");
-    }
     return sum;
   }
 
@@ -222,32 +216,31 @@ public class TimeUtils {
    * @return the string of the {@code seconds}
    */
   public static String toString(long seconds, boolean simple) {
-    Preconditions.checkArgument(seconds > -1, "seconds cannot be smaller than 0.");
     long days = seconds / TimeUtils.SECONDS_PER_DAY;
     long hours = (seconds % TimeUtils.SECONDS_PER_DAY) / TimeUtils.SECONDS_PER_HOUR;
     int minutes = (int) ((seconds % TimeUtils.SECONDS_PER_HOUR) / TimeUtils.SECONDS_PER_MINUTE);
     int secs = (int) (seconds % TimeUtils.SECONDS_PER_MINUTE);
     StringBuilder buf = new StringBuilder(24);
     if (days != 0) {
-      buf.append(days).append(simple ? "d" : " day" + (days != 1 ? "s" : ""));
+      buf.append(days).append(simple ? "d" : " day" + (days != 1 && days != -1 ? "s" : ""));
     }
     if (hours != 0) {
       if (!simple && buf.length() > 0) {
         buf.append(" ");
       }
-      buf.append(hours).append(simple ? "h" : " hour" + (hours != 1 ? "s" : ""));
+      buf.append(hours).append(simple ? "h" : " hour" + (hours != 1 && hours != -1 ? "s" : ""));
     }
     if (minutes != 0) {
       if (!simple && buf.length() > 0) {
         buf.append(" ");
       }
-      buf.append(minutes).append(simple ? "m" : " minute" + (minutes != 1 ? "s" : ""));
+      buf.append(minutes).append(simple ? "m" : " minute" + (minutes != 1 && minutes != -1 ? "s" : ""));
     }
     if (secs != 0) {
       if (!simple && buf.length() > 0) {
         buf.append(" ");
       }
-      buf.append(secs).append(simple ? "s" : " second" + (secs != 1 ? "s" : ""));
+      buf.append(secs).append(simple ? "s" : " second" + (secs != 1 && secs != -1 ? "s" : ""));
     }
     return buf.toString();
   }
