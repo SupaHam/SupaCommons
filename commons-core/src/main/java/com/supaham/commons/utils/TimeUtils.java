@@ -149,11 +149,13 @@ public class TimeUtils {
 
     Matcher matcher = PATTERN.matcher(text);
     long sum = 0;
+    boolean foundUnit = false;
     while (matcher.find()) {
       String d = matcher.group(1);
       String u = StringUtils.lowerCase(matcher.group(2));
       int multiplier;
       String unitString;
+      foundUnit = true;
       switch (u) {
         case "d":
           multiplier = TimeUtils.SECONDS_PER_DAY * 1000;
@@ -183,8 +185,11 @@ public class TimeUtils {
         sum += parseNumber(d, multiplier, unitString);
       } catch (ArithmeticException ex) {
         throw (DurationParseException) new DurationParseException(
-            "Text cannot be parsed to a Duration: overflow").initCause(ex);
+            "Text cannot be parsed as milliseconds: overflow").initCause(ex);
       }
+    }
+    if (sum == 0 && !foundUnit) {
+      throw new DurationParseException("Text cannot be parsed as milliseconds " + text);
     }
     return sum;
   }
