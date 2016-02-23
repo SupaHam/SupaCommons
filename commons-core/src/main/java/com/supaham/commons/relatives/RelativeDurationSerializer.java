@@ -2,6 +2,8 @@ package com.supaham.commons.relatives;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.utils.StringUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -24,7 +26,8 @@ public class RelativeDurationSerializer implements Serializer<RelativeDuration> 
     if (serialized == null) {
       return null;
     }
-    Preconditions.checkArgument(serialized instanceof String, "RelativeDuration may only be in the form of a String.");
+    Preconditions.checkArgument(StringUtils.isStringOrNumber(serialized),
+                                "RelativeDuration may only be in the form of a String.");
     return RelativeDuration.fromString(serialized.toString());
   }
 }

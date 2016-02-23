@@ -2,6 +2,8 @@ package com.supaham.commons.relatives;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.utils.StringUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -24,7 +26,8 @@ public class RelativeNumberSerializer implements Serializer<RelativeNumber> {
     if (serialized == null) {
       return null;
     }
-    Preconditions.checkArgument(serialized instanceof String, "RelativeNumber may only be in the form of a String.");
+    Preconditions.checkArgument(StringUtils.isStringOrNumber(serialized),
+                                "RelativeNumber may only be in the form of a String.");
     return RelativeNumber.fromString(serialized.toString());
   }
 }

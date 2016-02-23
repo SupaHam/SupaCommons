@@ -214,4 +214,8 @@ public final class StringUtils extends org.apache.commons.lang.StringUtils {
     return "false".equals(string) || "true".equals(string) ? Optional.of(Boolean.parseBoolean(string))
                                                            : Optional.empty();
   }
+  
+  public static boolean isStringOrNumber(Object o) {
+    return o instanceof String || o instanceof Number;
+  }
 }
