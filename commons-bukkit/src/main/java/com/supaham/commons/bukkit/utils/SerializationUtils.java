@@ -4,6 +4,10 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.serializers.ColorSerializer;
 import com.supaham.commons.bukkit.serializers.MaterialDataSerializer;
+import com.supaham.commons.relatives.RelativeDuration;
+import com.supaham.commons.relatives.RelativeDurationSerializer;
+import com.supaham.commons.relatives.RelativeNumber;
+import com.supaham.commons.relatives.RelativeNumberSerializer;
 import com.supaham.commons.serializers.DurationSerializer;
 
 import org.bukkit.Color;
@@ -42,6 +46,8 @@ public final class SerializationUtils {
     _add(builder, Duration.class, new DurationSerializer());
     _add(builder, Color.class, new ColorSerializer());
     _add(builder, MaterialData.class, new MaterialDataSerializer());
+    _add(builder, RelativeNumber.class, new RelativeNumberSerializer());
+    _add(builder, RelativeDuration.class, new RelativeDurationSerializer());
     SERIALIZER_SET = builder.build();
   }
 
