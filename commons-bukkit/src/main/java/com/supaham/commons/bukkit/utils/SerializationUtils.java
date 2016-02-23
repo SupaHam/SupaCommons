@@ -3,9 +3,11 @@ package com.supaham.commons.bukkit.utils;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.serializers.ColorSerializer;
+import com.supaham.commons.bukkit.serializers.MaterialDataSerializer;
 import com.supaham.commons.serializers.DurationSerializer;
 
 import org.bukkit.Color;
+import org.bukkit.material.MaterialData;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +41,7 @@ public final class SerializationUtils {
     Builder builder = SerializerSet.builder(SerializerSet.defaultSet());
     _add(builder, Duration.class, new DurationSerializer());
     _add(builder, Color.class, new ColorSerializer());
+    _add(builder, MaterialData.class, new MaterialDataSerializer());
     SERIALIZER_SET = builder.build();
   }
 

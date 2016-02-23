@@ -35,7 +35,7 @@ public class MaterialDataSerializer implements Serializer<MaterialData> {
       return null;
     }
     String[] split = serialized.toString().split(":");
-    Material material = Material.getMaterial(split[0]);
+    Material material = Material.matchMaterial(split[0]);
     Preconditions.checkArgument(material != null, split[0] + " is not a valid material.");
     return new MaterialData(material,
                             split.length >= 2 && !split[1].isEmpty() ? Byte.valueOf(split[1]) : 0);
