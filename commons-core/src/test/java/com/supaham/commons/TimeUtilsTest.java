@@ -34,6 +34,8 @@ public class TimeUtilsTest {
     Assert.assertEquals(3600 * 1000, duration);
     duration = TimeUtils.parseDurationMs("1d1h1m1s3ms");
     Assert.assertEquals((86400 + 3600 + 60 + 1) * 1000 + 3, duration);
+    duration = TimeUtils.parseDurationMs("0.5s");
+    Assert.assertEquals((0.5) * 1000, duration, 0.000001);
   }
 
   @Test(expected = DurationParseException.class)

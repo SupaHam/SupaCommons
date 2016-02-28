@@ -47,7 +47,7 @@ public class TimeUtils {
   public static final long NANOS_PER_SECOND = 1000_000_000L;
   public static final BigInteger BI_NANOS_PER_SECOND = BigInteger.valueOf(NANOS_PER_SECOND);
 
-  public static final Pattern PATTERN = Pattern.compile("(-?\\d+)(ms|[dhms])");
+  public static final Pattern PATTERN = Pattern.compile("(-?\\d*\\.?\\d*)(ms|[dhms])");
 
   /**
    * Checks whether a certain amount of milliseconds have elapsed a given time in  milliseconds.
@@ -200,8 +200,8 @@ public class TimeUtils {
       return 0;
     }
     try {
-      long val = Long.parseLong(parsed);
-      return LongMath.checkedMultiply(val, multiplier);
+      double val = Double.parseDouble(parsed);
+      return (long) (val * multiplier);
     } catch (NumberFormatException | ArithmeticException ex) {
       throw (DurationParseException)
           new DurationParseException("Text cannot be parsed to a Duration: " + errorText)
