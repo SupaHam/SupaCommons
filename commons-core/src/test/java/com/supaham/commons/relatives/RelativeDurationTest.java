@@ -70,7 +70,7 @@ public class RelativeDurationTest {
   @Test
   public void testDeserialization() throws Exception {
     RelativeDuration add = RelativeDuration.from(ArithmeticOperator.ADDITION, ONE);
-    RelativeDuration subtract = RelativeDuration.from(ArithmeticOperator.SUBTRACTION, ONE);
+    RelativeDuration subtract = RelativeDuration.from(ArithmeticOperator.ADDITION, ONE.negated());
     RelativeDuration multiplication = RelativeDuration.from(ArithmeticOperator.MULTIPLICATION, ONE);
     RelativeDuration division = RelativeDuration.from(ArithmeticOperator.DIVISION, ONE);
     RelativeDuration modulus = RelativeDuration.from(ArithmeticOperator.MODULUS, ONE);
@@ -83,6 +83,8 @@ public class RelativeDurationTest {
     Assert.assertEquals(add, RelativeDuration.fromString("~+1s"));
     Assert.assertEquals(add, RelativeDuration.fromString("~1")); // no unit defaults to seconds
 
+    Assert.assertEquals(subtract, RelativeDuration.fromString("~+-1s"));
+    Assert.assertEquals(subtract, RelativeDuration.fromString("~+-1"));
     Assert.assertEquals(subtract, RelativeDuration.fromString("~-1s"));
     Assert.assertEquals(subtract, RelativeDuration.fromString("~-1"));
 

@@ -126,7 +126,13 @@ public final class RelativeDuration implements Function<Duration, Duration> {
       operator = ArithmeticOperator.ADDITION;
     } else {
       operator = ArithmeticOperator.fromChar(string.charAt(0));
-      string = string.substring(1).trim();
+      // If the string is something like -123, make sure we pass the number as -123 and not 123 with subtraction
+      // operator. This makes Relativity with deserialized objects work as expected.
+      if (operator == ArithmeticOperator.SUBTRACTION && string.charAt(1) != '-') {
+        operator = ArithmeticOperator.ADDITION;
+      } else {
+        string = string.substring(1).trim();
+      }
     }
     Matcher matcher = NO_SPECIFIED_UNIT.matcher(string);
     if (matcher.find()) {
@@ -155,7 +161,7 @@ public final class RelativeDuration implements Function<Duration, Duration> {
    * @return result of the operation
    */
   @Override public Duration apply(Duration duration) throws ArithmeticException {
-    if (duration == null || !relative) {
+    if (duration == null) {
       return this.duration;
     }
     double d1 = BigDecimal.valueOf(this.duration.getSeconds())
