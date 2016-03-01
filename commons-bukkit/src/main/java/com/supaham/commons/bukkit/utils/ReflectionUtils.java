@@ -39,9 +39,9 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     classes.put("Vec3D", clazz);
     constructors.put("Vec3D",
                      clazz.getDeclaredConstructor(double.class, double.class, double.class));
-    fields.put("Vec3Dx", getField(clazz, "a"));
-    fields.put("Vec3Dy", getField(clazz, "b"));
-    fields.put("Vec3Dz", getField(clazz, "c"));
+    fields.put("Vec3Dx", getField(clazz, "x"));
+    fields.put("Vec3Dy", getField(clazz, "y"));
+    fields.put("Vec3Dz", getField(clazz, "z"));
 
     classes.put("BlockPosition", nms.getClassSafe("BlockPosition"));
     clazz = nms.getClassSafe("BaseBlockPosition");
@@ -117,6 +117,11 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
 
   public static boolean isServer18() {
     return getServerVersion().startsWith("v1_8");
+  }
+
+  public static boolean isServer18Or19() {
+    String ver = getServerVersion();
+    return ver.startsWith("v1_8") || ver.startsWith("v1_9");
   }
 
   public static Class<?> getNMSClass(String className) {

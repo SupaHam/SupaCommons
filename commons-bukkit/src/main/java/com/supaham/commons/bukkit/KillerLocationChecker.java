@@ -40,8 +40,8 @@ public class KillerLocationChecker extends WarnableLocationChecker<Player> {
   public KillerLocationChecker(@Nonnull Plugin plugin, @Nonnull Region region,
                                @Nonnull Supplier<Collection<Player>> supplier, int maxWarnings) {
     super(plugin, 20, region, supplier, maxWarnings);
-    this.returnSound = new SingleSound(org.bukkit.Sound.NOTE_PLING, 1F, 1.5F);
-    this.outOfBoundsSound = new SingleSound(org.bukkit.Sound.NOTE_BASS, 1F, .5F);
+    this.returnSound = new SingleSound(org.bukkit.Sound.BLOCK_NOTE_PLING, 1F, 1.5F);
+    this.outOfBoundsSound = new SingleSound(org.bukkit.Sound.BLOCK_NOTE_BASS, 1F, .5F);
   }
 
   @Override protected void onInBounds(@Nonnull Player entity) {

@@ -387,7 +387,11 @@ public enum ParticleEffect {
    * <li>The offset values have no influence on this particle effect
    * </ul>
    */
-  MOB_APPEARANCE("mobappearance", 41, 8);
+  MOB_APPEARANCE("mobappearance", 41, 8),
+  DRAGON_BREATH("dragonbreath", 42, 107),
+  END_ROD("endRod", 43, 107),
+  DAMAGE_INDICATOR("damageIndicator", 44, 107),
+  SWEEP_ATTACK("sweepAttack", 45, 107);
 
   private static final Map<String, ParticleEffect> NAME_MAP = new HashMap<String, ParticleEffect>();
   private static final Map<Integer, ParticleEffect> ID_MAP = new HashMap<Integer, ParticleEffect>();
