@@ -13,6 +13,7 @@
         <module>commons-bungee</module>
         <module>commons-core</module>
         <module>commons-jdbc</module>
+        <module>commons-minecraft</module>
     </modules>
     <properties>
         <commons-version>0.5.1-SNAPSHOT</commons-version>
