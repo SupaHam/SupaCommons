@@ -4,6 +4,18 @@ import com.google.common.base.Preconditions;
 
 import javax.annotation.Nonnull;
 
+import pluginbase.config.annotation.SerializeWith;
+
+/**
+ * Represents a mutable extension of {@link Vector}. Where all methods are still valid and accessible, they do not
+ * return a copy every time, instead the instance of MutableVector is modified. This can be extremely important
+ * depending on the feature implementation to improve JVM performance.
+ * <p />
+ * <b>Note: This class supports SerializableConfig serialization by using {@link VectorSerializer}</b>
+ *
+ * @since 0.5.1
+ */
+@SerializeWith(VectorSerializer.class)
 public class MutableVector extends Vector {
 
   public MutableVector(double x, double y, double z) {

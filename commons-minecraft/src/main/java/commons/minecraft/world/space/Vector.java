@@ -15,6 +15,7 @@ import pluginbase.config.annotation.SerializeWith;
  * @see #Vector(double, double, double)
  * @since 0.5.1
  */
+@SerializeWith(VectorSerializer.class)
 public class Vector {
 
   public static final Vector ZERO = new Vector(0, 0, 0);

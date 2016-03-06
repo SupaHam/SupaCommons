@@ -4,6 +4,9 @@ import com.google.common.base.Preconditions;
 
 import javax.annotation.Nonnull;
 
+import pluginbase.config.annotation.SerializeWith;
+
+@SerializeWith(PositionSerializer.class)
 public class MutablePosition extends Position {
 
   public MutablePosition(double x, double y, double z) {

@@ -4,6 +4,9 @@ import com.google.common.base.Preconditions;
 
 import javax.annotation.Nonnull;
 
+import pluginbase.config.annotation.SerializeWith;
+
+@SerializeWith(PositionSerializer.class)
 public class Position extends Vector {
 
   public static final Position ZERO = new Position(0, 0, 0, 0, 0);
