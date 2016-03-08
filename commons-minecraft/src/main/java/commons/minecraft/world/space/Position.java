@@ -177,7 +177,7 @@ public class Position extends Vector {
   @Nonnull
   public Position subtract(float a) {
     return a == 0 ? this : new Position(this.x - a, this.y - a, this.z - a,
-                                      this.yaw, this.pitch);
+                                        this.yaw, this.pitch);
   }
 
   /**
@@ -372,6 +372,55 @@ public class Position extends Vector {
   @Nonnull
   public Position normalize() {
     return divide(length());
+  }
+
+  /**
+   * Returns a new {@link Position} with the three {@code x, y, z} components negated. Where a
+   * {@code Position[-1,0,1,2,3].negate()} occurs, the returned position will be {@code Position[1,0,-1,2,3]}.
+   * <p />
+   * <b>Note: The yaw and pitch are not affected by this operation.</b> This is done to ensure consistent behaviour
+   * with all instances of {@link Vector}.
+   *
+   * @return negated position
+   * @see #negate(boolean)
+   */
+  @Override public Position negate() {
+    return negate(false);
+  }
+
+  /**
+   * Returns a new {@link Position} with the three {@code x, y, z} components negated. If {@code direction} is true,
+   * the yaw and pitch will be negated as well.
+   * <p />
+   * Where a {@code Position[-1,0,1,2,3].negate(false)} occurs, the returned position will be {@code
+   * Position[1,0,-1,2,3]}.
+   * <br />
+   * Where a {@code Position[-1,0,1,2,3].negate(true)} occurs, the returned position will be {@code
+   * Position[1,0,-1,-2,-3]}.
+   *
+   * @param direction whether to negate the direction
+   *
+   * @return negated position
+   * @see #negateDirection()
+   */
+  public Position negate(boolean direction) {
+    return new Position(x == 0 ? 0 : -x,
+                        y == 0 ? 0 : -y,
+                        z == 0 ? 0 : -z,
+                        yaw != 0 && direction ? -this.yaw : this.yaw,
+                        pitch != 0 && direction ? -this.pitch : this.pitch);
+  }
+
+  /**
+   * Returns a new {@link Position} with the direction negated.
+   * <p />
+   * Where a {@code Position[-1,0,1,2,3].negateDirection()} occurs, the returned position will be
+   * {@code Position[1,0,-1,-2,-3]}.
+   *
+   * @return postion with negated direction
+   */
+  public Position negateDirection() {
+    return new Position(x, y, z, yaw == 0 ? 0 : -yaw, pitch == 0 ? 0 : -pitch);
   }
 
   @Nonnull

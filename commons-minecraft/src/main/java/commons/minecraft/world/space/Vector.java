@@ -386,6 +386,19 @@ public class Vector {
   }
 
   /**
+   * Returns a new {@link Vector} with the three {@code x, y, z} components negated.
+   * <p />
+   * Where a {@code Vector[-1,0,1].negate()} occurs, the returned vector will be {@code Vector[1,0,-1]}.
+   *
+   * @return negated vector
+   */
+  public Vector negate() {
+    return new Vector(x == 0 ? 0 : -x,
+                      y == 0 ? 0 : -y,
+                      z == 0 ? 0 : -z);
+  }
+
+  /**
    * Returns the magnitude of this vector, defined as sqrt(x^2+y^2+z^2). The value of this method
    * is not cached and uses a costly square-root function, so do not repeatedly call this method to
    * get the vector's magnitude. NaN will be returned if the inner result of the sqrt() function
@@ -537,6 +550,21 @@ public class Vector {
   @Nonnull
   public MutableVector toMutableVector() {
     return this instanceof MutableVector ? (MutableVector) this : new MutableVector(x, y, z);
+  }
+
+  /**
+   * Returns an instance that is of type {@link Position}. If this instance is an instance of {@link Position} no
+   * operation is done, and this same instance is returned. Otherwise, a new {@link Position} instance is created. If
+   * this vector was previously a {@link MutableVector}, {@link #toMutablePosition()} is returned. Alternatively, if
+   * this vector was previously a {@link Vector}, {@link #toPosition()} is returned.
+   *
+   * @return position instance
+   */
+  public Position ofPosition() {
+    if (this instanceof Position) {
+      return (Position) this;
+    }
+    return this instanceof MutableVector ? toMutablePosition() : toPosition();
   }
 
   /**

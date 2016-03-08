@@ -183,6 +183,20 @@ public class MutableVector extends Vector {
     return this;
   }
 
+  /**
+   * Returns this {@link MutableVector} with the three {@code x, y, z} components negated.
+   * <p />
+   * Where a {@code MutableVector[-1,0,1].negate()} occurs, the returned vector will be {@code MutableVector[1,0,-1]}.
+   *
+   * @return negated vector
+   */
+  @Override public MutableVector negate() {
+    x = -x;
+    y = -y;
+    z = -z;
+    return this;
+  }
+
   @Nonnull @Override
   public MutableVector copy() {
     return new MutableVector(this.x, this.y, this.z);

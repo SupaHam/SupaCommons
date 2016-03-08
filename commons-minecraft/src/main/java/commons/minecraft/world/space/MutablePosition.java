@@ -188,6 +188,59 @@ public class MutablePosition extends Position {
     return this;
   }
 
+  /**
+   * Returns this {@link MutablePosition} with the three {@code x, y, z} components negated. Where a
+   * MutablePosition[-1,0,1,2,3].negate() occurs, the returned position will be MutablePosition[1,0,-1,2,3].
+   * <p />
+   * <b>Note: The yaw and pitch are not affected by this operation.</b> This is done to ensure consistent behaviour
+   * with all instances of {@link Vector}.
+   *
+   * @return negated position
+   */
+  @Override public MutablePosition negate() {
+    return (MutablePosition) super.negate();
+  }
+
+  /**
+   * Returns this {@link MutablePosition} with the three {@code x, y, z} components negated. If {@code direction} is true,
+   * the yaw and pitch will be negated as well.
+   * <p />
+   * Where a {@code MutablePosition[-1,0,1,2,3].negate(false)} occurs, the returned position will be {@code
+   * MutablePosition[1,0,-1,2,3]}.
+   * <br />
+   * Where a {@code MutablePosition[-1,0,1,2,3].negate(true)} occurs, the returned position will be {@code
+   * MutablePosition[1,0,-1,-2,-3]}.
+   *
+   * @param direction whether to negate the direction
+   *
+   * @return negated position
+   */
+  @Override public MutablePosition negate(boolean direction) {
+    this.x = -x;
+    this.y = -y;
+    this.z = -z;
+    if (direction) {
+      this.yaw = -this.yaw;
+      this.pitch = -this.pitch;
+    }
+    return this;
+  }
+
+
+  /**
+   * Returns this {@link MutablePosition} with the direction negated.
+   * <p />
+   * Where a {@code MutablePosition[-1,0,1,2,3].negateDirection()} occurs, the returned position will be
+   * {@code MutablePosition[1,0,-1,-2,-3]}.
+   *
+   * @return position with negated direction
+   */
+  @Override public MutablePosition negateDirection() {
+    this.yaw = -yaw;
+    this.pitch = -pitch;
+    return this;
+  }
+
   @Nonnull @Override
   public MutablePosition copy() {
     return new MutablePosition(x, y, z, yaw, pitch);
