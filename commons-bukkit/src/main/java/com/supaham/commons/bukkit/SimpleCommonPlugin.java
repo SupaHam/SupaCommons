@@ -135,12 +135,18 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
 
   @Override
   public boolean reloadSettings() {
-    return this.settingsContainer.load();
+    if (this.settingsContainer.isEnabled()) {
+      return this.settingsContainer.load();
+    }
+    return false;
   }
 
   @Override
   public boolean saveSettings() {
-    return this.settingsContainer.save();
+    if (this.settingsContainer.isEnabled()) {
+      return this.settingsContainer.save();
+    }
+    return false;
   }
 
   @Override
