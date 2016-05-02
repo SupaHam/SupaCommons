@@ -66,8 +66,9 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
     if (!this.settingsContainer.init()) {
       getLog().finer("Settings disabled.");
     }
-    reloadSettings();
-    SimpleCommonPlugin.this.firstRunContainer.init(); // FirstRun runs after reloadSettings
+    if (reloadSettings()) {
+      SimpleCommonPlugin.this.firstRunContainer.init(); // FirstRun runs after reloadSettings
+    }
   }
 
   @Override
