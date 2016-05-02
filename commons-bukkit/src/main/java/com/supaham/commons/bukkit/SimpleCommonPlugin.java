@@ -27,7 +27,7 @@ import pluginbase.messages.messaging.SendablePluginBaseException;
 /**
  * Represents a simple implementation of {@link CommonPlugin}. This class throws an
  * {@link AssertionError} when {@link #SimpleCommonPlugin()} is called, so the implementation must
- * not call said constructor and instead call {@link #SimpleCommonPlugin(Class, String)}
+ * not call said constructor and instead call {@link #SimpleCommonPlugin()}
  * <p />
  * This class does the following tasks:
  * <br />
@@ -63,7 +63,9 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
 
   @Override
   public void onLoad() {
-    this.settingsContainer.init();
+    if (!this.settingsContainer.init()) {
+      getLog().finer("Settings disabled.");
+    }
     reloadSettings();
     SimpleCommonPlugin.this.firstRunContainer.init(); // FirstRun runs after reloadSettings
   }
@@ -202,20 +204,22 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
     private CommonSettings settings;
     private YamlDataSource yaml;
 
-    private void isEnabled() {
-      if (settingsSupplier == null) {
-        throw new IllegalStateException("Settings are nullified.");
-      }
+    private boolean isEnabled() {
+      return settingsSupplier != null; // not null = enabled
     }
 
     private boolean init() {
-      isEnabled();
+      if (!isEnabled()) {
+        return false;
+      }
       this.settings = settingsSupplier.get();
       return true;
     }
 
     private boolean load() {
-      isEnabled();
+      if (!isEnabled()) {
+        throw new IllegalStateException("Settings not enabled.");
+      }
 
       try {
         yaml = SerializationUtils.yaml(this.settingsFile).build();
@@ -229,7 +233,9 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
     }
 
     public boolean save() {
-      isEnabled();
+      if (!isEnabled()) {
+        throw new IllegalStateException("Settings not enabled.");
+      }
 
       try {
         this.yaml.save(this.settings);
