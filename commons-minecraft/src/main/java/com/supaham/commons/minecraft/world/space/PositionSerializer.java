@@ -1,4 +1,4 @@
-package commons.minecraft.world.space;
+package com.supaham.commons.minecraft.world.space;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.supaham.commons.utils.NumberUtils.roundExact;

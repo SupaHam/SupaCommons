@@ -1,4 +1,4 @@
-package commons.minecraft.world.space;
+package com.supaham.commons.minecraft.world.space;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
