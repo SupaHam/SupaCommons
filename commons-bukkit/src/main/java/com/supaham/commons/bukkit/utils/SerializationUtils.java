@@ -4,6 +4,10 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.serializers.ColorSerializer;
 import com.supaham.commons.bukkit.serializers.MaterialDataSerializer;
+import com.supaham.commons.minecraft.world.space.Position;
+import com.supaham.commons.minecraft.world.space.PositionSerializer;
+import com.supaham.commons.minecraft.world.space.Vector;
+import com.supaham.commons.minecraft.world.space.VectorSerializer;
 import com.supaham.commons.relatives.RelativeDuration;
 import com.supaham.commons.relatives.RelativeDurationSerializer;
 import com.supaham.commons.relatives.RelativeNumber;
@@ -48,6 +52,9 @@ public final class SerializationUtils {
     _add(builder, MaterialData.class, new MaterialDataSerializer());
     _add(builder, RelativeNumber.class, new RelativeNumberSerializer());
     _add(builder, RelativeDuration.class, new RelativeDurationSerializer());
+    _add(builder, Vector.class, new VectorSerializer());
+    _add(builder, Position.class, new PositionSerializer());
+    
     SERIALIZER_SET = builder.build();
   }
 
