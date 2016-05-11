@@ -7,6 +7,7 @@ import static com.supaham.commons.utils.StringUtils.checkNotNullOrEmpty;
 import static java.lang.Double.parseDouble;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 
 import com.supaham.commons.utils.RandomUtils;
 
@@ -19,6 +20,8 @@ import java.util.Random;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.supaham.commons.minecraft.world.space.Position;
 
 /**
  * Utility methods for working with {@link Location} instances. This class contains methods such as
@@ -126,7 +129,7 @@ public class LocationUtils {
     yaw = pitch || (yaw && location.getYaw() > 0);
     return location.getWorld().getName() + ","
            + VectorUtils.serialize(location.toVector()) // x y z
-           + (yaw ?   "," + roundExact(3, location.getYaw()) : "")
+           + (yaw ? "," + roundExact(3, location.getYaw()) : "")
            + (pitch ? "," + roundExact(3, location.getPitch()) : "");
   }
 
@@ -287,6 +290,33 @@ public class LocationUtils {
    */
   public static Function<Location, Vector> toVectorFunction() {
     return ToVectorFunction.INSTANCE;
+  }
+
+  /**
+   * Convert {@link Vector} to a {@link Location}.
+   *
+   * @param vector vector to use
+   * @param world world to use
+   *
+   * @return Location
+   */
+  public static Location toLocation(@Nonnull com.supaham.commons.minecraft.world.space.Vector vector, World world) {
+    Preconditions.checkNotNull(vector, "vector cannot be null.");
+    return new Location(world, vector.getX(), vector.getY(), vector.getZ());
+  }
+
+  /**
+   * Convert {@link Position} to a {@link Location}.
+   *
+   * @param position position to use
+   * @param world world to use
+   *
+   * @return Location
+   */
+  public static Location toLocation(@Nonnull Position position, World world) {
+    Preconditions.checkNotNull(position, "position cannot be null.");
+    return new Location(world, position.getX(), position.getY(), position.getZ(), position.getYaw(),
+                        position.getPitch());
   }
 
   private static final class ToVectorFunction implements Function<Location, Vector> {

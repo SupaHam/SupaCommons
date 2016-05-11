@@ -44,6 +44,11 @@
             <version>${commons-version}</version>
         </dependency>
         <dependency>
+            <groupId>com.supaham.commons</groupId>
+            <artifactId>commons-minecraft</artifactId>
+            <version>${commons-version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.sk89q</groupId>
             <artifactId>squirrelid</artifactId>
             <version>${squirrelid-version}</version>
@@ -76,6 +81,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.supaham.commons:commons-core</include>
+                                    <include>com.supaham.commons:commons-minecraft</include>
                                     <include>net.ellune:exhaust-bukkit</include>
                                     <include>com.sk89q.intake:intake</include>
                                     <include>com.sk89q:squirrelid</include>
