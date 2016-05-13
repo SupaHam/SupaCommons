@@ -24,7 +24,7 @@
         </repository>
         <repository>
             <id>ellune</id>
-            <url>http://repo.ellune.net/content/groups/public/</url>
+            <url>http://repo.miserable.ninja/content/groups/public/</url>
         </repository>
     </repositories>
 
