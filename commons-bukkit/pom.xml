@@ -27,8 +27,8 @@
             <url>http://maven.sk89q.com/repo/</url>
         </repository>
         <repository>
-            <id>ellune</id>
-            <url>http://repo.ellune.net/content/groups/public/</url>
+            <id>miserable-ninja</id>
+            <url>http://repo.miserable.ninja/content/groups/public/</url>
         </repository>
     </repositories>
 
