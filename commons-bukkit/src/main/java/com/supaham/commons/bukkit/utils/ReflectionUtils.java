@@ -46,8 +46,8 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     classes.put("BlockPosition", nms.getClassSafe("BlockPosition"));
     clazz = nms.getClassSafe("BaseBlockPosition");
     fields.put("BaseBlockPositionx", getField(clazz, "a"));
-    fields.put("BaseBlockPositiony", getField(clazz, "c"));
-    fields.put("BaseBlockPositionz", getField(clazz, "d"));
+    fields.put("BaseBlockPositiony", getField(clazz, "b"));
+    fields.put("BaseBlockPositionz", getField(clazz, "c"));
   }
 
   public static void sendPacket(Player player, Object object) {
