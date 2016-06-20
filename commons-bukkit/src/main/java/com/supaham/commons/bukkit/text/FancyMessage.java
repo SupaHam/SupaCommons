@@ -635,7 +635,7 @@ public class FancyMessage {
   protected static Class<?> nmsChatSerializer;
 
   static {
-    if (ReflectionUtils.isServer18Or19()) {
+    if (ReflectionUtils.isServer18OrHigher()) {
       nmsChatSerializer = PackageType.MINECRAFT_SERVER
           .getClassSafe("IChatBaseComponent$ChatSerializer");
     } else {

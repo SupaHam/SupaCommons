@@ -46,8 +46,8 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     classes.put("BlockPosition", nms.getClassSafe("BlockPosition"));
     clazz = nms.getClassSafe("BaseBlockPosition");
     fields.put("BaseBlockPositionx", getField(clazz, "a"));
-    fields.put("BaseBlockPositiony", getField(clazz, "c"));
-    fields.put("BaseBlockPositionz", getField(clazz, "d"));
+    fields.put("BaseBlockPositiony", getField(clazz, "b"));
+    fields.put("BaseBlockPositionz", getField(clazz, "c"));
   }
 
   public static void sendPacket(Player player, Object object) {
@@ -115,13 +115,9 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     return Bukkit.getServer().getClass().getPackage().getName().substring(23);
   }
 
-  public static boolean isServer18() {
-    return getServerVersion().startsWith("v1_8");
-  }
-
-  public static boolean isServer18Or19() {
+  public static boolean isServer18OrHigher() {
     String ver = getServerVersion();
-    return ver.startsWith("v1_8") || ver.startsWith("v1_9");
+    return !ver.startsWith("v1_7");
   }
 
   public static Class<?> getNMSClass(String className) {
