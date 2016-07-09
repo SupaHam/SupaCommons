@@ -13,6 +13,7 @@ import com.supaham.commons.relatives.RelativeDurationSerializer;
 import com.supaham.commons.relatives.RelativeNumber;
 import com.supaham.commons.relatives.RelativeNumberSerializer;
 import com.supaham.commons.serializers.DurationSerializer;
+import com.supaham.commons.serializers.LocalTimeSerializer;
 
 import org.bukkit.Color;
 import org.bukkit.material.MaterialData;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -48,6 +50,7 @@ public final class SerializationUtils {
   static {
     Builder builder = SerializerSet.builder(SerializerSet.defaultSet());
     _add(builder, Duration.class, new DurationSerializer());
+    _add(builder, LocalTime.class, new LocalTimeSerializer());
     _add(builder, Color.class, new ColorSerializer());
     _add(builder, MaterialData.class, new MaterialDataSerializer());
     _add(builder, RelativeNumber.class, new RelativeNumberSerializer());

@@ -9,6 +9,8 @@ import com.supaham.commons.utils.TimeUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.LocalTime;
+
 /**
  * Created by Ali on 09/02/2015.
  */
@@ -41,5 +43,41 @@ public class TimeUtilsTest {
   @Test(expected = DurationParseException.class)
   public void testParseMsError() throws Exception {
     long duration = TimeUtils.parseDurationMs("1x");
+  }
+
+  @Test
+  public void testTime() throws Exception {
+    Assert.assertEquals(LocalTime.MIDNIGHT, TimeUtils.parseTime("0"));
+    Assert.assertEquals(LocalTime.of(1, 0), TimeUtils.parseTime("1"));
+    Assert.assertEquals(LocalTime.of(1, 0), TimeUtils.parseTime("1AM"));
+    Assert.assertEquals(LocalTime.of(13, 0), TimeUtils.parseTime("1PM"));
+
+    // AM parsing
+    Assert.assertEquals(LocalTime.of(0, 0), TimeUtils.parseTime("12AM"));
+    Assert.assertEquals(LocalTime.of(0, 0), TimeUtils.parseTime("12:00AM"));
+    Assert.assertEquals(LocalTime.of(0, 0), TimeUtils.parseTime("12:00:00AM"));
+    Assert.assertEquals(LocalTime.of(0, 34), TimeUtils.parseTime("12:34AM"));
+    Assert.assertEquals(LocalTime.of(0, 34, 56), TimeUtils.parseTime("12:34:56AM"));
+    Assert.assertEquals(LocalTime.of(0, 0, 30), TimeUtils.parseTime("12:00:30AM"));
+
+    // PM parsing
+    Assert.assertEquals(LocalTime.of(12, 0), TimeUtils.parseTime("12PM"));
+    Assert.assertEquals(LocalTime.of(12, 0), TimeUtils.parseTime("12:00PM"));
+    Assert.assertEquals(LocalTime.of(12, 0), TimeUtils.parseTime("12:00:00PM"));
+    Assert.assertEquals(LocalTime.of(12, 34), TimeUtils.parseTime("12:34PM"));
+    Assert.assertEquals(LocalTime.of(12, 34, 56), TimeUtils.parseTime("12:34:56PM"));
+    Assert.assertEquals(LocalTime.of(12, 0, 30), TimeUtils.parseTime("12:00:30PM"));
+
+    // Insensitive letter casing
+    Assert.assertEquals(LocalTime.of(0, 0, 30), TimeUtils.parseTime("12:00:30A.M."));
+    Assert.assertEquals(LocalTime.of(0, 0, 30), TimeUtils.parseTime("12:00:30a.m."));
+    Assert.assertEquals(LocalTime.of(0, 0, 30), TimeUtils.parseTime("12:00:30A.m."));
+    Assert.assertEquals(LocalTime.of(0, 0, 30), TimeUtils.parseTime("12:00:30a.M."));
+
+    Assert.assertEquals(LocalTime.of(12, 0, 30), TimeUtils.parseTime("12:00:30P.M."));
+    Assert.assertEquals(LocalTime.of(12, 0, 30), TimeUtils.parseTime("12:00:30p.m."));
+    Assert.assertEquals(LocalTime.of(12, 0, 30), TimeUtils.parseTime("12:00:30P.m."));
+    Assert.assertEquals(LocalTime.of(12, 0, 30), TimeUtils.parseTime("12:00:30p.M."));
+
   }
 }

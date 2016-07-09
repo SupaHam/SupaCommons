@@ -4,11 +4,12 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Preconditions;
-import com.google.common.math.LongMath;
 
 import com.supaham.commons.exceptions.DurationParseException;
+import com.supaham.commons.exceptions.TimeParseException;
 
 import java.math.BigInteger;
+import java.time.LocalTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,6 +49,9 @@ public class TimeUtils {
   public static final BigInteger BI_NANOS_PER_SECOND = BigInteger.valueOf(NANOS_PER_SECOND);
 
   public static final Pattern PATTERN = Pattern.compile("(-?\\d*\\.?\\d*)(ms|[dhms])");
+
+  public static final Pattern TIME_PATTERN = Pattern
+      .compile("(?<hours>\\d?\\d)(?::(?<minutes>\\d\\d))?(?::(?<seconds>\\d\\d))?\\s*(?<ampm>[aApP]\\.?[mM]\\.?)*");
 
   /**
    * Checks whether a certain amount of milliseconds have elapsed a given time in  milliseconds.
@@ -252,6 +256,112 @@ public class TimeUtils {
       buf.append(secs).append(simple ? "s" : " second" + (secs != 1 && secs != -1 ? "s" : ""));
     }
     return buf.toString();
+  }
+
+  /**
+   * Parses a {@link LocalTime} in the form of a string. The {@link Pattern} used to match the {@code timeString} is
+   * {@link #TIME_PATTERN}. A combination of hours, minutes, and seconds may be present to form a full 0-23 hour point
+   * in time. This method supports <b>12-hour time format</b>, where a string can be 12AM, 12:00PM, etc.
+   * <pre><code>
+   * TimeUtils.parse(null) = {@link NullPointerException}
+   * TimeUtils.parse("") = {@link IllegalArgumentException}
+   * TimeUtils.parse("asd") = {@link TimeParseException}
+   * TimeUtils.parse("24") = {@link TimeParseException}
+   * TimeUtils.parse("23") = {@link TimeParseException}
+   * TimeUtils.parse("0") = LocalTime{hours=0}
+   * TimeUtils.parse("1") = LocalTime{hours=1}
+   * TimeUtils.parse("01:00") = LocalTime{hours=1}
+   * TimeUtils.parse("1:00") = LocalTime{hours=1}
+   * TimeUtils.parse("01:23") = LocalTime{hours=1,minutes=23}
+   * TimeUtils.parse("01:23:45") = LocalTime{hours=1,minutes=23,seconds=45}
+   * TimeUtils.parse("13:23:45") = LocalTime{hours=13,minutes=23,seconds=45}
+   * TimeUtils.parse("24:23:45") = {@link TimeParseException}
+   *
+   * TimeUtils.parse("12AM") = LocalTime{hours=0}
+   * TimeUtils.parse("00AM") = {@link TimeParseException}
+   * TimeUtils.parse("1AM") = LocalTime{hours=1}
+   * TimeUtils.parse("01AM") = LocalTime{hours=1}
+   * TimeUtils.parse("01:23AM") = LocalTime{hours=1,minutes=23}
+   * TimeUtils.parse("01:23:45AM") = LocalTime{hours=1,minutes=23,seconds=45}
+   * TimeUtils.parse("12A.M.") = LocalTime{hours=0}
+   * TimeUtils.parse("12am") = LocalTime{hours=0}
+   * TimeUtils.parse("12a.m.") = LocalTime{hours=0}
+   *
+   * TimeUtils.parse("12PM") = LocalTime{hours=12}
+   * TimeUtils.parse("00PM") = {@link TimeParseException}
+   * TimeUtils.parse("1PM") = LocalTime{hours=1}
+   * TimeUtils.parse("01PM") = LocalTime{hours=1}
+   * TimeUtils.parse("01:23PM") = LocalTime{hours=1,minutes=23}
+   * TimeUtils.parse("01:23:45PM") = LocalTime{hours=1,minutes=23,seconds=45}
+   * TimeUtils.parse("12P.M.") = LocalTime{hours=12}
+   * TimeUtils.parse("12pm") = LocalTime{hours=12}
+   * TimeUtils.parse("12p.m.") = LocalTime{hours=12}
+   * </code></pre>
+   *
+   * @param timeString string in time format
+   *
+   * @return parsed {@code timeString} in a LocalTime instance
+   *
+   * @throws TimeParseException thrown if the timeString is in an invalid format or includes invalid time units
+   */
+  @Nonnull
+  public static LocalTime parseTime(@Nonnull String timeString) throws TimeParseException {
+    StringUtils.checkNotNullOrEmpty(timeString, "time string");
+
+    Matcher matcher = TIME_PATTERN.matcher(timeString);
+    checkTime(timeString, matcher.matches(), timeString + " is not a valid time.");
+
+    int hours = Integer.parseInt(matcher.group("hours"));
+    int minutes = 0;
+    int seconds = 0;
+    Boolean isAM = null;
+
+    try {
+      minutes = Integer.parseInt(matcher.group("minutes"));
+    } catch (IllegalArgumentException ignored) { // ignores NumberFormatException as well
+    }
+
+    try {
+      seconds = Integer.parseInt(matcher.group("seconds"));
+    } catch (IllegalArgumentException ignored) { // ignores NumberFormatException as well
+    }
+
+    if (matcher.group("ampm") != null) {
+      isAM = matcher.group("ampm").toLowerCase()
+          .replaceAll("\\.", "") // 12-hour time might be A.M or P.M.
+          .equals("am");
+    }
+
+    checkTime(timeString, hours >= 0 && hours <= 23, "hours cannot be less than 0 or greater than 23.");
+    checkTime(timeString, minutes >= 0 && minutes <= 60, "minutes cannot be less than 0 or greater than 60.");
+    checkTime(timeString, seconds >= 0 && seconds <= 60, "seconds cannot be less than 0 or greater than 60.");
+
+    // 12-hour format
+    if (isAM != null) {
+      checkTime(timeString, hours >= 1 && hours <= 12,
+                "hours cannot be less than 1 or greater than 12 in 12-hour format.");
+
+      // And the problem universally.
+      // Explained here: https://en.wikipedia.org/wiki/12-hour_clock#Confusion_at_noon_and_midnight
+      if (hours == 12) {
+        hours = 0;
+      }
+
+      if (!isAM) { // PM
+        hours += 12;
+      }
+    }
+    return LocalTime.of(hours, minutes, seconds);
+  }
+
+  private static void checkTime(String timeString, boolean b, String message) throws TimeParseException {
+    if (!b) {
+      throw new TimeParseException(timeString, message);
+    }
+  }
+  
+  public static String localTimeToString(LocalTime localTime) {
+    return localTime == null ? null : localTime.toString();
   }
 
   private TimeUtils() {
