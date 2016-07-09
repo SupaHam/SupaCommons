@@ -7,11 +7,9 @@ import com.supaham.commons.bukkit.CommonPlugin;
 import com.supaham.commons.bukkit.commands.utils.CommandUtils;
 import com.supaham.commons.bukkit.commands.utils.CommonCommandData;
 
-import net.ellune.exhaust.bukkit.command.CommandManager;
-
-import java.lang.reflect.Method;
-
 import javax.annotation.Nonnull;
+
+import ninja.miserable.exhaust.bukkit.command.CommandManager;
 
 /**
  * Handles the registration and invocation of commands.

@@ -23,7 +23,7 @@
             <url>http://maven.sk89q.com/repo/</url>
         </repository>
         <repository>
-            <id>ellune</id>
+            <id>miserable-ninja</id>
             <url>http://repo.miserable.ninja/content/groups/public/</url>
         </repository>
     </repositories>
@@ -35,7 +35,7 @@
             <version>${commons-version}</version>
         </dependency>
         <dependency>
-            <groupId>net.ellune</groupId>
+            <groupId>ninja.miserable</groupId>
             <artifactId>exhaust-core</artifactId>
             <version>${exhaust.version}</version>
         </dependency>

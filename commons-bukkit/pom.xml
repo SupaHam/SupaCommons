@@ -15,6 +15,7 @@
         <spigot-version>1.10-R0.1-SNAPSHOT</spigot-version>
         <squirrelid-version>0.1.0</squirrelid-version>
         <worldedit-version>6.0.2-SNAPSHOT</worldedit-version>
+        <exhaust-bukkit.version>2.0.0-SNAPSHOT</exhaust-bukkit.version>
     </properties>
    
     <repositories>
@@ -27,7 +28,7 @@
             <url>http://maven.sk89q.com/repo/</url>
         </repository>
         <repository>
-            <id>miserable-ninja</id>
+            <id>miserable-ninjaa</id>
             <url>http://repo.miserable.ninja/content/groups/public/</url>
         </repository>
     </repositories>
@@ -59,9 +60,9 @@
             <version>4.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>net.ellune</groupId>
+            <groupId>ninja.miserable</groupId>
             <artifactId>exhaust-bukkit</artifactId>
-            <version>2.0.0-SNAPSHOT</version>
+            <version>${exhaust-bukkit.version}</version>
         </dependency>
     </dependencies>
 
@@ -82,7 +83,7 @@
                                 <includes>
                                     <include>com.supaham.commons:commons-core</include>
                                     <include>com.supaham.commons:commons-minecraft</include>
-                                    <include>net.ellune:exhaust-bukkit</include>
+                                    <include>ninja.miserable:exhaust-bukkit</include>
                                     <include>com.sk89q.intake:intake</include>
                                     <include>com.sk89q:squirrelid</include>
                                 </includes>
