@@ -24,9 +24,12 @@ import pluginbase.logging.PluginLogger;
  */
 @SerializableAs("CommonSettings")
 public class CommonSettings {
+  
+  @Comment("Configuration version - DO NOT CHANGE THIS")
+  private int version = 1;
 
   /*
-   * ALL OF THE FOLLOWING CODE WAS TAKEN FROM https://github.com/dumptruckman/PluginBase/blob/be0cfa0e1e8d794e914594b6fbf5a711b608e4de/pluginbase-core/plugin/src/main/java/pluginbase/plugin/Settings.java
+   * THE FOLLOWING CODE WAS TAKEN FROM https://github.com/dumptruckman/PluginBase/blob/be0cfa0e1e8d794e914594b6fbf5a711b608e4de/pluginbase-core/plugin/src/main/java/pluginbase/plugin/Settings.java
    * 
    */
   @Comment("0 = off, 1-3 display debug info with increasing granularity.")
@@ -41,6 +44,14 @@ public class CommonSettings {
   public CommonSettings(@Nonnull CommonPlugin plugin) {
     Preconditions.checkNotNull(plugin, "plugin cannot be null.");
     this.debugLevel.setLogger(plugin.getLog());
+  }
+
+  public int getVersion() {
+    return version;
+  }
+
+  public void setVersion(int version) {
+    this.version = version;
   }
 
   public int getDebugLevel() {
