@@ -19,21 +19,29 @@ import javax.annotation.Nonnull;
 
 import pluginbase.config.annotation.SerializableAs;
 
-@SerializableAs("DatabaseConfig")
-public class DatabaseConfig {
+@SerializableAs("DatabaseSettings")
+public class DatabaseSettings {
+
+  public static final String MYSQL = "mysql";
+  public static final String REDIS = "redis";
 
   public static final String DATABASE = "database";
+  public static final String ENABLED = "enabled";
   public static final String IP = "ip";
   public static final String MAX_REDIS_CONNECTIONS = "max-redis-connections";
   public static final String PASSWORD = "password";
   public static final String PORT = "port";
   public static final String URL = "url";
   public static final String USERNAME = "username";
+  
+  /* ================================
+   * >> Config properties
+   * ================================ */
 
   private Map<String, Map<String, Object>> databases = Collections.emptyMap();
 
   public static Entry<String, Map<String, Object>> getMysqlDefault() {
-    return new SimpleEntry<>("mysql", ImmutableMap.<String, Object>builder()
+    return new SimpleEntry<>(MYSQL, ImmutableMap.<String, Object>builder()
         .put("enabled", false)
         .put("ip", "localhost")
         .put("port", 3306)
@@ -42,8 +50,9 @@ public class DatabaseConfig {
         .put("database", "test")
         .build());
   }
+
   public static Entry<String, Map<String, Object>> getRedisDefault() {
-    return new SimpleImmutableEntry<>("redis", ImmutableMap.<String, Object>builder()
+    return new SimpleImmutableEntry<>(REDIS, ImmutableMap.<String, Object>builder()
         .put("enabled", false)
         .put("ip", "localhost")
         .put("port", 6379)
@@ -52,9 +61,9 @@ public class DatabaseConfig {
         .build());
   }
 
-  protected DatabaseConfig() {}
+  protected DatabaseSettings() {}
 
-  public DatabaseConfig(@Nonnull Map<String, Map<String, Object>> databases) {
+  public DatabaseSettings(@Nonnull Map<String, Map<String, Object>> databases) {
     checkNotNull(databases, "databases cannot be null.");
     checkArgument(!databases.isEmpty(), "databases cannot be empty.");
     this.databases = databases;
@@ -76,7 +85,7 @@ public class DatabaseConfig {
   }
 
   public Optional<Boolean> isEnabled(@Nonnull String database) throws IllegalArgumentException {
-    return getString(database, "enabled").flatMap(StringUtils::parseBoolean);
+    return getString(database, ENABLED).flatMap(StringUtils::parseBoolean);
   }
 
   @Nonnull
