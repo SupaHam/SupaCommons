@@ -11,6 +11,7 @@ import com.supaham.commons.utils.StringUtils;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class DatabaseSettings {
    * >> Config properties
    * ================================ */
 
-  private Map<String, Map<String, Object>> databases = Collections.emptyMap();
+  private Map<String, Map<String, Object>> databases = new HashMap<>();
 
   public static Entry<String, Map<String, Object>> getMysqlDefault() {
     return new SimpleEntry<>(MYSQL, ImmutableMap.<String, Object>builder()
