@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 
 import pluginbase.config.annotation.Comment;
+import pluginbase.config.annotation.Name;
 import pluginbase.config.annotation.SerializableAs;
 import pluginbase.config.annotation.ValidateWith;
 import pluginbase.config.field.DependentField;
@@ -25,6 +26,7 @@ import pluginbase.logging.PluginLogger;
 @SerializableAs("CommonSettings")
 public class CommonSettings {
   
+  @Name("config-version")
   @Comment("Configuration version - DO NOT CHANGE THIS")
   private int version = 1;
 
