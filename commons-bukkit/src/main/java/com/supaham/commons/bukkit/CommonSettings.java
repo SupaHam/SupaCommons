@@ -34,10 +34,12 @@ public class CommonSettings {
    * THE FOLLOWING CODE WAS TAKEN FROM https://github.com/dumptruckman/PluginBase/blob/be0cfa0e1e8d794e914594b6fbf5a711b608e4de/pluginbase-core/plugin/src/main/java/pluginbase/plugin/Settings.java
    * 
    */
+  @Name("debug-level")
   @Comment("0 = off, 1-3 display debug info with increasing granularity.")
   @ValidateWith(DebugLevelValidator.class)
   private final VirtualDebug debugLevel = new VirtualDebug();
 
+  @Name("first-run")
   @Comment("Will make the plugin perform tasks only done on a first run (if any.)")
   private boolean firstRun = true;
 
