@@ -229,7 +229,7 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
       }
 
       try {
-        yaml = SerializationUtils.yaml(this.settingsFile).setCommentsEnabled(true).build();
+        yaml = SerializationUtils.yaml(this.settingsFile).build();
         SerializationUtils.loadOrCreateProperties(getLog(), this.yaml, this.settings);
         save();
         return true;
