@@ -379,7 +379,9 @@ public class ItemBuilder {
   public ItemBuilder removeLore(int index) {
     try {
       if (this.itemMeta.hasLore()) {
-        this.itemMeta.getLore().remove(index);
+        List<String> lore = this.itemMeta.getLore();
+        lore.remove(index);
+        this.itemMeta.setLore(lore);
       }
     } catch (Exception e) {
       if (!this.failSilently) {
