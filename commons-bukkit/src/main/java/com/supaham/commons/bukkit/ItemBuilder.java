@@ -29,6 +29,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -330,6 +331,15 @@ public class ItemBuilder {
       }
     }
     return this;
+  }
+
+  /**
+   * Returns an unmodifiable {@link List} of this ItemBuilder's lore.
+   *
+   * @return list of lore
+   */
+  public List<String> getLore() {
+    return Collections.unmodifiableList(this.itemMeta.getLore());
   }
 
   /**
