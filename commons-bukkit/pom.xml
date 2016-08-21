@@ -12,7 +12,7 @@
     <artifactId>commons-bukkit</artifactId>
 
     <properties>
-        <spigot-version>1.10-R0.1-SNAPSHOT</spigot-version>
+        <spigot-version>1.10.2-R0.1-SNAPSHOT</spigot-version>
         <squirrelid-version>0.1.0</squirrelid-version>
         <worldedit-version>6.0.2-SNAPSHOT</worldedit-version>
         <exhaust-bukkit.version>2.0.0-SNAPSHOT</exhaust-bukkit.version>
