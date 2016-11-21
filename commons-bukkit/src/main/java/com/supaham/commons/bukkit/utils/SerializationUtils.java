@@ -20,7 +20,6 @@ import org.bukkit.material.MaterialData;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Map;
@@ -57,7 +56,7 @@ public final class SerializationUtils {
     _add(builder, RelativeDuration.class, new RelativeDurationSerializer());
     _add(builder, Vector.class, new VectorSerializer());
     _add(builder, Position.class, new PositionSerializer());
-    
+
     SERIALIZER_SET = builder.build();
   }
 
@@ -144,10 +143,7 @@ public final class SerializationUtils {
     try {
       final Object loadedObject = dataSource.load();
       if (loadedObject != null) {
-        result = loadToObject(loadedObject, defaults, serializerSet);
-      }
-      if (result == null) {
-        result = defaults;
+        loadToObject(loadedObject, defaults, serializerSet);
       }
     } catch (PluginBaseException e) {
       e.printStackTrace();
@@ -201,25 +197,14 @@ public final class SerializationUtils {
     return getSerializer(serializerClass).deserialize(serialized, typeClass, serializerSet);
   }
 
-  public static <T> T loadToObject(Object value, T destination, SerializerSet serializerSet) {
+  public static void loadToObject(Object value, Object destination, SerializerSet serializerSet) {
     if (value == null) {
-      return null;
+      return;
     }
     Preconditions.checkState(value instanceof Map, "value is not map, cannot deserialize.");
 
     // This is where the magic of class (destination) config templates is loaded 
-    T source = SerializableConfig
-        .deserializeAs(value, (Class<T>) destination.getClass(), serializerSet);
-
-    if (destination.equals(source)) {
-      return destination;
-    }
-
-    if (source != null) {
-      return (T) serializerSet.getFallbackSerializer().deserializeToObject((Map)value, destination, serializerSet);
-    } else {
-      return null;
-    }
+    serializerSet.getFallbackSerializer().deserializeToObject((Map) value, destination, serializerSet);
   }
 
   private SerializationUtils() {
