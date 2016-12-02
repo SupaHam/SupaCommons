@@ -1,12 +1,12 @@
-# Supa Commons [![Build Status](https://ci.drtshock.net/buildStatus/icon?job=SupaCommons)](https://ci.drtshock.net/job/SupaCommons/)
+# Supa Commons [![Build Status](https://ci.ender.zone/buildStatus/icon?job=SupaCommons)](https://ci.ender.zone/job/SupaCommons/)
 SupaHam's Commons contains a bunch of utilities. This software is always being added to.
 
 # Maven
 ```xml
 <repositories>
     <repository>
-        <id>drtshock-repo</id>
-        <url>http://ci.drtshock.net/plugin/repository/everything</url>
+        <id>enderzone-repo</id>
+        <url>http://ci.ender.zone/plugin/repository/everything</url>
     </repository>
 </repositories>
 <dependencies>
