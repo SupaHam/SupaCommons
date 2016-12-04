@@ -59,7 +59,7 @@
             <version>${snakeyaml.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.dumptruckman.minecraft.pluginbase</groupId>
+            <groupId>com.supaham.minecraft.pluginbase</groupId>
             <artifactId>Serializable-Config</artifactId>
             <version>${pluginbase.version}</version>
         </dependency>
@@ -79,9 +79,9 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>com.dumptruckman.minecraft.pluginbase:Logging</include>
-                                    <include>com.dumptruckman.minecraft.pluginbase:Messaging</include>
-                                    <include>com.dumptruckman.minecraft.pluginbase:Serializable-Config</include>
+                                    <include>com.supaham.minecraft.pluginbase:Logging</include>
+                                    <include>com.supaham.minecraft.pluginbase:Messaging</include>
+                                    <include>com.supaham.minecraft.pluginbase:Serializable-Config</include>
                                 </includes>
                             </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>

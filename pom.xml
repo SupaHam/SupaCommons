@@ -25,12 +25,12 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>onarandombox</id>
-            <url>http://repo.onarandombox.com/content/repositories/thirdparty-dev/</url>
+            <id>enderzone</id>
+            <url>http://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
         <repository>
-            <id>drtshock</id>
-            <url>http://ci.drtshock.net/plugin/repository/everything/</url>
+            <id>onarandombox</id>
+            <url>http://repo.onarandombox.com/content/repositories/thirdparty-dev/</url>
         </repository>
     </repositories>
     
