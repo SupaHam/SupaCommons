@@ -41,7 +41,7 @@ public class CommonProviders extends AbstractModule {
   private static final class MaterialDataProvider implements Provider<MaterialData> {
 
     @Override public boolean isProvided() {
-      return true;
+      return false;
     }
 
     @Nullable @Override public MaterialData get(CommandArgs arguments, List<? extends Annotation> modifiers)
