@@ -235,7 +235,7 @@ public class ItemBuilder {
       if (this.itemStack.getType() == Material.INK_SACK) {
         this.itemStack.setDurability((short) color.getDyeData());
       } else {
-        this.itemStack.setDurability((short) color.getData());
+        this.itemStack.setDurability((short) color.getWoolData());
       }
     } catch (Exception e) {
       if (!this.failSilently) {
