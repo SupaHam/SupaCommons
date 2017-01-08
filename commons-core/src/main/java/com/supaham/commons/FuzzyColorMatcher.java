@@ -26,7 +26,9 @@ import javax.annotation.Nonnull;
 /**
  * Fuzzy {@link Color} matching feature. This class allows you to match a given color to a given array of colors. <p />
  *
- * This works by checking the distance between two colours and returning the one with the least distance. <p />
+ * This works by checking the Euclidean distance between two colours and returning the one with the least distance. <p />
+ * 
+ * See: <a href="http://www.compuphase.com/cmetric.htm">http://www.compuphase.com/cmetric.htm</a> <p />
  *
  * Credit goes to Bukkit: https://github.com/Bukkit/Bukkit/blob/master/src/main/java/org/bukkit/map/MapPalette.java
  */
