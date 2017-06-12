@@ -4,8 +4,11 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.utils.StringUtils;
 
+import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -17,6 +20,8 @@ import javax.annotation.Nonnull;
  * @since 0.2.5
  */
 public class IndexedObjective {
+
+  public static final int MAX_ENTRY_LENGTH = 40;
 
   private CommonScoreboard scoreboard;
   private Objective bukkitObjective;
@@ -83,8 +88,30 @@ public class IndexedObjective {
     if (old != null) {
       this.scoreboard.getBukkitScoreboard().resetScores(old);
     }
+
+    // Minecraft scoreboards only allow unique entries. When the current string already exists in the scoreboard, it
+    // is replaced and added with the new score (below in setScore).
+    // To get around this we append RESET codes to the string until it becomes unique. There is one problem with
+    // this: if the string exceeds maximum length, then the entry cannot be inserted and an error will occur.
+    Set<String> existingBukkitEntries = this.scoreboard.getBukkitScoreboard().getEntries();
+    if (existingBukkitEntries.contains(string)) {
+      String uniqueString = string;
+      boolean append = true; // Used to change where the RESET codes are inserted for more unique values.
+      while (existingBukkitEntries.contains(uniqueString)) {
+        if (append) {
+          uniqueString += ChatColor.RESET;
+        } else { // prepend
+          uniqueString = ChatColor.RESET + uniqueString;
+        }
+        if (uniqueString.length() > MAX_ENTRY_LENGTH) {
+          append = false;
+          uniqueString = string;
+        }
+      }
+      string = uniqueString;
+    }
     this.bukkitObjective.getScore(string).setScore(sanitizeIndex(index));
-    entries[index] = string;
+    this.entries[index] = string;
     return old;
   }
 
