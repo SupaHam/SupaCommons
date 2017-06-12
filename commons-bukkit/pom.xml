@@ -27,10 +27,6 @@
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/repo/</url>
         </repository>
-        <repository>
-            <id>miserable-ninjaa</id>
-            <url>http://repo.miserable.ninja/content/groups/public/</url>
-        </repository>
     </repositories>
 
     <dependencies>
