@@ -812,7 +812,11 @@ public class ItemBuilder {
       }
       return this;
     }
-    boolean b = isFireworkEffectMeta();
+    boolean b = false;
+    try {
+      b = isFireworkEffectMeta();
+    } catch (IllegalStateException ignored) {
+    }
     if (b || isFireworkMeta()) {
       try {
         if (b) {
