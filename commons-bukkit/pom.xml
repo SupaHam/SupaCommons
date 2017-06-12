@@ -53,7 +53,7 @@
         <dependency>
             <groupId>com.sk89q.intake</groupId>
             <artifactId>intake</artifactId>
-            <version>4.2-SNAPSHOT</version>
+            <version>4.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ninja.miserable</groupId>

@@ -6,7 +6,6 @@ import com.google.gson.stream.JsonWriter;
 
 import com.supaham.commons.bukkit.utils.ReflectionUtils;
 
-import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -32,7 +31,6 @@ public class MessagePart implements Cloneable {
   String text = "";
 
   protected static Class<?> nmsTagCompound = ReflectionUtils.getNMSClass("NBTTagCompound");
-  protected static Class<?> nmsAchievement = ReflectionUtils.getNMSClass("Achievement");
   protected static Class<?> nmsStatistic = ReflectionUtils.getNMSClass("Statistic");
   protected static Class<?> nmsItemStack = ReflectionUtils.getNMSClass("ItemStack");
 
@@ -173,22 +171,6 @@ public class MessagePart implements Cloneable {
    */
   public void achievementTooltip(final String name) {
     onHover("show_achievement", "achievement." + name);
-  }
-
-  /**
-   * Displays an {@link Achievement} on hover event.
-   *
-   * @param which achievement to display
-   */
-  public void achievementTooltip(final Achievement which) {
-    try {
-      Object achievement = ReflectionUtils.getMethod(obcStatistic,
-                                                    "getNMSAchievement").invoke(null, which);
-      achievementTooltip((String) ReflectionUtils.getField(nmsAchievement, "name")
-          .get(achievement));
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   /**

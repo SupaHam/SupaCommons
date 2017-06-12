@@ -2,6 +2,7 @@ package com.supaham.commons.bukkit.title;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.bukkit.NMSVersion;
 import com.supaham.commons.bukkit.text.FancyMessage;
 import com.supaham.commons.bukkit.text.MessagePart;
 import com.supaham.commons.bukkit.utils.ReflectionUtils;
@@ -36,11 +37,19 @@ public class Title {
   private static Class<?> chatComponentClass = ReflectionUtils.getNMSClass("IChatBaseComponent");
   private static Constructor ctor1, ctor3;
 
+  private static Class<? extends Enum> chatMessageTypeClass;
+
   static {
     try {
       ctor1 = packetClass.getDeclaredConstructor(packetActionClass, chatComponentClass);
       ctor3 = packetClass.getDeclaredConstructor(packetActionClass, chatComponentClass,
                                                  int.class, int.class, int.class);
+
+      // 1.12
+      if (NMSVersion.CURRENT.isHigherThanOrEqualTo(NMSVersion.V1_12_R1)) {
+        chatMessageTypeClass = (Class<? extends Enum>) ReflectionUtils.getNMSClass("ChatMessageType");
+      }
+
     } catch (NoSuchMethodException e) {
       e.printStackTrace();
     }
@@ -136,9 +145,7 @@ public class Title {
     Preconditions.checkNotNull(player, "player cannot be null.");
     Preconditions.checkNotNull(messagePart, "Message part cannot be null.");
     try {
-      Constructor<?> ctor = chatPacket.getDeclaredConstructor(chatComponentClass, byte.class);
-      Object packet = ctor.newInstance(messagePart.getNMSChatObject(), (byte) 2);
-      ReflectionUtils.sendPacket(player, packet);
+      sendActionBarMessage(player, messagePart.getNMSChatObject());
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
         | InstantiationException e) {
       e.printStackTrace();
@@ -157,13 +164,24 @@ public class Title {
     Preconditions.checkNotNull(player, "player cannot be null.");
     Preconditions.checkNotNull(fancyMessage, "fancy message cannot be null.");
     try {
-      Constructor<?> ctor = chatPacket.getDeclaredConstructor(chatComponentClass, byte.class);
-      Object packet = ctor.newInstance(fancyMessage.getNMSChatObject(), (byte) 2);
-      ReflectionUtils.sendPacket(player, packet);
+      sendActionBarMessage(player, fancyMessage.getNMSChatObject());
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
         | InstantiationException e) {
       e.printStackTrace();
     }
+  }
+  
+  private static void sendActionBarMessage(Player player, Object nmsObject)
+      throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    Object packet;
+    if (NMSVersion.CURRENT.isLowerThanOrEqualTo(NMSVersion.V1_11_R1)) {
+      Constructor<?> ctor = chatPacket.getDeclaredConstructor(chatComponentClass, byte.class);
+      packet = ctor.newInstance(nmsObject, (byte) 2);
+    } else {
+      Constructor<?> ctor = chatPacket.getDeclaredConstructor(chatComponentClass, chatMessageTypeClass);
+      packet = ctor.newInstance(nmsObject, ChatMessageType.GAME_INFO.nmsMessageType);
+    }
+    ReflectionUtils.sendPacket(player, packet);
   }
 
   private enum Action {
@@ -173,6 +191,20 @@ public class Title {
 
     Action() {
       nmsAction = Preconditions.checkNotNull(Enum.valueOf(packetActionClass, name()));
+    }
+  }
+
+  private enum ChatMessageType {
+    CHAT, SYSTEM, GAME_INFO;
+
+    private final Object nmsMessageType;
+
+    ChatMessageType() {
+      nmsMessageType = Preconditions.checkNotNull(Enum.valueOf(chatMessageTypeClass, name()));
+    }
+    
+    public byte getId() {
+      return (byte) ordinal();
     }
   }
 

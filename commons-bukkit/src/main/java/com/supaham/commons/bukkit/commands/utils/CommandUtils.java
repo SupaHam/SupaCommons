@@ -11,6 +11,7 @@ import com.sk89q.intake.Command;
 import com.sk89q.intake.CommandCallable;
 import com.sk89q.intake.Description;
 import com.sk89q.intake.ImmutableDescription;
+import com.sk89q.intake.completion.CommandCompleter;
 import com.sk89q.intake.parametric.AbstractParametricCallable;
 import com.sk89q.intake.parametric.ArgumentParser;
 import com.sk89q.intake.parametric.IllegalParameterException;
@@ -44,7 +45,7 @@ public class CommandUtils {
     try {
       ctor = Class.forName("com.sk89q.intake.parametric.MethodCallable")
           .getDeclaredConstructor(ParametricBuilder.class, ArgumentParser.class, Object.class, Method.class,
-                                          Description.class, List.class);
+                                  Description.class, List.class, CommandCompleter.class);
       ctor.setAccessible(true);
 
       setCommandAnnotations = ReflectionUtils.getMethod(AbstractParametricCallable.class, "setCommandAnnotations", 
@@ -128,7 +129,7 @@ public class CommandUtils {
 
     try {
       AbstractParametricCallable o =
-          (AbstractParametricCallable) ctor.newInstance(builder, parser, object, method, description, permissions);
+          (AbstractParametricCallable) ctor.newInstance(builder, parser, object, method, description, permissions, null); // TODO specify CommandCompleter
       setCommandAnnotations.invoke(o, ImmutableList.copyOf(method.getAnnotations()));
       setIgnoreUnusedFlags.invoke(o, ignoreUnusedFlags);
       setUnusedFlags.invoke(o, unusedFlags);

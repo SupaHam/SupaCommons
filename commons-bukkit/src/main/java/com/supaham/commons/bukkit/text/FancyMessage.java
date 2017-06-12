@@ -14,7 +14,6 @@ import com.supaham.commons.bukkit.utils.ReflectionUtils;
 import com.supaham.commons.bukkit.utils.ReflectionUtils.PackageType;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Achievement;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -326,19 +325,6 @@ public class FancyMessage {
    */
   public FancyMessage achievementTooltip(final String name) {
     latest().achievementTooltip("achievement." + name);
-    dirty = true;
-    return this;
-  }
-
-  /**
-   * Displays an {@link Achievement} on hover event.
-   *
-   * @param which achievement to display
-   *
-   * @return this instance of FancyMessage, for chaining.
-   */
-  public FancyMessage achievementTooltip(final Achievement which) {
-    latest().achievementTooltip(which);
     dirty = true;
     return this;
   }
