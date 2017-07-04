@@ -3,9 +3,10 @@ package com.supaham.commons.bukkit.title;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.NMSVersion;
-import com.supaham.commons.bukkit.text.FancyMessage;
-import com.supaham.commons.bukkit.text.MessagePart;
+import com.supaham.commons.bukkit.utils.ChatUtils;
 import com.supaham.commons.bukkit.utils.ReflectionUtils;
+
+import net.kyori.text.Component;
 
 import org.bukkit.entity.Player;
 
@@ -20,12 +21,12 @@ import javax.annotation.Nullable;
  * class.
  * <p />
  * <b>Note:</b> As of 1.8, subtitles do not appear without the title. This means that in order for
- * a {@link #sendSubtitle(Player, FancyMessage)} to visually display for the player,
- * {@link #sendTitle(Player, FancyMessage)} must be sent immediately before or after the subtitle.
+ * a {@link #sendSubtitle(Player, Component)} to visually display for the player,
+ * {@link #sendTitle(Player, Component)} must be sent immediately before or after the subtitle.
  *
  * @see #sendTimes(Player, int, int, int)
- * @see #sendSubtitle(Player, FancyMessage)
- * @see #sendTitle(Player, FancyMessage)
+ * @see #sendSubtitle(Player, Component)
+ * @see #sendTitle(Player, Component)
  */
 public class Title {
 
@@ -75,9 +76,9 @@ public class Title {
    * @param subtitle subtitle to send
    *
    * @see #sendTimes(Player, int, int, int)
-   * @see #sendTitle(Player, FancyMessage)
+   * @see #sendTitle(Player, Component)
    */
-  public static void sendSubtitle(@Nonnull Player player, @Nullable FancyMessage subtitle) {
+  public static void sendSubtitle(@Nonnull Player player, @Nullable Component subtitle) {
     Preconditions.checkNotNull(subtitle, "subtitle cannot be null.");
     sendTitle(player, null, null, null, null, subtitle);
   }
@@ -89,10 +90,10 @@ public class Title {
    * @param subtitle subtitle to send
    *
    * @see #sendTimes(Player, int, int, int)
-   * @see #sendTitle(Player, FancyMessage)
+   * @see #sendTitle(Player, Component)
    */
-  public static void sendSubtitle(@Nonnull Player player, @Nonnull FancyMessage title,
-                                  @Nullable FancyMessage subtitle) {
+  public static void sendSubtitle(@Nonnull Player player, @Nonnull Component title,
+                                  @Nullable Component subtitle) {
     Preconditions.checkNotNull(title, "title cannot be null.");
     Preconditions.checkNotNull(subtitle, "subtitle cannot be null.");
     sendTitle(player, null, null, null, title, subtitle);
@@ -105,16 +106,16 @@ public class Title {
    * @param title title to send
    *
    * @see #sendTimes(Player, int, int, int)
-   * @see #sendSubtitle(Player, FancyMessage)
+   * @see #sendSubtitle(Player, Component)
    */
-  public static void sendTitle(@Nonnull Player player, @Nonnull FancyMessage title) {
+  public static void sendTitle(@Nonnull Player player, @Nonnull Component title) {
     Preconditions.checkNotNull(title, "title cannot be null.");
     sendTitle(player, null, null, null, title, null);
   }
 
   private static void sendTitle(@Nonnull Player player,
                                 Integer fadeIn, Integer stay, Integer fadeOut,
-                                @Nullable FancyMessage title, @Nullable FancyMessage subtitle) {
+                                @Nullable Component title, @Nullable Component subtitle) {
     Preconditions.checkNotNull(player, "player cannot be null.");
     try {
       if (fadeIn != null && stay != null && fadeOut != null) {
@@ -126,13 +127,13 @@ public class Title {
       }
 
       if (title != null) {
-        Object titlePacket = ctor1.newInstance(Action.TITLE.nmsAction, title.getNMSChatObject());
+        Object titlePacket = ctor1.newInstance(Action.TITLE.nmsAction, ChatUtils.nmsFromComponent(title));
         ReflectionUtils.sendPacket(player, titlePacket);
       }
 
       if (subtitle != null) {
         Object subtitlePacket = ctor1.newInstance(Action.SUBTITLE.nmsAction,
-                                                  subtitle.getNMSChatObject());
+                                                  ChatUtils.nmsFromComponent(subtitle));
         ReflectionUtils.sendPacket(player, subtitlePacket);
       }
     } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
@@ -140,37 +141,17 @@ public class Title {
     }
   }
 
-  public static void sendActionBarMessage(@Nonnull Player player,
-                                          @Nonnull MessagePart messagePart) {
+  public static void sendActionBarMessage(@Nonnull Player player, @Nonnull Component component) {
     Preconditions.checkNotNull(player, "player cannot be null.");
-    Preconditions.checkNotNull(messagePart, "Message part cannot be null.");
+    Preconditions.checkNotNull(component, "component cannot be null.");
     try {
-      sendActionBarMessage(player, messagePart.getNMSChatObject());
+      sendActionBarMessage(player, ChatUtils.nmsFromComponent(component));
     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
         | InstantiationException e) {
       e.printStackTrace();
     }
   }
 
-  /**
-   * This doesn't work properly as {@link FancyMessage} doesn't serialize everything in the first
-   * text json string-object.
-   *
-   * @see #sendActionBarMessage(Player, MessagePart)
-   */
-  @Deprecated
-  public static void sendActionBarMessage(@Nonnull Player player,
-                                          @Nonnull FancyMessage fancyMessage) {
-    Preconditions.checkNotNull(player, "player cannot be null.");
-    Preconditions.checkNotNull(fancyMessage, "fancy message cannot be null.");
-    try {
-      sendActionBarMessage(player, fancyMessage.getNMSChatObject());
-    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException
-        | InstantiationException e) {
-      e.printStackTrace();
-    }
-  }
-  
   private static void sendActionBarMessage(Player player, Object nmsObject)
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
     Object packet;

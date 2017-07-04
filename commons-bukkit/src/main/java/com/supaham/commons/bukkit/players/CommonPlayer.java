@@ -8,9 +8,10 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.Uuidable;
 import com.supaham.commons.bukkit.language.Message;
-import com.supaham.commons.bukkit.text.FancyMessage;
-import com.supaham.commons.bukkit.text.MessagePart;
 import com.supaham.commons.bukkit.title.Title;
+import com.supaham.commons.bukkit.utils.ChatUtils;
+
+import net.kyori.text.Component;
 
 import org.bukkit.entity.Player;
 
@@ -78,10 +79,10 @@ public class CommonPlayer implements Uuidable {
     }
   }
 
-  public void message(@Nonnull FancyMessage fancyMessage) {
-    Preconditions.checkNotNull(fancyMessage, "message cannot be null.");
+  public void message(@Nonnull Component component) {
+    Preconditions.checkNotNull(component, "component tcannot be null.");
     if (getPlayer() != null) {
-      fancyMessage.send(getPlayer());
+      ChatUtils.sendComponent(getPlayer(), component);
     }
   }
 
@@ -137,9 +138,9 @@ public class CommonPlayer implements Uuidable {
   }
 
   /**
-   * @see Title#sendActionBarMessage(Player, MessagePart)
+   * @see Title#sendActionBarMessage(Player, Component)
    */
-  public void sendActionBar(@Nonnull MessagePart messagePart) {
+  public void sendActionBar(@Nonnull Component messagePart) {
     Title.sendActionBarMessage(getPlayer(), messagePart);
   }
 
@@ -151,23 +152,23 @@ public class CommonPlayer implements Uuidable {
   }
 
   /**
-   * @see Title#sendTitle(Player, FancyMessage)
+   * @see Title#sendTitle(Player, Component)
    */
-  public void sendTitle(@Nonnull FancyMessage title) {
+  public void sendTitle(@Nonnull Component title) {
     Title.sendTitle(getPlayer(), title);
   }
 
   /**
-   * @see Title#sendSubtitle(Player, FancyMessage)
+   * @see Title#sendSubtitle(Player, Component)
    */
-  public void sendSubtitle(@Nonnull FancyMessage subtitle) {
+  public void sendSubtitle(@Nonnull Component subtitle) {
     Title.sendSubtitle(getPlayer(), subtitle);
   }
 
   /**
-   * @see Title#sendSubtitle(Player, FancyMessage, FancyMessage)
+   * @see Title#sendSubtitle(Player, Component, Component)
    */
-  public void sendSubtitle(@Nonnull FancyMessage title, @Nonnull FancyMessage subtitle) {
+  public void sendSubtitle(@Nonnull Component title, @Nonnull Component subtitle) {
     Title.sendSubtitle(getPlayer(), title, subtitle);
   }
 }

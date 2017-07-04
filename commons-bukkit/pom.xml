@@ -16,6 +16,7 @@
         <squirrelid-version>0.1.0</squirrelid-version>
         <worldedit-version>6.0.2-SNAPSHOT</worldedit-version>
         <exhaust-bukkit.version>2.0.0-SNAPSHOT</exhaust-bukkit.version>
+        <text.version>1.12-SNAPSHOT</text.version>
     </properties>
    
     <repositories>
@@ -60,6 +61,11 @@
             <artifactId>exhaust-bukkit</artifactId>
             <version>${exhaust-bukkit.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>text</artifactId>
+            <version>${text.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -82,6 +88,7 @@
                                     <include>ninja.miserable:exhaust-bukkit</include>
                                     <include>com.sk89q.intake:intake</include>
                                     <include>com.sk89q:squirrelid</include>
+                                    <include>net.kyori:text</include>
                                 </includes>
                             </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
