@@ -18,15 +18,20 @@ package com.supaham.commons.bukkit.utils;
 
 import com.google.common.base.Preconditions;
 
+import com.supaham.commons.bukkit.serializers.RelativeVectorSerializer;
+
 import org.bukkit.util.Vector;
 
 import javax.annotation.Nonnull;
+
+import pluginbase.config.annotation.SerializeWith;
 
 /**
  * Represents an {@link ImmutableVector} with the given components being optionally relative. This class plays nice
  * with Both {@link ImmutableVector} and {@link Vector}, both through {@link #equals(Object)} & {@link #equals(Vector)}
  * and {@link #with(ImmutableVector)} & {@link #with(Vector)}
  */
+@SerializeWith(RelativeVectorSerializer.class)
 public class RelativeVector extends ImmutableVector {
 
   private final boolean xRelative;
