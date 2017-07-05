@@ -14,15 +14,8 @@
     <name>Commons-Minecraft</name>
 
     <properties>
-        <exhaust.version>2.0.0-SNAPSHOT</exhaust.version>
+        <acf-core.version>0.5.0-SNAPSHOT</acf-core.version>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>sk89q-repo</id>
-            <url>http://maven.sk89q.com/repo/</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>
@@ -31,9 +24,9 @@
             <version>${commons-version}</version>
         </dependency>
         <dependency>
-            <groupId>ninja.miserable</groupId>
-            <artifactId>exhaust-core</artifactId>
-            <version>${exhaust.version}</version>
+            <groupId>co.aikar</groupId>
+            <artifactId>acf-core</artifactId>
+            <version>${acf-core.version}</version>
         </dependency>
     </dependencies>
 
@@ -42,7 +35,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <version>2.4.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -53,7 +46,6 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.supaham.commons:commons-core</include>
-                                    <include>com.sk89q:squirrelid</include>
                                 </includes>
                             </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>

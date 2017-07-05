@@ -14,15 +14,18 @@
     <properties>
         <spigot-version>1.11.2-R0.1-SNAPSHOT</spigot-version>
         <squirrelid-version>0.1.0</squirrelid-version>
-        <worldedit-version>6.0.2-SNAPSHOT</worldedit-version>
-        <exhaust-bukkit.version>2.0.0-SNAPSHOT</exhaust-bukkit.version>
         <text.version>1.12-SNAPSHOT</text.version>
+        <acf-bukkit.version>0.5.0-SNAPSHOT</acf-bukkit.version>
     </properties>
    
     <repositories>
         <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+            <id>aikar</id>
+            <url>https://ci.emc.gs/nexus/content/groups/aikar/</url>
+        </repository>
+        <repository>
+            <id>spigot</id>
+            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
             <id>sk89q-repo</id>
@@ -52,28 +55,35 @@
             <version>${squirrelid-version}</version>
         </dependency>
         <dependency>
-            <groupId>com.sk89q.intake</groupId>
-            <artifactId>intake</artifactId>
-            <version>4.3-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>ninja.miserable</groupId>
-            <artifactId>exhaust-bukkit</artifactId>
-            <version>${exhaust-bukkit.version}</version>
-        </dependency>
-        <dependency>
             <groupId>net.kyori</groupId>
             <artifactId>text</artifactId>
             <version>${text.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>co.aikar</groupId>
+            <artifactId>acf-bukkit</artifactId>
+            <version>${acf-bukkit.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
+                <version>3.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.3</version>
+                <version>2.4.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -85,9 +95,8 @@
                                 <includes>
                                     <include>com.supaham.commons:commons-core</include>
                                     <include>com.supaham.commons:commons-minecraft</include>
-                                    <include>ninja.miserable:exhaust-bukkit</include>
-                                    <include>com.sk89q.intake:intake</include>
                                     <include>com.sk89q:squirrelid</include>
+                                    <include>co.aikar:*</include>
                                     <include>net.kyori:text</include>
                                 </includes>
                             </artifactSet>

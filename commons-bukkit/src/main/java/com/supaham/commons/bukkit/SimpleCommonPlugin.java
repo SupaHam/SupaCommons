@@ -8,8 +8,6 @@ import com.supaham.commons.bukkit.modules.ModuleContainer;
 import com.supaham.commons.bukkit.utils.SerializationUtils;
 import com.supaham.commons.state.State;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -53,7 +51,7 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
   private final SettingsContainer settingsContainer = new SettingsContainer();
   private final FirstRunContainer firstRunContainer = new FirstRunContainer();
 
-  @Nonnull private CommonCommandsManager commandsManager = new CommonCommandsManager(this);
+  @Nonnull private CommonCommandsManager commandsManager;
 
   private Metrics metrics;
 
@@ -74,12 +72,14 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
   @Override
   public void onEnable() {
     this.state = State.ACTIVE;
+    this.commandsManager = new CommonCommandsManager(this);
   }
 
   @Override
   public void onDisable() {
     this.state = State.STOPPED;
     disableMetrics(); // Automatically disable metrics if it is enabled, convenience method.
+    this.commandsManager.unregisterCommands();
   }
 
   @Nonnull
@@ -92,14 +92,6 @@ public abstract class SimpleCommonPlugin<T extends SimpleCommonPlugin> extends J
   @Override
   public PluginLogger getLog() {
     return this.pluginLogger;
-  }
-
-  /*
-   * onCommand is overridden in order for bukkit to relay all command calls to our own executor.
-   */
-  @Override
-  public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
-    return getCommandsManager().getDefaultExecutor().onCommand(sender, command, alias, args);
   }
 
   @Nonnull
