@@ -133,6 +133,11 @@ public class FlagParserTest {
     Assert.assertEquals("foo", result.getArgs()[0]);
   }
 
+  @Test(expected = Exception.class)
+  public void testNullArgs() throws Exception {
+    parser.parse(null);
+  }
+
   @Test(expected = MissingFlagException.class)
   public void testMissingFlag() throws Exception {
     parser.add(FOO_FLAG);

@@ -41,7 +41,8 @@ public class FlagParser {
   }
 
   @Nonnull
-  public FlagParseResult parse(String[] args) {
+  public FlagParseResult parse(@Nonnull String[] args) {
+    Preconditions.checkNotNull(args, "args");
     HashMap<Flag, String> parsedFlags = new HashMap<>();
     int i = 0;
     for (; i < args.length; i++) {
