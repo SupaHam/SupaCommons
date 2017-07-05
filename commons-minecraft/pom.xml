@@ -17,6 +17,13 @@
         <acf-core.version>0.5.0-SNAPSHOT</acf-core.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>aikar</id>
+            <url>https://ci.emc.gs/nexus/content/groups/aikar/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.supaham.commons</groupId>
