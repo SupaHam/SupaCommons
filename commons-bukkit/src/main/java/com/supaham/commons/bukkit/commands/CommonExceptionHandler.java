@@ -4,7 +4,9 @@ import com.supaham.commons.bukkit.CommonPlugin;
 import com.supaham.commons.exceptions.CommonException;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandException;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +30,9 @@ public class CommonExceptionHandler implements ExceptionHandler {
 
   @Override public boolean execute(BaseCommand command, RegisteredCommand registeredCommand, CommandIssuer sender,
                                    List<String> args, Throwable t) {
+    if (t instanceof InvocationTargetException) { // ACF doesnt pass actual exception in 0.5.0
+      t = t.getCause();
+    }
     if (t instanceof NumberFormatException) {
       final Matcher matcher = numberFormat.matcher(t.getMessage());
       if (matcher.matches()) {
@@ -40,6 +45,9 @@ public class CommonExceptionHandler implements ExceptionHandler {
     } else if (t instanceof CommonException) {
       sender.sendMessage(ChatColor.RED + t.getMessage());
       t.printStackTrace();
+      return true;
+    } else if (t instanceof CommandException) {
+      sender.sendMessage(ChatColor.RED + t.getMessage());
       return true;
     }
     return false;
