@@ -29,6 +29,8 @@ import javax.annotation.Nonnull;
 
 public class ChatUtils {
 
+  public static final TextComponent NEW_LINE = TextComponent.of("\n");
+
   protected static Class<?> nmsIChatBaseComponent = PackageType.MINECRAFT_SERVER
       .getClassSafe("IChatBaseComponent");
   protected static Class<?> nmsPacketPlayOutChat = PackageType.MINECRAFT_SERVER
