@@ -1,5 +1,7 @@
 package com.supaham.commons.bukkit.utils;
 
+import com.google.common.base.Preconditions;
+
 import com.supaham.commons.Enums;
 import com.supaham.commons.bukkit.utils.ReflectionUtils.PackageType;
 
@@ -21,6 +23,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+
+import javax.annotation.Nonnull;
 
 public class ChatUtils {
 
@@ -46,7 +51,25 @@ public class ChatUtils {
       e.printStackTrace();
     }
   }
-  
+
+  /**
+   * Applies function over a {@link Component} and its children.
+   *
+   * @param component base component
+   * @param function function to apply, returning the component to be appended to new base
+   *
+   * @return transformed component
+   */
+  public static Component transform(@Nonnull Component component, @Nonnull Function<Component, Component> function) {
+    Preconditions.checkNotNull(component, "component");
+    Preconditions.checkNotNull(function, "function");
+    Component result = function.apply(component);
+    for (Component child : component.children()) {
+      result.append(transform(child, function));
+    }
+    return result;
+  }
+
   public static <T extends Component> T forceResetStyles(T component) {
     component = (T) component.color(null);
     for (TextDecoration textDecoration : TextDecoration.values()) {
