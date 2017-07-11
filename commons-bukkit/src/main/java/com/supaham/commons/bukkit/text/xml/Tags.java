@@ -25,9 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 public class Tags {
 
-  /*
-   * javac bug doesn't let me name generic type definition B because there already exists a B
-   */
+  // javac bug doesn't allow naming generic type definition B because there exists a class named B
   interface ComponentCreator<BB extends Component.Builder<BB, C>, C extends Component> {
 
     Component.Builder<BB, C> createBuilder();
@@ -94,7 +92,7 @@ public class Tags {
       Preconditions.checkArgument(action != null, "Invalid hover action " + action);
       Component value;
       try {
-        value = TextParsers.XML_PARSER.parse(this.value);
+        value = TextParsers.XML.parse(this.value);
       } catch (Exception e) {
         value = TextComponent.of(this.value);
       }
@@ -180,7 +178,7 @@ public class Tags {
       List<Component> args = getAttributes().entrySet().stream()
           .filter(attr -> attr.getKey().getLocalPart().startsWith("with-"))
           .sorted(Comparator.comparing(Object::toString))
-          .map(attr -> TextParsers.XML_PARSER.parse(attr.getValue())).collect(Collectors.toList());
+          .map(attr -> TextParsers.XML.parse(attr.getValue())).collect(Collectors.toList());
       if (!args.isEmpty()) {
         component.args(args);
       }
