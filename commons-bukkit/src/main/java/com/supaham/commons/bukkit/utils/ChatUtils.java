@@ -79,7 +79,14 @@ public class ChatUtils {
     }
     return component;
   }
-  
+
+  public static void forceResetStyles(Component.Builder builder) {
+    builder.color(null);
+    for (TextDecoration textDecoration : TextDecoration.values()) {
+      builder.decoration(textDecoration, false);
+    }
+  }
+
   public static String getReadableComponent(Component component) {
     StringBuilder sb = new StringBuilder();
     getReadableComponentSingle(sb, component);
@@ -101,11 +108,11 @@ public class ChatUtils {
       throw new UnsupportedOperationException("Cannot parse " + component.getClass());
     }
   }
-  
+
   public static ChatColor textColorToBukkit(TextColor textColor) {
     return Enums.findByValue(ChatColor.class, textColor.name());
   }
-  
+
   public static ChatColor textDecorationToBukkit(TextDecoration textDecoration) {
     if (textDecoration == TextDecoration.OBFUSCATED) {
       return ChatColor.MAGIC;
