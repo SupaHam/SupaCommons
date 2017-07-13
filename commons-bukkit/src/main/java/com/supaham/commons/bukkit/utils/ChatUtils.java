@@ -3,6 +3,7 @@ package com.supaham.commons.bukkit.utils;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.Enums;
+import com.supaham.commons.bukkit.text.TextParsers;
 import com.supaham.commons.bukkit.utils.ReflectionUtils.PackageType;
 
 import net.kyori.text.Component;
@@ -52,6 +53,17 @@ public class ChatUtils {
     } catch (NoSuchMethodException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Returns parsed legacy message using ampersand as color char.
+   * @param message message to parse
+   * @return parsed component
+   */
+  public static Component parseLegacy(@Nonnull String message) {
+    Preconditions.checkNotNull(message, "message");
+    message = ChatColor.translateAlternateColorCodes('&', message);
+    return TextParsers.LEGACY.parse(message);
   }
 
   /**
