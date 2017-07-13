@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -124,6 +125,22 @@ public class ItemBuilder {
                                    itemBuilder.itemStack.getDurability());
     this.itemMeta = itemBuilder.itemMeta.clone();
     this.failSilently = itemBuilder.failSilently;
+  }
+
+  @Override public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    } else if (!(obj instanceof ItemBuilder)) {
+      return false;
+    }
+    ItemBuilder other = (ItemBuilder) obj;
+    return Objects.equals(this.itemStack, other.itemStack)
+           && Objects.equals(this.itemMeta, other.itemStack)
+           && Objects.equals(this.failSilently, other.failSilently);
+  }
+
+  @Override public int hashCode() {
+    return Objects.hash(this.itemStack, this.itemMeta, this.failSilently);
   }
 
   /**
