@@ -141,7 +141,7 @@ public class ChatUtils {
     }
   }
 
-  public static void sendComponent(Iterable<CommandSender> senders, Component component) {
+  public static void sendComponent(Iterable<? extends CommandSender> senders, Component component) {
     List<Player> players = new ArrayList<>();
     List<CommandSender> others = new ArrayList<>();
     for (CommandSender sender : senders) {
@@ -164,7 +164,7 @@ public class ChatUtils {
     sendStringComponent(Collections.singleton(sender), component);
   }
 
-  public static void sendStringComponent(Iterable<CommandSender> senders, Component component) {
+  public static void sendStringComponent(Iterable<? extends CommandSender> senders, Component component) {
     String str = getReadableComponent(component);
     for (CommandSender sender : senders) {
       sender.sendMessage(str);
