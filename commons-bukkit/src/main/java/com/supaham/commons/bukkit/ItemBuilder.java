@@ -23,8 +23,10 @@ import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -992,11 +994,38 @@ public class ItemBuilder {
    * @param effectType effect type to set
    *
    * @return this item builder instance, for chaining
+   * @see ItemBuilder#potionMain(PotionData) 
    */
-  public ItemBuilder potionMain(@Nonnull PotionEffectType effectType) {
+  @Deprecated
+  public ItemBuilder potionMain(PotionEffectType effectType) {
     if (isPotionMeta()) {
       try {
-        ((PotionMeta) this.itemMeta).setMainEffect(effectType);
+        PotionMeta potionMeta = (PotionMeta) this.itemMeta;
+        if (potionMeta.setMainEffect(effectType) == false) {
+          potionMeta.setBasePotionData(new PotionData(potionTypeFromLegacy(effectType), false, false));
+        }
+      } catch (Exception e) {
+        if (!this.failSilently) {
+          e.printStackTrace();
+        }
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Sets this item's base potion data, assuming it is a potion.
+   * <p />
+   * <b>UNSAFE</b>
+   *
+   * @param data data to set
+   *
+   * @return this item builder instance, for chaining
+   */
+  public ItemBuilder potionMain(PotionData data) {
+    if (isPotionMeta()) {
+      try {
+        ((PotionMeta) this.itemMeta).setBasePotionData(data);
       } catch (Exception e) {
         if (!this.failSilently) {
           e.printStackTrace();
@@ -1308,5 +1337,41 @@ public class ItemBuilder {
       return false;
     }
     return true;
+  }
+  
+  private static PotionType potionTypeFromLegacy(PotionEffectType type) {
+    if (type == PotionEffectType.NIGHT_VISION) {
+      return PotionType.NIGHT_VISION;
+    } else if (type == PotionEffectType.INVISIBILITY) {
+      return PotionType.INVISIBILITY;
+    } else if (type == PotionEffectType.JUMP) {
+      return PotionType.JUMP;
+    } else if (type == PotionEffectType.FIRE_RESISTANCE) {
+      return PotionType.FIRE_RESISTANCE;
+    } else if (type == PotionEffectType.SPEED) {
+      return PotionType.SPEED;
+    } else if (type == PotionEffectType.SLOW) {
+      return PotionType.SLOWNESS;
+    } else if (type == PotionEffectType.WATER_BREATHING) {
+      return PotionType.WATER_BREATHING;
+    } else if (type == PotionEffectType.HEALTH_BOOST) {
+      return PotionType.INSTANT_HEAL;
+    } else if (type == PotionEffectType.HARM) {
+      return PotionType.INSTANT_DAMAGE;
+    } else if (type == PotionEffectType.HARM) {
+      return PotionType.INSTANT_DAMAGE;
+    } else if (type == PotionEffectType.POISON) {
+      return PotionType.POISON;
+    } else if (type == PotionEffectType.REGENERATION) {
+      return PotionType.REGEN;
+    } else if (type == PotionEffectType.INCREASE_DAMAGE) {
+      return PotionType.STRENGTH;
+    } else if (type == PotionEffectType.WEAKNESS) {
+      return PotionType.WEAKNESS;
+    } else if (type == PotionEffectType.LUCK) {
+      return PotionType.LUCK;
+    } else {
+      throw new IllegalArgumentException(type.getName() + " is not convertable.");
+    }
   }
 }
