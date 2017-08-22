@@ -5,8 +5,8 @@ import com.google.common.base.Preconditions;
 import com.supaham.commons.Enums;
 import com.supaham.commons.utils.StringUtils;
 
+import net.kyori.text.BuildableComponent;
 import net.kyori.text.Component;
-import net.kyori.text.Component.Builder;
 import net.kyori.text.TextComponent;
 import net.kyori.text.event.ClickEvent;
 import net.kyori.text.event.HoverEvent;
@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.namespace.QName;
-
 
 @XmlSeeAlso({
     Tags.A.class,
@@ -56,15 +55,16 @@ public class Element {
   @XmlElementRef(type = Element.class) @XmlMixed private List<Object> mixedContent;
   @XmlAnyAttribute private Map<QName, String> attributes;
 
-  public static <B extends Component.Builder<B, C>, C extends Component> void parseAndApplyStyle(
-      Component.Builder<B, C> builder, String style) {
+  public static <C extends BuildableComponent, B extends BuildableComponent.Builder<C, B>> void parseAndApplyStyle(
+      BuildableComponent.Builder<C, B> builder, String style) {
     String[] styles = style.split("\\s*,\\s*");
     for (String _style : styles) {
       handleStyle(builder, _style);
     }
   }
 
-  private static <B extends Builder<B, C>, C extends Component> void handleStyle(Builder<B, C> builder, String style) {
+  private static <C extends BuildableComponent, B extends BuildableComponent.Builder<C, B>> void handleStyle(
+      BuildableComponent.Builder<C, B> builder, String style) {
     String[] stateSplit = style.split("\\s*:\\s*");
     String styleName = stateSplit[0];
     boolean stateSpecified = stateSplit.length > 1;
@@ -109,8 +109,8 @@ public class Element {
     Preconditions.checkArgument(found, "Invalid style '" + styleName + "'");
   }
 
-  private static <B extends Builder<B, C>, C extends Component> boolean handleColor(
-      Builder<B, C> builder, String value, TextDecoration.State state, boolean stateSpecified) {
+  private static <C extends BuildableComponent, B extends BuildableComponent.Builder<C, B>> boolean handleColor(
+      BuildableComponent.Builder<C, B> builder, String value, TextDecoration.State state, boolean stateSpecified) {
     if (value.equalsIgnoreCase("color")) {
       TextDecoration.State foundState = (!stateSpecified && state == TextDecoration.State.TRUE)
                                     ? TextDecoration.State.NOT_SET : state;
@@ -127,8 +127,9 @@ public class Element {
     }
     return false;
   }
-  
-  public <B extends Builder<B, C>, C extends Component> void apply(Component.Builder<B, C> builder) {
+
+  public <C extends BuildableComponent, B extends BuildableComponent.Builder<C, B>> void apply(
+      BuildableComponent.Builder<C, B> builder) {
     if (style != null) {
       parseAndApplyStyle(builder, style);
     }
@@ -151,7 +152,8 @@ public class Element {
     }
   }
 
-  public <B extends Builder<B, C>, C extends Component> void loop(Component.Builder<B, C> builder) {
+  public <C extends BuildableComponent, B extends BuildableComponent.Builder<C, B>> void loop(
+      BuildableComponent.Builder<C, B> builder) {
     boolean elementAppended = false; // Maintains order of string content when attempting to optimise.
     for (Object o : mixedContent) {
       if (o instanceof String) {
@@ -168,7 +170,7 @@ public class Element {
       } else if (o instanceof Element) {
         Element el = (Element) o;
         elementAppended = true;
-        Builder elBuilder;
+        BuildableComponent.Builder elBuilder;
         if (el instanceof Tags.ComponentCreator) {
           elBuilder = ((Tags.ComponentCreator) el).createBuilder();
         } else {

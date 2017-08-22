@@ -6,6 +6,7 @@ import com.supaham.commons.Enums;
 import com.supaham.commons.bukkit.text.TextParsers;
 import com.supaham.commons.bukkit.utils.ReflectionUtils.PackageType;
 
+import net.kyori.text.BuildableComponent;
 import net.kyori.text.Component;
 import net.kyori.text.KeybindComponent;
 import net.kyori.text.SelectorComponent;
@@ -13,6 +14,7 @@ import net.kyori.text.TextComponent;
 import net.kyori.text.format.TextColor;
 import net.kyori.text.format.TextDecoration;
 import net.kyori.text.serializer.ComponentSerializer;
+import net.kyori.text.serializer.GsonComponentSerializer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +32,7 @@ import javax.annotation.Nonnull;
 
 public class ChatUtils {
 
+  private static final GsonComponentSerializer gsonComponentSerializer = new GsonComponentSerializer();
   public static final TextComponent NEW_LINE = TextComponent.of("\n");
 
   protected static Class<?> nmsIChatBaseComponent = PackageType.MINECRAFT_SERVER
@@ -92,7 +95,7 @@ public class ChatUtils {
     return component;
   }
 
-  public static void forceResetStyles(Component.Builder builder) {
+  public static void forceResetStyles(BuildableComponent.Builder builder) {
     builder.color(null);
     for (TextDecoration textDecoration : TextDecoration.values()) {
       builder.decoration(textDecoration, false);
@@ -134,7 +137,7 @@ public class ChatUtils {
 
   public static void sendComponent(CommandSender sender, Component component) {
     if (sender instanceof Player) {
-      String json = ComponentSerializer.serialize(component);
+      String json = gsonComponentSerializer.serialize(component);
       sendJson(Collections.singleton(((Player) sender)), json);
     } else {
       sendStringComponent(sender, component);
@@ -152,7 +155,7 @@ public class ChatUtils {
       }
     }
     if (!players.isEmpty()) {
-      String json = ComponentSerializer.serialize(component);
+      String json = gsonComponentSerializer.serialize(component);
       sendJson(players, json);
     }
     if (!others.isEmpty()) {
@@ -187,7 +190,7 @@ public class ChatUtils {
   }
 
   public static Object nmsFromComponent(Component component) {
-    return nmsFromJson(ComponentSerializer.serialize(component));
+    return nmsFromJson(gsonComponentSerializer.serialize(component));
   }
 
   public static Object nmsFromJson(String json) {
