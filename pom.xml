@@ -16,7 +16,7 @@
         <module>commons-minecraft</module>
     </modules>
     <properties>
-        <commons-version>0.5.5</commons-version>
+        <commons-version>0.5.6-SNAPSHOT</commons-version>
     </properties>
 
     <repositories>
