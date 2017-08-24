@@ -143,7 +143,12 @@ public final class SerializationUtils {
     try {
       final Object loadedObject = dataSource.load();
       if (loadedObject != null) {
-        loadToObject(loadedObject, defaults, serializerSet);
+        if (defaults.getClass().isAssignableFrom(loadedObject.getClass())) {
+          return (T) loadedObject;
+        }
+        Preconditions.checkState(loadedObject instanceof Map, "loadedObject is type %s, expecting Map.",
+                                 loadedObject.getClass().getCanonicalName());
+        loadToObject((Map) loadedObject, defaults, serializerSet);
       }
     } catch (PluginBaseException e) {
       e.printStackTrace();
@@ -197,14 +202,13 @@ public final class SerializationUtils {
     return getSerializer(serializerClass).deserialize(serialized, typeClass, serializerSet);
   }
 
-  public static void loadToObject(Object value, Object destination, SerializerSet serializerSet) {
+  public static void loadToObject(Map value, Object destination, SerializerSet serializerSet) {
     if (value == null) {
       return;
     }
-    Preconditions.checkState(value instanceof Map, "value is not map, cannot deserialize.");
 
     // This is where the magic of class (destination) config templates is loaded 
-    serializerSet.getFallbackSerializer().deserializeToObject((Map) value, destination, serializerSet);
+    serializerSet.getFallbackSerializer().deserializeToObject(value, destination, serializerSet);
   }
 
   private SerializationUtils() {
