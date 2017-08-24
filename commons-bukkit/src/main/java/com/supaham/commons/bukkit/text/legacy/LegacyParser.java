@@ -47,46 +47,56 @@ public class LegacyParser implements TextParser {
 
     private Component build() {
       Matcher matcher = INCREMENTAL_PATTERN.matcher(message);
-      TextComponent.Builder builder = TextComponent.builder().content("");
+      final TextComponent.Builder _builder = TextComponent.builder().content("");
+      TextComponent.Builder currentBuilder = _builder;
       String match;
       while (matcher.find()) {
         int group = 0;
         while ((match = matcher.group(++group)) == null) {
         }
 
-        appendMessage(builder, matcher.start(group));
+        appendMessage(currentBuilder, matcher.start(group));
 
         TextComponent.Builder processResult = null;
         switch (group) {
           case 1: // Color/format group
             ChatColor color = ChatColor.getByChar(match.charAt(1));
-            processResult = processChatColor(builder, color);
+            processResult = processChatColor(currentBuilder, color);
             break;
           case 2: // New line
-            TextComponent.Builder builderToChange = builder;
-            if (!isEmpty(builder, false)) {
+            TextComponent.Builder builderToChange = currentBuilder;
+            if (!isEmpty(currentBuilder, false)) {
               builderToChange = processResult = TextComponent.builder();
             }
             builderToChange.content("\n");
             break;
           case 3: // URL
-            processResult = appendMessage(builder, matcher.end(group));
+            processResult = appendMessage(currentBuilder, matcher.end(group));
             processResult.clickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, match));
             break;
         }
-        appendIfNotEqual(builder, processResult);
+        if (processResult != null && currentBuilder != processResult) {
+          if (currentBuilder != _builder) { // Will run only when not empty base.
+            _builder.append(currentBuilder.build());
+          }
+          currentBuilder = processResult;
+        }
+//        appendIfNotEqual(builder, processResult);
         currentIndex = matcher.end(group);
       }
       if (currentIndex < message.length()) {
-        TextComponent.Builder appendResult = appendMessage(builder, message.length());
-        appendIfNotEqual(builder, appendResult);
+        TextComponent.Builder appendResult = appendMessage(currentBuilder, message.length());
+        appendIfNotEqual(currentBuilder, appendResult);
       }
-      return builder.build();
+      if (currentBuilder != _builder) { // Will run only when not empty base.
+        _builder.append(currentBuilder.build());
+      }
+      return _builder.build();
     }
 
     private TextComponent.Builder processChatColor(TextComponent.Builder builder, ChatColor color) {
       if (color.equals(ChatColor.RESET)) {
-        TextComponent.Builder newBuilder = TextComponent.builder();
+        TextComponent.Builder newBuilder = TextComponent.builder().content("");
         ChatUtils.forceResetStyles(newBuilder);
         return newBuilder;
       } else if (color.isFormat()) {
@@ -113,7 +123,7 @@ public class LegacyParser implements TextParser {
         TextColor textColor = Enums.findByValue(TextColor.class, color.name());
         TextComponent.Builder builderToChange = builder;
         if (!isEmpty(builderToChange, false)) {
-          builderToChange = TextComponent.builder();
+          builderToChange = TextComponent.builder().content("");
         }
         builderToChange.color(textColor);
         return builderToChange;

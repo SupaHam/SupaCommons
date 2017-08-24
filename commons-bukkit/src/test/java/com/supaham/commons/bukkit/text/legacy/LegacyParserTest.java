@@ -50,4 +50,21 @@ public class LegacyParserTest {
     TextComponent expected = TextComponent.of("foo").decoration(TextDecoration.BOLD, true).decoration(TextDecoration.STRIKETHROUGH, true);
     Assert.assertEquals(expected, component);
   }
+
+  @Test
+  public void testColorWithEmptyBase() {
+    Component component = TextParsers.LEGACY.parse(ChatColor.COLOR_CHAR + "a" + ChatColor.COLOR_CHAR + "lfoo");
+    TextComponent expected = TextComponent.of("foo").color(TextColor.GREEN).decoration(TextDecoration.BOLD, true);
+    Assert.assertEquals(expected, component);
+  }
+
+  @Test
+  public void testColorWithTrailingText() {
+    String spaces = "    ";
+    Component component = TextParsers.LEGACY.parse(spaces + ChatColor.COLOR_CHAR + "a" + ChatColor.COLOR_CHAR + "lfoo");
+    TextComponent expected = TextComponent.of(spaces).append(
+        TextComponent.of("foo").color(TextColor.GREEN).decoration(TextDecoration.BOLD, true)
+    );
+    Assert.assertEquals(expected, component);
+  }
 }
