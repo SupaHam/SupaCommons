@@ -13,8 +13,7 @@ import net.kyori.text.SelectorComponent;
 import net.kyori.text.TextComponent;
 import net.kyori.text.format.TextColor;
 import net.kyori.text.format.TextDecoration;
-import net.kyori.text.serializer.ComponentSerializer;
-import net.kyori.text.serializer.GsonComponentSerializer;
+import net.kyori.text.serializer.ComponentSerializers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -32,7 +31,6 @@ import javax.annotation.Nonnull;
 
 public class ChatUtils {
 
-  private static final GsonComponentSerializer gsonComponentSerializer = new GsonComponentSerializer();
   public static final TextComponent NEW_LINE = TextComponent.of("\n");
 
   protected static Class<?> nmsIChatBaseComponent = PackageType.MINECRAFT_SERVER
@@ -137,7 +135,7 @@ public class ChatUtils {
 
   public static void sendComponent(CommandSender sender, Component component) {
     if (sender instanceof Player) {
-      String json = gsonComponentSerializer.serialize(component);
+      String json = ComponentSerializers.JSON.serialize(component);
       sendJson(Collections.singleton(((Player) sender)), json);
     } else {
       sendStringComponent(sender, component);
@@ -155,7 +153,7 @@ public class ChatUtils {
       }
     }
     if (!players.isEmpty()) {
-      String json = gsonComponentSerializer.serialize(component);
+      String json = ComponentSerializers.JSON.serialize(component);
       sendJson(players, json);
     }
     if (!others.isEmpty()) {
@@ -190,7 +188,7 @@ public class ChatUtils {
   }
 
   public static Object nmsFromComponent(Component component) {
-    return nmsFromJson(gsonComponentSerializer.serialize(component));
+    return nmsFromJson(ComponentSerializers.JSON.serialize(component));
   }
 
   public static Object nmsFromJson(String json) {
