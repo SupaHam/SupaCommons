@@ -110,7 +110,9 @@ public class ChatUtils {
   }
 
   public static void getReadableComponentSingle(StringBuilder sb, Component component) {
-    sb.append(textColorToBukkit(component.color()));
+    if (component.color() != null) {
+      sb.append(textColorToBukkit(component.color()));
+    }
     if (component instanceof TextComponent) {
       sb.append(((TextComponent) component).content());
     } else if (component instanceof KeybindComponent) {
