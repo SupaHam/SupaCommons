@@ -97,6 +97,7 @@
                                     <include>com.supaham.commons:commons-minecraft</include>
                                     <include>com.sk89q:squirrelid</include>
                                     <include>co.aikar:*</include>
+                                    <include>net.jodah:expiringmap</include>
                                     <include>net.kyori:text</include>
                                 </includes>
                             </artifactSet>
