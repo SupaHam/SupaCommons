@@ -2,10 +2,10 @@ package com.supaham.commons.jdbc.sql;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
 import com.supaham.commons.database.JDBCAgent;
 import com.supaham.commons.jdbc.CDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -67,7 +67,6 @@ public class SpringJDBCAgent implements JDBCAgent {
    * which is used to look for the MySQL Driver class.
    *
    * @param config mysql configuration used to connect to the database
-   * @param classLoader the {@link ClassLoader} that will load the the database Driver class
    *
    * @return a new instance of {@link SpringJDBCAgent}
    *
@@ -75,9 +74,9 @@ public class SpringJDBCAgent implements JDBCAgent {
    * @throws SQLException thrown if the {@code config} data fails to connect to a mysql database
    */
   public static SpringJDBCAgent createAgent(@Nonnull SQLConfig config,
-                                            @Nonnull BoneCPConfig boneCPConfig)
+                                            @Nonnull HikariConfig hikariCPConfig)
       throws ClassNotFoundException, SQLException {
-    return createAgent(config, Thread.currentThread().getContextClassLoader(), boneCPConfig);
+    return createAgent(config, Thread.currentThread().getContextClassLoader(), hikariCPConfig);
   }
 
   /**
@@ -86,7 +85,7 @@ public class SpringJDBCAgent implements JDBCAgent {
    *
    * @param config mysql configuration used to connect to the database
    * @param classLoader the {@link ClassLoader} that will load the the database Driver class
-   * @param boneCPConfig {@link BoneCPConfig}
+   * @param hikariCPConfig {@link HikariConfig}
    *
    * @return a new instance of {@link SpringJDBCAgent}
    *
@@ -95,32 +94,29 @@ public class SpringJDBCAgent implements JDBCAgent {
    */
   public static SpringJDBCAgent createAgent(@Nonnull SQLConfig config,
                                             @Nullable ClassLoader classLoader,
-                                            @Nullable BoneCPConfig boneCPConfig)
+                                            @Nullable HikariConfig hikariCPConfig)
       throws ClassNotFoundException, SQLException {
     checkNotNull(classLoader, "class loader cannot be null.");
 
     ClassLoader previousClassLoader = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(classLoader);
 
-    if (boneCPConfig == null) {
-      boneCPConfig = new BoneCPConfig();
-      boneCPConfig.setMinConnectionsPerPartition(3);
-      boneCPConfig.setMaxConnectionsPerPartition(20);
-      boneCPConfig.setPartitionCount(2);
-      boneCPConfig.setConnectionTestStatement("SELECT 1");
+    if (hikariCPConfig == null) {
+      hikariCPConfig = new HikariConfig();
+      hikariCPConfig.setConnectionTestQuery("SELECT 1");
     }
     if (config instanceof MySQLConfig) {
       Class.forName("com.mysql.jdbc.Driver");
       MySQLConfig mysql = (MySQLConfig) config;
-      boneCPConfig.setJdbcUrl("jdbc:mysql://" + mysql.getIp() + ":" + mysql.getPort() + "/"
+      hikariCPConfig.setJdbcUrl("jdbc:mysql://" + mysql.getIp() + ":" + mysql.getPort() + "/"
                               + mysql.getDatabase());
-      boneCPConfig.setUser(mysql.getUsername());
-      boneCPConfig.setPassword(mysql.getPassword());
+      hikariCPConfig.setUsername(mysql.getUsername());
+      hikariCPConfig.setPassword(mysql.getPassword());
     } else {
       Class.forName("org.sqlite.JDBC");
-      boneCPConfig.setJdbcUrl("jdbc:sqlite:" + new File(config.getFile()).getAbsolutePath());
+      hikariCPConfig.setJdbcUrl("jdbc:sqlite:" + new File(config.getFile()).getAbsolutePath());
     }
-    CDataSource dataSource = new CDataSource(new BoneCP(boneCPConfig));
+    CDataSource dataSource = new CDataSource(new HikariDataSource(hikariCPConfig));
     Thread.currentThread().setContextClassLoader(previousClassLoader);
     return new SpringJDBCAgent(config, dataSource);
   }

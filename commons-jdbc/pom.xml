@@ -12,7 +12,7 @@
     <artifactId>commons-jdbc</artifactId>
 
     <properties>
-        <bonecp.version>0.8.0-rc3</bonecp.version>
+        <hikaricp.version>2.7.4</hikaricp.version>
         <spring-jdbc.version>3.2.4.RELEASE</spring-jdbc.version>
         <sqlite-jdbc.version>3.7.2</sqlite-jdbc.version>
         <mysql-connector-java.version>5.1.32</mysql-connector-java.version>
@@ -25,9 +25,9 @@
             <version>${commons-version}</version>
         </dependency>
         <dependency>
-            <groupId>com.jolbox</groupId>
-            <artifactId>bonecp</artifactId>
-            <version>${bonecp.version}</version>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${hikaricp.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -62,7 +62,7 @@
                             <artifactSet>
                                 <includes>
                                     <include>com.supaham.commons:commons-core</include>
-                                    <include>com.jolbox:bonecp</include>
+                                    <include>com.zaxxer:HikariCP</include>
                                     <include>org.springframework:spring-jdbc</include>
                                 </includes>
                             </artifactSet>

@@ -1,6 +1,6 @@
 package com.supaham.commons.jdbc;
 
-import com.jolbox.bonecp.BoneCP;
+import com.zaxxer.hikari.HikariDataSource;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -11,24 +11,24 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 /**
- * Represents a {@link DataSource} implementation for {@link BoneCP}.
+ * Represents a {@link DataSource} implementation for {@link HikariDataSource}.
  */
 public class CDataSource implements DataSource {
     
-    private final BoneCP boneCP;
+    private final HikariDataSource hikariCP;
     
-    public CDataSource(BoneCP boneCP) {
-        this.boneCP = boneCP;
+    public CDataSource(HikariDataSource hikariCP) {
+        this.hikariCP = hikariCP;
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        return boneCP.getConnection();
+        return hikariCP.getConnection();
     }
 
     @Override
     public Connection getConnection(String s, String s2) throws SQLException {
-        return boneCP.getConnection();
+        return hikariCP.getConnection();
     }
 
     @Override
