@@ -263,7 +263,7 @@ public final class BlockUtils {
     
     block.setData((byte) 1, false);
     if (playSound) {
-      new SingleSound("random.click", 0.3f, 0.5f)
+      new SingleSound("block.stone_pressureplate.click_on", 0.3f, 0.6f)
           .play(block.getWorld(), block.getLocation().add(0.5, 0.1, 0.5));
     }
     new TickerTask(plugin, pressedTicks) {
@@ -272,7 +272,7 @@ public final class BlockUtils {
                                  Material.WOOD_PLATE, Material.STONE_PLATE)) {
           block.setData((byte) 0, false);
           if (playSound) {
-            new SingleSound("random.click", 0.3f, 0.5f)
+            new SingleSound("block.stone_pressureplate.click_off", 0.3f, 0.5f)
                 .play(block.getWorld(), block.getLocation().add(0.5, 0.1, 0.5));
           }
         }
