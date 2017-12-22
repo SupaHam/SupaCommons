@@ -129,6 +129,7 @@ public class SpringJDBCAgent implements JDBCAgent {
     this.dataSource = dataSource;
     Connection connection = this.dataSource.getConnection();
     checkNotNull(connection, "Failed to create connection, maybe the credentials are wrong?");
+    connection.close();
   }
 
   /**
