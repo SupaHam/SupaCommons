@@ -23,7 +23,7 @@ public class CommonCommandsManager extends BukkitCommandManager {
     setDefaultExceptionHandler(new CommonExceptionHandler(plugin));
   }
 
-  public CommonPlugin getPlugin() {
+  public CommonPlugin getCommonPlugin() {
     return plugin;
   }
 }
