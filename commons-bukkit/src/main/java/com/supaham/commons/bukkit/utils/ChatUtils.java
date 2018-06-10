@@ -135,6 +135,17 @@ public class ChatUtils {
     return Enums.findByValue(ChatColor.class, textDecoration.name());
   }
 
+  public static TextColor bukkitToTextColor(ChatColor chatColor) {
+    return Enums.findByValue(TextColor.class, chatColor.name());
+  }
+
+  public static TextDecoration bukkitToTextDecoration(ChatColor chatColor) {
+    if (chatColor == ChatColor.MAGIC) {
+      return TextDecoration.OBFUSCATED;
+    }
+    return Enums.findByValue(TextDecoration.class, chatColor.name());
+  }
+
   public static void sendComponent(CommandSender sender, Component component) {
     if (sender instanceof Player) {
       String json = ComponentSerializers.JSON.serialize(component);
