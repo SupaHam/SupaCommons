@@ -70,7 +70,9 @@ public class Element {
     boolean stateSpecified = stateSplit.length > 1;
     TextDecoration.State state = stateSpecified ? Enums.findFuzzyByValue(TextDecoration.State.class, stateSplit[1])
                                                 : TextDecoration.State.TRUE;
-    Preconditions.checkArgument(state != null, "Invalid state: '" + stateSplit[1] + "'");
+    if (stateSpecified && state == null) {
+      throw new IllegalArgumentException("Invalid state: '" + stateSplit[1] + "'");
+    }
     boolean found = false;
     for (TextDecoration decoration : TextDecoration.values()) {
       if (styleName.equals(decoration.name())) {
