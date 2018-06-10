@@ -157,32 +157,34 @@ public class Element {
   public <C extends BuildableComponent, B extends BuildableComponent.Builder<C, B>> void loop(
       BuildableComponent.Builder<C, B> builder) {
     boolean elementAppended = false; // Maintains order of string content when attempting to optimise.
-    for (Object o : mixedContent) {
-      if (o instanceof String) {
-        if (builder instanceof TextComponent.Builder) {
-          TextComponent component = ((TextComponent.Builder) builder).build();
-          if (!elementAppended && StringUtils.stripToNull(component.content()) == null) {
-            ((TextComponent.Builder) builder).content(o.toString());
+    if (mixedContent != null) {
+      for (Object o : mixedContent) {
+        if (o instanceof String) {
+          if (builder instanceof TextComponent.Builder) {
+            TextComponent component = ((TextComponent.Builder) builder).build();
+            if (!elementAppended && StringUtils.stripToNull(component.content()) == null) {
+              ((TextComponent.Builder) builder).content(o.toString());
+            } else {
+              builder.append(TextComponent.of(o.toString()));
+            }
           } else {
             builder.append(TextComponent.of(o.toString()));
           }
+        } else if (o instanceof Element) {
+          Element el = (Element) o;
+          elementAppended = true;
+          BuildableComponent.Builder elBuilder;
+          if (el instanceof Tags.ComponentCreator) {
+            elBuilder = ((Tags.ComponentCreator) el).createBuilder();
+          } else {
+            elBuilder = builder;
+          }
+          el.apply(elBuilder);
+          el.loop(elBuilder);
+          builder.append(elBuilder.build());
         } else {
-          builder.append(TextComponent.of(o.toString()));
+          throw new IllegalStateException("Unknown mixed content of type " + o.getClass().getCanonicalName());
         }
-      } else if (o instanceof Element) {
-        Element el = (Element) o;
-        elementAppended = true;
-        BuildableComponent.Builder elBuilder;
-        if (el instanceof Tags.ComponentCreator) {
-          elBuilder = ((Tags.ComponentCreator) el).createBuilder();
-        } else {
-          elBuilder = builder;
-        }
-        el.apply(elBuilder);
-        el.loop(elBuilder);
-        builder.append(elBuilder.build());
-      } else {
-        throw new IllegalStateException("Unknown mixed content of type " + o.getClass().getCanonicalName());
       }
     }
   }
