@@ -102,11 +102,15 @@ public class ChatUtils {
 
   public static String getReadableComponent(Component component) {
     StringBuilder sb = new StringBuilder();
+    getReadableComponent(sb, component);
+    return sb.toString();
+  }
+
+  public static void getReadableComponent(StringBuilder sb, Component component) {
     getReadableComponentSingle(sb, component);
     for (Component child : component.children()) {
-      getReadableComponentSingle(sb, child);
+      getReadableComponent(sb, child);
     }
-    return sb.toString();
   }
 
   public static void getReadableComponentSingle(StringBuilder sb, Component component) {
