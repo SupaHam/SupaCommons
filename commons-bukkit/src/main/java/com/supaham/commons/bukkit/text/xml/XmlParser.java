@@ -23,9 +23,8 @@ public class XmlParser implements TextParser {
       tag.apply(builder);
       tag.loop(builder);
       return builder.build();
-    } catch (JAXBException e) {
-      e.printStackTrace();
-      return null;
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to parse: " + source, e);
     }
   }
 }
