@@ -84,7 +84,7 @@ public abstract class RayTraceIterator {
 
   private MovingObjectPosition rayTrace(Vector start, Vector end) {
     return RayTracing.rayTraceBlocks(data.getWorld(), start, end,
-                                     data.isStopOnLiquid(),
+                                     data.getFluidCollision(),
                                      data.isIgnoreBoundingBox(),
                                      data.isReturnLastCollidableBlock());
   }

@@ -31,7 +31,7 @@ public class RayTracing {
     PackageType nms = PackageType.MINECRAFT_SERVER;
     Class<?> worldClazz = nms.getClassSafe("World");
     rayTraceMethod = ReflectionUtils.getMethod(worldClazz, "rayTrace", nms.getClassSafe("Vec3D"),
-                                               nms.getClassSafe("Vec3D"), boolean.class,
+                                               nms.getClassSafe("Vec3D"), nms.getClassSafe("FluidCollisionOption"),
                                                boolean.class, boolean.class);
   }
 
@@ -48,13 +48,13 @@ public class RayTracing {
   public static MovingObjectPosition rayTraceBlocks(@Nonnull RayTraceData data) {
     Preconditions.checkNotNull(data, "data cannot be null.");
     return rayTraceBlocks(data.getWorld(), data.getStart().toVector(), data.getEnd().toVector(),
-                          data.isStopOnLiquid(), data.isIgnoreBoundingBox(),
+                          data.getFluidCollision(), data.isIgnoreBoundingBox(),
                           data.isReturnLastCollidableBlock());
   }
 
   /**
    * Returns a {@link MovingObjectPosition} as a result of a ray trace from two {@link Vector}s.
-   * This is equivalent to calling {@link #rayTraceBlocks(World, Vector, Vector, boolean, boolean,
+   * This is equivalent to calling {@link #rayTraceBlocks(World, Vector, Vector, FluidCollisionOption, boolean,
    * boolean)} with the booleans as {@code false, false, false}. Meaning the ray trace won't stop
    * when it hits liquids, it won't ignore non solid blocks' bounding boxes, and it won't return
    * the last collidable block.
@@ -67,25 +67,25 @@ public class RayTracing {
    */
   @Nullable
   public static MovingObjectPosition rayTraceBlocks(World world, Vector start, Vector end) {
-    return rayTraceBlocks(world, start, end, false, false, false);
+    return rayTraceBlocks(world, start, end, FluidCollisionOption.NEVER, false, false);
   }
 
   /**
    * Returns a {@link MovingObjectPosition} as a result of a ray trace from two {@link Vector}s.
-   * This is equivalent to calling {@link #rayTraceBlocks(World, Vector, Vector, boolean, boolean,
+   * This is equivalent to calling {@link #rayTraceBlocks(World, Vector, Vector, FluidCollisionOption, boolean,
    * boolean)} with the last two booleans as {@code false, false}. Meaning the ray trace won't
    * ignore non solid blocks' bounding boxes, and it won't return the last collidable block.
    *
    * @param world world to perform ray trace in
    * @param start starting point of ray trace
    * @param end end point of ray trace
-   * @param stopOnLiquid whether to stop on liquid
+   * @param fluidCollision fluidCollision
    *
    * @return {@link MovingObjectPosition}, nullable
    */
   public static MovingObjectPosition rayTraceBlocks(World world, Vector start, Vector end,
-                                                    boolean stopOnLiquid) {
-    return rayTraceBlocks(world, start, end, stopOnLiquid, false, false);
+                                                    FluidCollisionOption fluidCollision) {
+    return rayTraceBlocks(world, start, end, fluidCollision, false, false);
   }
 
   /**
@@ -97,7 +97,7 @@ public class RayTracing {
    * @param world world to perform ray trace in
    * @param start starting point of ray trace
    * @param end end point of ray trace
-   * @param stopOnLiquid whether to stop on liquid
+   * @param fluidCollision
    * @param ignoreBoundingBox whether to ignore non solid blocks' bounding box
    * @param returnLastCollidableBlock whether to return the last collidable block, returns non null
    *
@@ -106,17 +106,28 @@ public class RayTracing {
   public static MovingObjectPosition rayTraceBlocks(World world,
                                                     Vector start,
                                                     Vector end,
-                                                    boolean stopOnLiquid,
+                                                    FluidCollisionOption fluidCollision,
                                                     boolean ignoreBoundingBox,
                                                     boolean returnLastCollidableBlock) {
     try {
       Object result = rayTraceMethod.invoke(ReflectionUtils.getHandle(world), toNMSVec3D(start),
-                                            toNMSVec3D(end), stopOnLiquid, ignoreBoundingBox,
+                                            toNMSVec3D(end), fluidCollision.nmsEnum, ignoreBoundingBox,
                                             returnLastCollidableBlock);
       return result == null ? null : MovingObjectPosition.from(result);
     } catch (IllegalAccessException | InvocationTargetException e) {
       e.printStackTrace();
       return null;
+    }
+  }
+
+  public enum FluidCollisionOption {
+    NEVER, SOURCE_ONLY, ALWAYS;
+    private Object nmsEnum;
+
+    FluidCollisionOption() {
+      Class<? extends Enum> clazz = (Class<? extends Enum>) PackageType.MINECRAFT_SERVER
+          .getClassSafe("FluidCollisionOption");
+      nmsEnum = Enum.valueOf(clazz, name());
     }
   }
 }

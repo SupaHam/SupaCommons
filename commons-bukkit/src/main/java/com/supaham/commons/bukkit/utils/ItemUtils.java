@@ -2,6 +2,7 @@ package com.supaham.commons.bukkit.utils;
 
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,9 +17,8 @@ import javax.annotation.Nullable;
 public class ItemUtils {
 
   /**
-   * Gets an {@link Enchantment} by {@link String}. This method check if the given string is
-   * numeric, if it is, {@link Enchantment#getById(int)} is called with the string parsed as
-   * integer. Otherwise, {@link Enchantment#getByName(String)} is called.
+   * Gets an {@link Enchantment} by {@link String}. This method check {@link Enchantment#getByKey(NamespacedKey)} if
+   * null it tries {@link Enchantment#getByName(String)}.
    *
    * @param string string to get enchantment by
    *
@@ -26,8 +26,11 @@ public class ItemUtils {
    */
   @Nullable
   public static Enchantment getEnchantment(String string) {
-    return StringUtils.isNumeric(string) ? Enchantment.getById(Integer.parseInt(string))
-                                         : Enchantment.getByName(string);
+    Enchantment enchant = Enchantment.getByKey(NamespacedKey.minecraft(string.toLowerCase()));
+    if (enchant == null) {
+      enchant = Enchantment.getByName(string); 
+    }
+    return enchant;
   }
 
   /**

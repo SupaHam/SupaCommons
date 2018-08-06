@@ -27,7 +27,7 @@ public class EnchantmentUtils {
     public static final class EnchantGlow extends EnchantmentWrapper {
 
         public EnchantGlow() {
-            super(120);
+            super("supa-commons-glow");
         }
 
         @Override public int getMaxLevel() {
@@ -48,6 +48,14 @@ public class EnchantmentUtils {
 
         @Override public String getName() {
             return "Glow";
+        }
+
+        @Override public boolean isTreasure() {
+            return false;
+        }
+
+        @Override public boolean isCursed() {
+            return false;
         }
 
         @Override public boolean conflictsWith(Enchantment other) {

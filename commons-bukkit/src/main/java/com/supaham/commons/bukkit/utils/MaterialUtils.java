@@ -4,13 +4,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Preconditions;
 
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.TreeSpecies;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
+import org.bukkit.block.data.type.Bed;
+import org.bukkit.block.data.type.CommandBlock;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.Fence;
+import org.bukkit.block.data.type.Gate;
+import org.bukkit.block.data.type.Leaves;
+import org.bukkit.block.data.type.Switch;
+import org.bukkit.block.data.type.TrapDoor;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -25,52 +33,118 @@ import javax.annotation.Nullable;
 public final class MaterialUtils {
 
   private static final Set<Material> interactableBlocks = EnumSet.noneOf(Material.class);
+  private static final Set<Class<?>> interactableBlockClasses = new HashSet<>();
+  public static final Map<DyeColor, Material> dyeToWool = new EnumMap<>(DyeColor.class);
+  public static final Map<DyeColor, Material> dyeToBanner = new EnumMap<>(DyeColor.class);
+  public static final Map<DyeColor, Material> dyeToItem = new EnumMap<>(DyeColor.class);
+  public static final Map<Material, Material> itemWallableMapping = new EnumMap<>(Material.class);
 
   static {
-    interactableBlocks.clear();
     interactableBlocks.add(Material.DISPENSER);
     interactableBlocks.add(Material.NOTE_BLOCK);
-    interactableBlocks.add(Material.BED_BLOCK);
     interactableBlocks.add(Material.TNT);
     interactableBlocks.add(Material.CHEST);
-    interactableBlocks.add(Material.WORKBENCH);
-    interactableBlocks.add(Material.CROPS);
-    interactableBlocks.add(Material.SOIL);
+    interactableBlocks.add(Material.CRAFTING_TABLE);
+    interactableBlocks.add(Material.BEETROOTS);
+    interactableBlocks.add(Material.CARROTS);
+    interactableBlocks.add(Material.FARMLAND);
     interactableBlocks.add(Material.FURNACE);
-    interactableBlocks.add(Material.BURNING_FURNACE);
-    interactableBlocks.add(Material.WOODEN_DOOR);
-    interactableBlocks.add(Material.LEVER);
-    interactableBlocks.add(Material.IRON_DOOR_BLOCK);
     interactableBlocks.add(Material.STONE_BUTTON);
     interactableBlocks.add(Material.JUKEBOX);
-    interactableBlocks.add(Material.FENCE);
     interactableBlocks.add(Material.SOUL_SAND);
-    interactableBlocks.add(Material.CAKE_BLOCK);
-    interactableBlocks.add(Material.DIODE_BLOCK_OFF);
-    interactableBlocks.add(Material.DIODE_BLOCK_ON);
-    interactableBlocks.add(Material.TRAP_DOOR);
-    interactableBlocks.add(Material.IRON_FENCE);
-    interactableBlocks.add(Material.FENCE_GATE);
-    interactableBlocks.add(Material.NETHER_FENCE);
-    interactableBlocks.add(Material.ENCHANTMENT_TABLE);
+    interactableBlocks.add(Material.CAKE);
+    interactableBlocks.add(Material.REPEATER);
+    interactableBlocks.add(Material.ENCHANTING_TABLE);
     interactableBlocks.add(Material.BREWING_STAND);
     interactableBlocks.add(Material.CAULDRON);
-    interactableBlocks.add(Material.ENDER_PORTAL_FRAME);
+    interactableBlocks.add(Material.END_PORTAL_FRAME);
     interactableBlocks.add(Material.DRAGON_EGG);
-    // TODO possibly interactable? interactableBlocks.add(Material.COCOA);
     interactableBlocks.add(Material.ENDER_CHEST);
-    interactableBlocks.add(Material.COMMAND);
     interactableBlocks.add(Material.BEACON);
     interactableBlocks.add(Material.FLOWER_POT);
     interactableBlocks.add(Material.CARROT);
     interactableBlocks.add(Material.POTATO);
-    interactableBlocks.add(Material.WOOD_BUTTON);
     interactableBlocks.add(Material.ANVIL);
     interactableBlocks.add(Material.TRAPPED_CHEST);
-    interactableBlocks.add(Material.REDSTONE_COMPARATOR_OFF);
-    interactableBlocks.add(Material.REDSTONE_COMPARATOR_ON);
+    interactableBlocks.add(Material.COMPARATOR);
     interactableBlocks.add(Material.HOPPER);
     interactableBlocks.add(Material.DROPPER);
+
+    interactableBlockClasses.add(Bed.class);
+    interactableBlockClasses.add(CommandBlock.class);
+    interactableBlockClasses.add(Door.class);
+    interactableBlockClasses.add(Fence.class);
+    interactableBlockClasses.add(Gate.class);
+    interactableBlockClasses.add(Switch.class);
+    interactableBlockClasses.add(TrapDoor.class);
+
+    dyeToWool.put(DyeColor.WHITE, Material.WHITE_WOOL);
+    dyeToWool.put(DyeColor.ORANGE, Material.ORANGE_WOOL);
+    dyeToWool.put(DyeColor.MAGENTA, Material.MAGENTA_WOOL);
+    dyeToWool.put(DyeColor.LIGHT_BLUE, Material.LIGHT_BLUE_WOOL);
+    dyeToWool.put(DyeColor.YELLOW, Material.YELLOW_WOOL);
+    dyeToWool.put(DyeColor.LIME, Material.LIME_WOOL);
+    dyeToWool.put(DyeColor.PINK, Material.PINK_WOOL);
+    dyeToWool.put(DyeColor.GRAY, Material.GRAY_WOOL);
+    dyeToWool.put(DyeColor.LIGHT_GRAY, Material.LIGHT_GRAY_WOOL);
+    dyeToWool.put(DyeColor.CYAN, Material.CYAN_WOOL);
+    dyeToWool.put(DyeColor.PURPLE, Material.PURPLE_WOOL);
+    dyeToWool.put(DyeColor.BLUE, Material.BLUE_WOOL);
+    dyeToWool.put(DyeColor.BROWN, Material.BROWN_WOOL);
+    dyeToWool.put(DyeColor.GREEN, Material.GREEN_WOOL);
+    dyeToWool.put(DyeColor.RED, Material.RED_WOOL);
+    dyeToWool.put(DyeColor.BLACK, Material.BLACK_WOOL);
+
+    dyeToBanner.put(DyeColor.WHITE, Material.WHITE_BANNER);
+    dyeToBanner.put(DyeColor.ORANGE, Material.ORANGE_BANNER);
+    dyeToBanner.put(DyeColor.MAGENTA, Material.MAGENTA_BANNER);
+    dyeToBanner.put(DyeColor.LIGHT_BLUE, Material.LIGHT_BLUE_BANNER);
+    dyeToBanner.put(DyeColor.YELLOW, Material.YELLOW_BANNER);
+    dyeToBanner.put(DyeColor.LIME, Material.LIME_BANNER);
+    dyeToBanner.put(DyeColor.PINK, Material.PINK_BANNER);
+    dyeToBanner.put(DyeColor.GRAY, Material.GRAY_BANNER);
+    dyeToBanner.put(DyeColor.LIGHT_GRAY, Material.LIGHT_GRAY_BANNER);
+    dyeToBanner.put(DyeColor.CYAN, Material.CYAN_BANNER);
+    dyeToBanner.put(DyeColor.PURPLE, Material.PURPLE_BANNER);
+    dyeToBanner.put(DyeColor.BLUE, Material.BLUE_BANNER);
+    dyeToBanner.put(DyeColor.BROWN, Material.BROWN_BANNER);
+    dyeToBanner.put(DyeColor.GREEN, Material.GREEN_BANNER);
+    dyeToBanner.put(DyeColor.RED, Material.RED_BANNER);
+    dyeToBanner.put(DyeColor.BLACK, Material.BLACK_BANNER);
+
+    dyeToItem.put(DyeColor.WHITE, Material.BONE_MEAL);
+    dyeToItem.put(DyeColor.ORANGE, Material.ORANGE_DYE);
+    dyeToItem.put(DyeColor.MAGENTA, Material.MAGENTA_DYE);
+    dyeToItem.put(DyeColor.LIGHT_BLUE, Material.LIGHT_BLUE_DYE);
+    dyeToItem.put(DyeColor.YELLOW, Material.DANDELION_YELLOW);
+    dyeToItem.put(DyeColor.LIME, Material.LIME_DYE);
+    dyeToItem.put(DyeColor.PINK, Material.PINK_DYE);
+    dyeToItem.put(DyeColor.GRAY, Material.GRAY_DYE);
+    dyeToItem.put(DyeColor.LIGHT_GRAY, Material.LIGHT_GRAY_DYE);
+    dyeToItem.put(DyeColor.CYAN, Material.CYAN_DYE);
+    dyeToItem.put(DyeColor.PURPLE, Material.PURPLE_DYE);
+    dyeToItem.put(DyeColor.BLUE, Material.LAPIS_LAZULI);
+    dyeToItem.put(DyeColor.BROWN, Material.COCOA_BEANS);
+    dyeToItem.put(DyeColor.GREEN, Material.CACTUS_GREEN);
+    dyeToItem.put(DyeColor.RED, Material.ROSE_RED);
+    dyeToItem.put(DyeColor.BLACK, Material.INK_SAC);
+
+    itemWallableMapping.put(Material.WHITE_BANNER, Material.WHITE_WALL_BANNER);
+    itemWallableMapping.put(Material.ORANGE_BANNER, Material.ORANGE_WALL_BANNER);
+    itemWallableMapping.put(Material.MAGENTA_BANNER, Material.MAGENTA_WALL_BANNER);
+    itemWallableMapping.put(Material.LIGHT_BLUE_BANNER, Material.LIGHT_BLUE_WALL_BANNER);
+    itemWallableMapping.put(Material.YELLOW_BANNER, Material.YELLOW_WALL_BANNER);
+    itemWallableMapping.put(Material.LIME_BANNER, Material.LIME_WALL_BANNER);
+    itemWallableMapping.put(Material.PINK_BANNER, Material.PINK_WALL_BANNER);
+    itemWallableMapping.put(Material.GRAY_BANNER, Material.GRAY_WALL_BANNER);
+    itemWallableMapping.put(Material.LIGHT_GRAY_BANNER, Material.LIGHT_GRAY_WALL_BANNER);
+    itemWallableMapping.put(Material.CYAN_BANNER, Material.CYAN_WALL_BANNER);
+    itemWallableMapping.put(Material.PURPLE_BANNER, Material.PURPLE_WALL_BANNER);
+    itemWallableMapping.put(Material.BLUE_BANNER, Material.BLUE_WALL_BANNER);
+    itemWallableMapping.put(Material.BROWN_BANNER, Material.BROWN_WALL_BANNER);
+    itemWallableMapping.put(Material.GREEN_BANNER, Material.GREEN_WALL_BANNER);
+    itemWallableMapping.put(Material.RED_BANNER, Material.RED_WALL_BANNER);
+    itemWallableMapping.put(Material.BLACK_BANNER, Material.BLACK_WALL_BANNER);
   }
 
   /**
@@ -96,26 +170,22 @@ public final class MaterialUtils {
     switch (material) {
       case BEACON:
       case BREWING_STAND:
-      case BURNING_FURNACE:
       case CHEST:
       case DISPENSER:
-      case DIODE:
-      case DIODE_BLOCK_OFF:
-      case DIODE_BLOCK_ON:
+      case REPEATER:
       case DRAGON_EGG:
       case DROPPER:
-      case ENCHANTMENT_TABLE:
+      case ENCHANTING_TABLE:
       case ENDER_CHEST:
       case FURNACE:
       case HOPPER:
       case JUKEBOX:
-      case REDSTONE_COMPARATOR:
-      case REDSTONE_COMPARATOR_OFF:
-      case REDSTONE_COMPARATOR_ON:
+      case COMPARATOR:
       case TRAPPED_CHEST:
-      case WORKBENCH:
-      case STORAGE_MINECART:
-      case POWERED_MINECART:
+      case CRAFTING_TABLE:
+      case CHEST_MINECART:
+      case FURNACE_MINECART:
+      case HOPPER_MINECART:
         return true;
       default:
         return false;
@@ -130,75 +200,7 @@ public final class MaterialUtils {
    * @return whether the {@code material} is a sign
    */
   public static boolean isSign(Material material) {
-    return material == Material.SIGN
-           || material == Material.SIGN_POST
-           || material == Material.WALL_SIGN;
-  }
-
-  /**
-   * Checks whether a {@link Block} is the same as a {@link MaterialData}. If either the Block or
-   * the MaterialData have a data (damage/durability) value of -1, only the {@link Material} is
-   * tested.
-   *
-   * @param block block to check
-   * @param materialData {@link MaterialData} to test against
-   *
-   * @return whether the {@code block}'s data matches the {@code materialData}
-   */
-  public static boolean same(Block block, MaterialData materialData) {
-    return same(block.getType(), block.getData(), materialData);
-  }
-
-  /**
-   * Checks whether an {@link ItemStack} is the same as a {@link MaterialData}. If either the
-   * ItemStack or the MaterialData have a data (damage/durability) value of -1, only the {@link
-   * Material} is tested.
-   *
-   * @param item item to check
-   * @param materialData {@link MaterialData} to test against
-   *
-   * @return whether the {@code item}'s data matches the {@code materialData}
-   */
-  public static boolean same(ItemStack item, MaterialData materialData) {
-    return same(item.getData(), materialData);
-  }
-
-  /**
-   * Checks whether a {@link Material} and data value (byte) is the same as a {@link MaterialData}.
-   * This simply constructs a {@link MaterialData} out of the given data and calls {@link
-   * #same(MaterialData, MaterialData)}. If either the Block or the MaterialData have a data
-   * (damage/durability) value of -1, only the {@link Material} is tested.
-   *
-   * @param type type to check
-   * @param data data to check, set to -1 to ignore data checks
-   * @param materialData {@link MaterialData} to test against
-   *
-   * @return whether the {@code block}'s data matches the {@code materialData}
-   */
-  public static boolean same(Material type, byte data, MaterialData materialData) {
-    return same(new MaterialData(type, data), materialData);
-  }
-
-  /**
-   * Checks whether a {@link MaterialData} is the same as another {@link MaterialData}. If either
-   * of
-   * the MaterialDatas have a data (damage/durability) value of -1, only the {@link Material} is
-   * tested.
-   *
-   * @param data1 first {@link MaterialData} to test
-   * @param data2 first {@link MaterialData} to test
-   *
-   * @return whether the {@code block}'s data matches the {@code materialData}
-   */
-  public static boolean same(MaterialData data1, MaterialData data2) {
-    if (data1 == null) {
-      return data2 == null;
-    } else if (data2 == null) {
-      return false;
-    }
-    return data1.getItemType().equals(data2.getItemType())
-           && ((data1.getData() == -1 || data2.getData() == -1)
-               || data1.getData() == data2.getData());
+    return material == Material.SIGN || material == Material.WALL_SIGN;
   }
 
   /**
@@ -211,178 +213,15 @@ public final class MaterialUtils {
   public static boolean isGoldTool(@Nonnull Material material) {
     checkNotNull(material, "material cannot be null.");
     switch (material) {
-      case GOLD_AXE:
-      case GOLD_SPADE:
-      case GOLD_SWORD:
-      case GOLD_PICKAXE:
+      case GOLDEN_AXE:
+      case GOLDEN_SHOVEL:
+      case GOLDEN_SWORD:
+      case GOLDEN_PICKAXE:
+      case GOLDEN_HOE:
         return true;
       default:
         return false;
     }
-  }
-
-  /**
-   * Returns a {@link MaterialData} with the type as the dropped item of the given material data.
-   *
-   * @param materialData material data to convert to item. This is returned if the type is not an
-   * item
-   *
-   * @return material data
-   */
-  public static MaterialData toItem(@Nonnull MaterialData materialData) {
-    Material material = materialData.getItemType();
-    if (!material.isBlock()) {
-      return materialData;
-    }
-    byte data = 0;
-    byte mdata = materialData.getData();
-    switch (material) {
-      case STONE:
-        material = Material.COBBLESTONE;
-        break;
-      case GRASS:
-      case SOIL:
-      case MYCEL:
-        material = Material.DIRT;
-        break;
-      case GRAVEL:
-        material = Material.FLINT;
-        break;
-      case GOLD_ORE:
-        material = Material.GOLD_INGOT;
-        break;
-      case IRON_ORE:
-        material = Material.IRON_INGOT;
-        break;
-      case COAL_ORE:
-        material = Material.COAL;
-        break;
-      case LOG:
-      case LOG_2:
-        data = TreeSpecies.getByData((byte) (mdata & 0x3)).getData();
-        material = Material.WOOD;
-        break;
-      case LEAVES:
-      case LEAVES_2:
-        material = Material.SAPLING;
-        data = TreeSpecies.getByData((byte) (mdata & 0x3)).getData();
-        break;
-      case LAPIS_ORE:
-        material = Material.INK_SACK;
-        data = 4;
-        break;
-      case BED:
-        material = Material.BED;
-        break;
-      case PISTON_EXTENSION:
-      case PISTON_MOVING_PIECE:
-        material = Material.PISTON_BASE;
-        break;
-      case BOOKSHELF:
-        material = Material.BOOK;
-        break;
-      case REDSTONE_WIRE:
-      case REDSTONE_ORE:
-      case GLOWING_REDSTONE_ORE:
-        material = Material.REDSTONE;
-        break;
-      case DIAMOND_ORE:
-        material = Material.DIAMOND;
-        break;
-      case CROPS:
-        material = Material.SEEDS;
-        break;
-      case BURNING_FURNACE:
-        material = Material.FURNACE;
-        break;
-      case SIGN_POST:
-      case WALL_SIGN:
-        material = Material.SIGN;
-        break;
-      case WOODEN_DOOR:
-        material = Material.WOOD_DOOR;
-        break;
-      case REDSTONE_TORCH_ON:
-        material = Material.REDSTONE_TORCH_OFF;
-        break;
-      case CLAY:
-        material = Material.CLAY_BALL;
-        break;
-      case DIODE_BLOCK_ON:
-        material = Material.DIODE;
-        break;
-      case HUGE_MUSHROOM_1:
-        material = Material.RED_MUSHROOM;
-        break;
-      case HUGE_MUSHROOM_2:
-        material = Material.BROWN_MUSHROOM;
-        break;
-      case IRON_FENCE:
-        break;
-      case PUMPKIN_STEM:
-        material = Material.PUMPKIN_SEEDS;
-        break;
-      case MELON_STEM:
-        material = Material.MELON_SEEDS;
-        data = 0;
-        break;
-      case BREWING_STAND:
-        material = Material.BREWING_STAND_ITEM;
-        break;
-      case CAULDRON:
-        material = Material.CAULDRON_ITEM;
-        break;
-      case DRAGON_EGG:
-        break;
-      case REDSTONE_LAMP_ON:
-        material = Material.REDSTONE_LAMP_OFF;
-        break;
-      case WOOD_DOUBLE_STEP:
-        material = Material.WOOD_STEP;
-        break;
-      case COCOA:
-        material = Material.INK_SACK;
-        data = 3;
-        break;
-      case EMERALD_ORE:
-        material = Material.EMERALD;
-        break;
-      case TRIPWIRE_HOOK:
-        material = Material.EMERALD;
-        break;
-      case TRIPWIRE:
-        material = Material.STRING;
-        break;
-      case CARROT:
-        material = Material.CARROT_ITEM;
-        break;
-      case POTATO:
-        material = Material.POTATO_ITEM;
-        break;
-      case REDSTONE_COMPARATOR_ON:
-        material = Material.REDSTONE_COMPARATOR_OFF;
-        break;
-      case DAYLIGHT_DETECTOR_INVERTED:
-        material = Material.DAYLIGHT_DETECTOR;
-        break;
-      case QUARTZ_ORE:
-        material = Material.QUARTZ;
-        break;
-      case CARPET:
-      case DOUBLE_PLANT:
-        data = mdata;
-        break;
-
-      case STANDING_BANNER:
-      case WALL_BANNER:
-        material = Material.BANNER;
-        break;
-      case DOUBLE_STONE_SLAB2:
-        material = Material.STONE_SLAB2;
-        data = mdata;
-        break;
-    }
-    return new MaterialData(material, data);
   }
 
   /**
@@ -394,7 +233,7 @@ public final class MaterialUtils {
    * @return whether the given material is leaves
    */
   public static boolean isLeaves(@Nullable Material material) {
-    return material != null && (material == Material.LEAVES || material == Material.LEAVES_2);
+    return material != null && (material.data == Leaves.class);
   }
 
   /**

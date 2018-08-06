@@ -107,7 +107,7 @@ public class MNCSBannerGenerator {
   static {
     COLOR_CODES.put('a', DyeColor.BLACK);
     COLOR_CODES.put('i', DyeColor.GRAY);
-    COLOR_CODES.put('h', DyeColor.SILVER);
+    COLOR_CODES.put('h', DyeColor.LIGHT_GRAY);
     COLOR_CODES.put('p', DyeColor.WHITE);
     COLOR_CODES.put('j', DyeColor.PINK);
     COLOR_CODES.put('n', DyeColor.MAGENTA);
@@ -164,8 +164,8 @@ public class MNCSBannerGenerator {
   }
 
   /**
-   * Parses a MinersNeedCoolShoes Banner generator generated code into a Bukkit ItemStack of
-   * {@link Material#BANNER}. Code must have an even amount of characters, with the first of the
+   * Parses a MinersNeedCoolShoes Banner generator generated code into a Bukkit Banner ItemStack.
+   * Code must have an even amount of characters, with the first of the
    * pair being the color, and the second being the pattern. See {@link MNCSBannerGenerator} for
    * a table of those.
    *
@@ -176,7 +176,7 @@ public class MNCSBannerGenerator {
   public static ItemStack parseCode(@Nonnull String code) {
     StringUtils.checkNotNullOrEmpty(code, "code");
     Preconditions.checkArgument(code.length() % 2 == 0, "code must be even characters");
-    ItemBuilder builder = ItemBuilder.builder(Material.BANNER);
+    ItemBuilder builder = ItemBuilder.builder(Material.WHITE_BANNER);
     char[] chars = code.toCharArray();
     for (int i = 0; i < chars.length; i++) {
       DyeColor dyeColor = COLOR_CODES.get(chars[i]);

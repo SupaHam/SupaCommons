@@ -17,7 +17,7 @@ public class MaterialUtilsTest {
   public void isContainer() {
     assertTrue(MaterialUtils.isContainer(Material.CHEST));
     assertTrue(MaterialUtils.isContainer(Material.DISPENSER));
-    assertTrue(MaterialUtils.isContainer(Material.STORAGE_MINECART));
+    assertTrue(MaterialUtils.isContainer(Material.CHEST_MINECART));
   }
 
 
@@ -25,7 +25,6 @@ public class MaterialUtilsTest {
   public void isSign() {
     assertTrue(MaterialUtils.isSign(Material.SIGN));
     assertTrue(MaterialUtils.isSign(Material.WALL_SIGN));
-    assertTrue(MaterialUtils.isSign(Material.SIGN_POST));
     assertFalse(MaterialUtils.isSign(Material.DIRT));
   }
 }

@@ -28,6 +28,10 @@ public class MovingObjectPosition {
     return MakeFrom.from(object);
   }
 
+  public MovingObjectPosition(BlockFace direction, ImmutableVector position) {
+    this(Type.BLOCK, direction, ImmutableBlockVector.ZERO, position, null);
+  }
+  
   public MovingObjectPosition(Type type, BlockFace direction, ImmutableBlockVector blockPosition,
                               ImmutableVector position, Entity entity) {
     this.type = type;

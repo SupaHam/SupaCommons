@@ -15,7 +15,7 @@ public class RayTraceData {
   private final World world;
   private final ImmutableVector start;
   private final ImmutableVector end;
-  private final boolean stopOnLiquid;
+  private final RayTracing.FluidCollisionOption fluidCollision;
   private final boolean ignoreBoundingBox;
   private final boolean returnLastCollidableBlock;
 
@@ -23,12 +23,13 @@ public class RayTraceData {
     return new Builder();
   }
 
-  public RayTraceData(World world, ImmutableVector start, ImmutableVector end, boolean stopOnLiquid,
-                      boolean ignoreBoundingBox, boolean returnLastCollidableBlock) {
+  public RayTraceData(World world, ImmutableVector start, ImmutableVector end,
+                      RayTracing.FluidCollisionOption fluidCollision, boolean ignoreBoundingBox,
+                      boolean returnLastCollidableBlock) {
     this.world = world;
     this.start = start;
     this.end = end;
-    this.stopOnLiquid = stopOnLiquid;
+    this.fluidCollision = fluidCollision;
     this.ignoreBoundingBox = ignoreBoundingBox;
     this.returnLastCollidableBlock = returnLastCollidableBlock;
   }
@@ -49,8 +50,8 @@ public class RayTraceData {
     return end;
   }
 
-  public boolean isStopOnLiquid() {
-    return stopOnLiquid;
+  public RayTracing.FluidCollisionOption getFluidCollision() {
+    return fluidCollision;
   }
 
   public boolean isIgnoreBoundingBox() {
@@ -66,7 +67,7 @@ public class RayTraceData {
     private World world;
     private ImmutableVector start;
     private ImmutableVector end;
-    private boolean stopOnLiquid = false;
+    private RayTracing.FluidCollisionOption fluidCollision = RayTracing.FluidCollisionOption.NEVER;
     private boolean ignoreBoundingBox = false;
     private boolean returnLastCollidableBlock = false;
 
@@ -74,7 +75,7 @@ public class RayTraceData {
       Preconditions.checkNotNull(this.world, "world cannot be null.");
       Preconditions.checkNotNull(this.start, "start vector cannot be null.");
       Preconditions.checkNotNull(this.end, "end vector cannot be null.");
-      return new RayTraceData(this.world, this.start, this.end, this.stopOnLiquid,
+      return new RayTraceData(this.world, this.start, this.end, this.fluidCollision,
                               this.ignoreBoundingBox, this.returnLastCollidableBlock);
     }
 
@@ -93,13 +94,8 @@ public class RayTraceData {
       return this;
     }
 
-    public Builder stopOnLiquid() {
-      this.stopOnLiquid = true;
-      return this;
-    }
-
-    public Builder stopOnLiquid(boolean stopOnLiquid) {
-      this.stopOnLiquid = stopOnLiquid;
+    public Builder fluidCollision(RayTracing.FluidCollisionOption fluidCollision) {
+      this.fluidCollision = fluidCollision;
       return this;
     }
 

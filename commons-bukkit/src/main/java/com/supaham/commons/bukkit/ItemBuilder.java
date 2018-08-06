@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.items.ItemEnchantment;
 import com.supaham.commons.bukkit.utils.EnchantmentUtils;
+import com.supaham.commons.bukkit.utils.MaterialUtils;
 
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -251,11 +252,17 @@ public class ItemBuilder {
         this.itemStack.setDurability((short) 0);
         return this;
       }
-      if (this.itemStack.getType() == Material.INK_SACK) {
-        this.itemStack.setDurability((short) color.getDyeData());
+      Material type = this.itemStack.getType();
+      Material target;
+      if (type.name().endsWith("BANNER")) {
+        bannerColor(color);
+        return this;
+      } else if (type.name().endsWith("WOOL")) {
+        target = MaterialUtils.dyeToWool.get(color);
       } else {
-        this.itemStack.setDurability((short) color.getWoolData());
+        target = MaterialUtils.dyeToItem.get(color);
       }
+      this.itemStack.setType(target);
     } catch (Exception e) {
       if (!this.failSilently) {
         e.printStackTrace();
@@ -1148,7 +1155,11 @@ public class ItemBuilder {
   public ItemBuilder bannerColor(DyeColor color) {
     if (isBannerMeta()) {
       try {
-        ((BannerMeta) this.itemMeta).setBaseColor(color);
+        Material target = MaterialUtils.dyeToBanner.get(color);
+        if (this.itemStack.getType().name().contains("WALL")) {
+          target = MaterialUtils.itemWallableMapping.get(target);
+        }
+        type(target);
       } catch (Exception e) {
         if (!this.failSilently) {
           e.printStackTrace();
