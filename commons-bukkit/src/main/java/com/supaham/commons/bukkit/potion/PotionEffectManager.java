@@ -475,9 +475,12 @@ public class PotionEffectManager extends CommonModule {
     }
 
     private PotionEffect getPotionEffect() {
-      int duration = this.potion.isHidingDuration()
-                     ? Integer.MAX_VALUE
-                     : ((int) ((this.expires - System.currentTimeMillis()) / 50));
+      int duration;
+      if (this.potion.isHidingDuration() || this.expires < 0) {
+        duration = Integer.MAX_VALUE;
+      } else {
+        duration = ((int) ((this.expires - System.currentTimeMillis()) / 50));
+      }
       try {
         return new PotionEffect(type, duration, this.potion.getAmplifier(), this.potion.isAmbient(),
                                 this.potion.isSpawningParticles());
