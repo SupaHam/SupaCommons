@@ -150,7 +150,7 @@ public class ItemMetaSerializer {
       map.put("glow", true);
     }
 
-    if (im.spigot().isUnbreakable()) {
+    if (im.isUnbreakable()) {
       map.put("unbreakable", true);
     }
 

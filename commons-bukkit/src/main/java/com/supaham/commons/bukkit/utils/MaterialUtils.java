@@ -6,14 +6,7 @@ import com.google.common.base.Preconditions;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.block.data.type.Bed;
-import org.bukkit.block.data.type.CommandBlock;
-import org.bukkit.block.data.type.Door;
-import org.bukkit.block.data.type.Fence;
-import org.bukkit.block.data.type.Gate;
-import org.bukkit.block.data.type.Leaves;
-import org.bukkit.block.data.type.Switch;
-import org.bukkit.block.data.type.TrapDoor;
+import org.bukkit.block.data.type.*;
 
 import java.util.EnumMap;
 import java.util.EnumSet;
@@ -116,7 +109,7 @@ public final class MaterialUtils {
     dyeToItem.put(DyeColor.ORANGE, Material.ORANGE_DYE);
     dyeToItem.put(DyeColor.MAGENTA, Material.MAGENTA_DYE);
     dyeToItem.put(DyeColor.LIGHT_BLUE, Material.LIGHT_BLUE_DYE);
-    dyeToItem.put(DyeColor.YELLOW, Material.DANDELION_YELLOW);
+    dyeToItem.put(DyeColor.YELLOW, Material.YELLOW_DYE);
     dyeToItem.put(DyeColor.LIME, Material.LIME_DYE);
     dyeToItem.put(DyeColor.PINK, Material.PINK_DYE);
     dyeToItem.put(DyeColor.GRAY, Material.GRAY_DYE);
@@ -125,8 +118,8 @@ public final class MaterialUtils {
     dyeToItem.put(DyeColor.PURPLE, Material.PURPLE_DYE);
     dyeToItem.put(DyeColor.BLUE, Material.LAPIS_LAZULI);
     dyeToItem.put(DyeColor.BROWN, Material.COCOA_BEANS);
-    dyeToItem.put(DyeColor.GREEN, Material.CACTUS_GREEN);
-    dyeToItem.put(DyeColor.RED, Material.ROSE_RED);
+    dyeToItem.put(DyeColor.GREEN, Material.GREEN_DYE);
+    dyeToItem.put(DyeColor.RED, Material.RED_DYE);
     dyeToItem.put(DyeColor.BLACK, Material.INK_SAC);
 
     itemWallableMapping.put(Material.WHITE_BANNER, Material.WHITE_WALL_BANNER);
@@ -200,7 +193,7 @@ public final class MaterialUtils {
    * @return whether the {@code material} is a sign
    */
   public static boolean isSign(Material material) {
-    return material == Material.SIGN || material == Material.WALL_SIGN;
+    return material.data.equals(Sign.class) || material.data.equals(WallSign.class);
   }
 
   /**

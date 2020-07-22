@@ -23,8 +23,8 @@ public class MaterialUtilsTest {
 
   @Test
   public void isSign() {
-    assertTrue(MaterialUtils.isSign(Material.SIGN));
-    assertTrue(MaterialUtils.isSign(Material.WALL_SIGN));
+    assertTrue(MaterialUtils.isSign(Material.ACACIA_SIGN));
+    assertTrue(MaterialUtils.isSign(Material.ACACIA_WALL_SIGN));
     assertFalse(MaterialUtils.isSign(Material.DIRT));
   }
 }

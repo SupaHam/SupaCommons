@@ -113,6 +113,48 @@ public class VectorUtils {
                .getBlockY()) &&
            (o.getBlockZ() == o2.getBlockZ());
   }
+
+  public static Vector getIntermediateWithXValue(Vector origin, Vector vec, double x) {
+    double d1 = vec.getX() - origin.getX();
+    double d2 = vec.getY() - origin.getY();
+    double d3 = vec.getZ() - origin.getZ();
+
+    if (d1 * d1 < 1.0000000116860974E-7D) {
+      return null;
+    } else {
+      double d4 = (x - origin.getX()) / d1;
+      return d4 >= 0.0D && d4 <= 1.0D ? new Vector(origin.getX() + d1 * d4, origin.getY() + d2 * d4,
+                                                   origin.getZ() + d3 * d4) : null;
+    }
+  }
+
+  public static Vector getIntermediateWithYValue(Vector origin, Vector vec, double y) {
+    double d1 = vec.getX() - origin.getX();
+    double d2 = vec.getY() - origin.getY();
+    double d3 = vec.getZ() - origin.getZ();
+
+    if (d2 * d2 < 1.0000000116860974E-7D) {
+      return null;
+    } else {
+      double d4 = (y - origin.getY()) / d2;
+      return d4 >= 0.0D && d4 <= 1.0D ? new Vector(origin.getX() + d1 * d4, origin.getY() + d2 * d4,
+                                                   origin.getZ() + d3 * d4) : null;
+    }
+  }
+
+  public static Vector getIntermediateWithZValue(Vector origin, Vector vec, double z) {
+    double d1 = vec.getX() - origin.getX();
+    double d2 = vec.getY() - origin.getY();
+    double d3 = vec.getZ() - origin.getZ();
+
+    if (d3 * d3 < 1.0000000116860974E-7D) {
+      return null;
+    } else {
+      double d4 = (z - origin.getZ()) / d3;
+      return d4 >= 0.0D && d4 <= 1.0D ? new Vector(origin.getX() + d1 * d4, origin.getY() + d2 * d4,
+                                                   origin.getZ() + d3 * d4) : null;
+    }
+  }
   
   /* ================================
    * >> Relative Vectors
@@ -156,6 +198,7 @@ public class VectorUtils {
     double z = parseDouble(StringUtils.defaultIfEmpty(split[2].substring(zRel ? 1 : 0), "0"));
     return new RelativeVector(x, y, z, xRel, yRel, zRel);
   }
+  
 
   /**
    * Serializes a {@link RelativeVector} in the form of '~x,~y,~z'. The x, y, and z

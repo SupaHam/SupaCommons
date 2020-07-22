@@ -3,6 +3,7 @@ package com.supaham.commons.bukkit.title;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.NMSVersion;
+import com.supaham.commons.bukkit.chat.ChatMessageType;
 import com.supaham.commons.bukkit.utils.ChatUtils;
 import com.supaham.commons.bukkit.utils.ReflectionUtils;
 
@@ -12,9 +13,12 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import static com.supaham.commons.bukkit.chat.ChatMessageType.chatMessageTypeClass;
 
 /**
  * Title messaging system completely based on packets through static methods provided by this
@@ -38,19 +42,12 @@ public class Title {
   private static Class<?> chatComponentClass = ReflectionUtils.getNMSClass("IChatBaseComponent");
   private static Constructor ctor1, ctor3;
 
-  private static Class<? extends Enum> chatMessageTypeClass;
 
   static {
     try {
       ctor1 = packetClass.getDeclaredConstructor(packetActionClass, chatComponentClass);
       ctor3 = packetClass.getDeclaredConstructor(packetActionClass, chatComponentClass,
                                                  int.class, int.class, int.class);
-
-      // 1.12
-      if (NMSVersion.CURRENT.isHigherThanOrEqualTo(NMSVersion.V1_12_R1)) {
-        chatMessageTypeClass = (Class<? extends Enum>) ReflectionUtils.getNMSClass("ChatMessageType");
-      }
-
     } catch (NoSuchMethodException e) {
       e.printStackTrace();
     }
@@ -154,15 +151,7 @@ public class Title {
 
   private static void sendActionBarMessage(Player player, Object nmsObject)
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-    Object packet;
-    if (NMSVersion.CURRENT.isLowerThanOrEqualTo(NMSVersion.V1_11_R1)) {
-      Constructor<?> ctor = chatPacket.getDeclaredConstructor(chatComponentClass, byte.class);
-      packet = ctor.newInstance(nmsObject, (byte) 2);
-    } else {
-      Constructor<?> ctor = chatPacket.getDeclaredConstructor(chatComponentClass, chatMessageTypeClass);
-      packet = ctor.newInstance(nmsObject, ChatMessageType.GAME_INFO.nmsMessageType);
-    }
-    ReflectionUtils.sendPacket(player, packet);
+    ChatMessageType.sendMessage(player, ChatMessageType.GAME_INFO, nmsObject, new UUID(0, 0));
   }
 
   private enum Action {
@@ -172,20 +161,6 @@ public class Title {
 
     Action() {
       nmsAction = Preconditions.checkNotNull(Enum.valueOf(packetActionClass, name()));
-    }
-  }
-
-  private enum ChatMessageType {
-    CHAT, SYSTEM, GAME_INFO;
-
-    private final Object nmsMessageType;
-
-    ChatMessageType() {
-      nmsMessageType = Preconditions.checkNotNull(Enum.valueOf(chatMessageTypeClass, name()));
-    }
-    
-    public byte getId() {
-      return (byte) ordinal();
     }
   }
 

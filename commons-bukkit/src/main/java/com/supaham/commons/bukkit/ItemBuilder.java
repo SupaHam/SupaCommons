@@ -610,7 +610,7 @@ public class ItemBuilder {
    */
   public ItemBuilder unbreakable(boolean unbreakable) {
     try {
-      this.itemMeta.spigot().setUnbreakable(unbreakable);
+      this.itemMeta.setUnbreakable(unbreakable);
     } catch (Exception e) {
       if (!this.failSilently) {
         e.printStackTrace();

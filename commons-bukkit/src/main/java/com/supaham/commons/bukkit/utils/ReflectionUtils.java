@@ -3,6 +3,7 @@ package com.supaham.commons.bukkit.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.Constructor;
@@ -48,6 +49,9 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     fields.put("BaseBlockPositionx", getField(clazz, "a"));
     fields.put("BaseBlockPositiony", getField(clazz, "b"));
     fields.put("BaseBlockPositionz", getField(clazz, "c"));
+
+    clazz = obc.getClassSafe("inventory.CraftInventoryCustom");
+    classes.put("CraftInventoryCustom", clazz);
   }
 
   public static void sendPacket(Player player, Object object) {
@@ -107,6 +111,20 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
       e.printStackTrace();
       return null;
     }
+  }
+  
+  public static String getInventoryTitle(Inventory inventory) {
+    try {
+      Class clazzCraftInventoryCustom = classes.get("CraftInventoryCustom");
+      if (inventory.getClass().isAssignableFrom(clazzCraftInventoryCustom)) {
+        Object iinventory = getField(inventory.getClass(), "inventory").get(inventory);
+        Object title = getField(iinventory.getClass(), "title").get(iinventory);
+        return title.toString();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   public static String getServerVersion() {

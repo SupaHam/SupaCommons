@@ -3,6 +3,7 @@ package com.supaham.commons.bukkit.utils;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.Enums;
+import com.supaham.commons.bukkit.chat.ChatMessageType;
 import com.supaham.commons.bukkit.text.TextParsers;
 import com.supaham.commons.bukkit.utils.ReflectionUtils.PackageType;
 
@@ -25,6 +26,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
@@ -37,13 +39,15 @@ public class ChatUtils {
       .getClassSafe("IChatBaseComponent");
   protected static Class<?> nmsPacketPlayOutChat = PackageType.MINECRAFT_SERVER
       .getClassSafe("PacketPlayOutChat");
+  protected static Class<?> nmsChatMessageType = PackageType.MINECRAFT_SERVER
+          .getClassSafe("ChatMessageType");
   protected static Class<?> nmsChatSerializer;
   private static Constructor nmsPacketPlayOutChatCtor;
   private static Method nmsChatSerializerSerialize;
 
   static {
     try {
-      nmsPacketPlayOutChatCtor = nmsPacketPlayOutChat.getConstructor(nmsIChatBaseComponent);
+      nmsPacketPlayOutChatCtor = nmsPacketPlayOutChat.getConstructor(nmsIChatBaseComponent, nmsChatMessageType, UUID.class);
 
       if (ReflectionUtils.isServer18OrHigher()) {
         nmsChatSerializer = PackageType.MINECRAFT_SERVER.getClassSafe("IChatBaseComponent$ChatSerializer");
@@ -195,10 +199,7 @@ public class ChatUtils {
 
   public static void sendJson(Iterable<Player> players, String json) {
     try {
-      Object packet = nmsPacketPlayOutChatCtor.newInstance(nmsFromJson(json));
-      for (Player player : players) {
-        ReflectionUtils.sendPacket(player, packet);
-      }
+      ChatMessageType.sendMessage(players, ChatMessageType.CHAT, nmsFromJson(json), new UUID(0, 0));
     } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
       e.printStackTrace();
     }
