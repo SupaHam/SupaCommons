@@ -16,7 +16,6 @@
         <squirrelid-version>0.1.0</squirrelid-version>
         <text.version>1.12-1.6.4</text.version>
         <acf-bukkit.version>0.5.0-SNAPSHOT</acf-bukkit.version>
-        <jakarta.xml.bind-api.version>2.3.3</jakarta.xml.bind-api.version>
     </properties>
 
     <repositories>
@@ -35,11 +34,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>${jakarta.xml.bind-api.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
@@ -105,7 +99,6 @@
                                     <include>co.aikar:*</include>
                                     <include>net.jodah:expiringmap</include>
                                     <include>net.kyori:text</include>
-                                    <include>jakarta.xml.bind:jakarta.xml.bind-api</include>
                                 </includes>
                             </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
