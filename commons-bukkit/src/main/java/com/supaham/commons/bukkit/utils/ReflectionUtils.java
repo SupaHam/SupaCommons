@@ -116,7 +116,7 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
   public static String getInventoryTitle(Inventory inventory) {
     try {
       Class clazzCraftInventoryCustom = classes.get("CraftInventoryCustom");
-      if (inventory.getClass().isAssignableFrom(clazzCraftInventoryCustom)) {
+      if (clazzCraftInventoryCustom.getClass().isAssignableFrom(inventory)) {
         Object iinventory = getField(inventory.getClass(), "inventory").get(inventory);
         Object title = getField(iinventory.getClass(), "title").get(iinventory);
         return title.toString();
