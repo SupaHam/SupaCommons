@@ -10,6 +10,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -114,15 +115,17 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
   }
   
   public static String getInventoryTitle(Inventory inventory) {
-    try {
-      Class clazzCraftInventoryCustom = classes.get("CraftInventoryCustom");
-      if (clazzCraftInventoryCustom.getClass().isAssignableFrom(inventory)) {
-        Object iinventory = getField(inventory.getClass(), "inventory").get(inventory);
-        Object title = getField(iinventory.getClass(), "title").get(iinventory);
-        return title.toString();
+    if (inventory != null) {
+      try {
+        Class clazzCraftInventoryCustom = classes.get("CraftInventoryCustom");
+        if (clazzCraftInventoryCustom.isAssignableFrom(inventory.getClass())) {
+          Object iinventory = getField(clazzCraftInventoryCustom.getSuperclass(), "inventory").get(inventory);
+          Object title = getField(iinventory.getClass(), "title").get(iinventory);
+          return title.toString();
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-    } catch (Exception e) {
-      e.printStackTrace();
     }
     return null;
   }
