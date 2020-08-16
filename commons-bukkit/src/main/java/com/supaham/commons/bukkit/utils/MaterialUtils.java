@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.type.*;
 
 import java.util.EnumMap;
@@ -149,6 +150,22 @@ public final class MaterialUtils {
    */
   public static boolean isInteractableBlock(Material material) {
     return material != null && material.isBlock() && interactableBlocks.contains(material);
+  }
+
+  /**
+   * Checks whether a {@link Block} can be interacted with.
+   *
+   * @param block block to check
+   *
+   * @return true if the {@code block} can be interacted with
+   */
+  public static boolean isInteractableBlockClass(Block block) {
+    for (Class<?> blockClass : interactableBlockClasses) {
+      if (blockClass.isInstance(block.getBlockData())) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
