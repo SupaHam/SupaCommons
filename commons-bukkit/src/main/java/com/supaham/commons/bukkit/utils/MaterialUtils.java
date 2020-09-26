@@ -55,7 +55,38 @@ public final class MaterialUtils {
     interactableBlocks.add(Material.DRAGON_EGG);
     interactableBlocks.add(Material.ENDER_CHEST);
     interactableBlocks.add(Material.BEACON);
+
     interactableBlocks.add(Material.FLOWER_POT);
+    interactableBlocks.add(Material.POTTED_ACACIA_SAPLING);
+    interactableBlocks.add(Material.POTTED_ALLIUM);
+    interactableBlocks.add(Material.POTTED_AZURE_BLUET);
+    interactableBlocks.add(Material.POTTED_BAMBOO);
+    interactableBlocks.add(Material.POTTED_BIRCH_SAPLING);
+    interactableBlocks.add(Material.POTTED_BLUE_ORCHID);
+    interactableBlocks.add(Material.POTTED_BROWN_MUSHROOM);
+    interactableBlocks.add(Material.POTTED_CACTUS);
+    interactableBlocks.add(Material.POTTED_CORNFLOWER);
+    interactableBlocks.add(Material.POTTED_CRIMSON_FUNGUS);
+    interactableBlocks.add(Material.POTTED_CRIMSON_ROOTS);
+    interactableBlocks.add(Material.POTTED_DANDELION);
+    interactableBlocks.add(Material.POTTED_DARK_OAK_SAPLING);
+    interactableBlocks.add(Material.POTTED_DEAD_BUSH);
+    interactableBlocks.add(Material.POTTED_FERN);
+    interactableBlocks.add(Material.POTTED_JUNGLE_SAPLING);
+    interactableBlocks.add(Material.POTTED_LILY_OF_THE_VALLEY);
+    interactableBlocks.add(Material.POTTED_OAK_SAPLING);
+    interactableBlocks.add(Material.POTTED_ORANGE_TULIP);
+    interactableBlocks.add(Material.POTTED_OXEYE_DAISY);
+    interactableBlocks.add(Material.POTTED_PINK_TULIP);
+    interactableBlocks.add(Material.POTTED_POPPY);
+    interactableBlocks.add(Material.POTTED_RED_MUSHROOM);
+    interactableBlocks.add(Material.POTTED_RED_TULIP);
+    interactableBlocks.add(Material.POTTED_SPRUCE_SAPLING);
+    interactableBlocks.add(Material.POTTED_WARPED_FUNGUS);
+    interactableBlocks.add(Material.POTTED_WARPED_ROOTS);
+    interactableBlocks.add(Material.POTTED_WHITE_TULIP);
+    interactableBlocks.add(Material.POTTED_WITHER_ROSE);
+
     interactableBlocks.add(Material.CARROT);
     interactableBlocks.add(Material.POTATO);
     interactableBlocks.add(Material.ANVIL);
