@@ -16,7 +16,7 @@
         <module>commons-minecraft</module>
     </modules>
     <properties>
-        <commons-version>0.7.0-SNAPSHOT</commons-version>
+        <commons-version>0.8.0-SNAPSHOT</commons-version>
     </properties>
 
     <repositories>
@@ -26,7 +26,7 @@
         </repository>
         <repository>
             <id>enderzone</id>
-            <url>http://ci.ender.zone/plugin/repository/everything/</url>
+            <url>https://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
         <repository>
             <id>onarandombox</id>
