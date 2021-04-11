@@ -23,18 +23,9 @@ import javax.annotation.Nullable;
  */
 public class OBCUtils {
 
-  private static Method getSoundMethod = null;
   private static Map<String, Color> colorsByFieldName = new HashMap<>(17);
 
   static {
-    try {
-      Class<?> clazz = PackageType.CRAFTBUKKIT.getClass("CraftSound");
-      getSoundMethod = clazz.getDeclaredMethod("getSound", Sound.class);
-      getSoundMethod.setAccessible(true);
-    } catch (Exception e) {
-      CMain.getLogger().log(Level.SEVERE,
-                            "Error occurred whilst getting CraftSound.getSound method", e);
-    }
     try {
       colorsByFieldName.put("white", Color.WHITE);
       colorsByFieldName.put("silver", Color.SILVER);
@@ -64,14 +55,10 @@ public class OBCUtils {
    * @param sound sound to get name for
    *
    * @return name of the {@code sound}
+   * @deprecated backwards-compatible usage for {@link Sound#getKey()}
    */
   public static String getSound(final Sound sound) {
-    try {
-      return (String) getSoundMethod.invoke(null, sound);
-    } catch (IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
-      return null;
-    }
+    return sound.getKey().getKey();
   }
 
   /**
