@@ -7,8 +7,8 @@ import com.supaham.commons.utils.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Team;
 
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +25,7 @@ public class IndexedObjective {
 
   private CommonScoreboard scoreboard;
   private Objective bukkitObjective;
-  private final String[] entries = new String[16];
+  private final Team[] entries = new Team[16];
 
   /**
    * Constructs a new indexed objective. This operation only sets the display slot. The name of the
@@ -46,6 +46,21 @@ public class IndexedObjective {
       throw new IndexOutOfBoundsException(String.valueOf(index));
     }
     return index;
+  }
+
+  private String indexToStringTag(int index) {
+    Preconditions.checkArgument(0 <= index && index <= 15, "index out of bounds.");
+
+    // Create a 5 'bit' (black = 0, white = 1) tag String unique to each index number that consists of no rendered characters.
+    StringBuilder tag = new StringBuilder();
+    for (int i =0; i < 5; i++) {
+      if ((index & 0b00000001 << i) == 0) {
+        tag.append(ChatColor.BLACK);
+      } else {
+        tag.append(ChatColor.WHITE);
+      }
+    }
+    return tag.toString();
   }
 
   protected int sanitizeIndex(int index) {
@@ -71,7 +86,7 @@ public class IndexedObjective {
    * @return entry by index
    */
   public String getEntry(int index) {
-    return entries[validateIndex(index)];
+    return entries[validateIndex(index)].getPrefix();
   }
 
   /**
@@ -84,34 +99,14 @@ public class IndexedObjective {
    * @return previous entry text this insertion operation replaced
    */
   public String put(int index, String string) {
-    String old = entries[validateIndex(index)];
-    if (old != null) {
-      this.scoreboard.getBukkitScoreboard().resetScores(old);
-    }
-
-    // Minecraft scoreboards only allow unique entries. When the current string already exists in the scoreboard, it
-    // is replaced and added with the new score (below in setScore).
-    // To get around this we append RESET codes to the string until it becomes unique. There is one problem with
-    // this: if the string exceeds maximum length, then the entry cannot be inserted and an error will occur.
-    Set<String> existingBukkitEntries = this.scoreboard.getBukkitScoreboard().getEntries();
-    if (existingBukkitEntries.contains(string)) {
-      String uniqueString = string;
-      boolean append = true; // Used to change where the RESET codes are inserted for more unique values.
-      while (existingBukkitEntries.contains(uniqueString)) {
-        if (append) {
-          uniqueString += ChatColor.RESET;
-        } else { // prepend
-          uniqueString = ChatColor.RESET + uniqueString;
-        }
-        if (uniqueString.length() > MAX_ENTRY_LENGTH) {
-          append = false;
-          uniqueString = string;
-        }
+      String old = (this.entries[index] != null) ? this.entries[index].getPrefix() : null;
+      if (entries[index] == null) {
+          this.entries[index] = scoreboard.getBukkitScoreboard().registerNewTeam(String.format("%d", index));
+          entries[index].addEntry(indexToStringTag(index));
+          bukkitObjective.getScore(indexToStringTag(index)).setScore(sanitizeIndex(index));
       }
-      string = uniqueString;
-    }
-    this.bukkitObjective.getScore(string).setScore(sanitizeIndex(index));
-    this.entries[index] = string;
+
+      this.entries[index].setPrefix(string);
     return old;
   }
 
@@ -123,10 +118,8 @@ public class IndexedObjective {
    * @return the removed entry
    */
   public String remove(int index) {
-    String old = entries[validateIndex(index)];
-    if (old != null) {
-      this.scoreboard.getBukkitScoreboard().resetScores(old);
-    }
+    String old = entries[validateIndex(index)].getPrefix();
+    this.scoreboard.getBukkitScoreboard().getTeams().remove(entries[validateIndex(index)]);
     entries[index] = null;
     return old;
   }
