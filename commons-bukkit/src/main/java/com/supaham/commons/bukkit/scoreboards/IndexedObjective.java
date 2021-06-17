@@ -118,7 +118,7 @@ public class IndexedObjective {
    * @return the removed entry
    */
   public String remove(int index) {
-    String old = entries[validateIndex(index)].getPrefix();
+    String old = (entries[validateIndex(index)] != null) ? entries[validateIndex(index)].getPrefix() : null;
     this.scoreboard.getBukkitScoreboard().getTeams().remove(entries[validateIndex(index)]);
     entries[index] = null;
     return old;
