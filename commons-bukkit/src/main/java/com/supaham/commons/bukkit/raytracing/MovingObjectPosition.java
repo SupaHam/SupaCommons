@@ -124,7 +124,7 @@ public class MovingObjectPosition {
     private static Field entity;
 
     static {
-      Class nmsMOP = ReflectionUtils.getNMSClass("MovingObjectPosition");
+      Class nmsMOP = ReflectionUtils.getNMSClass("world.phys", "MovingObjectPosition");
       try {
         blockPos = nmsMOP.getDeclaredField("e");
         blockPos.setAccessible(true);

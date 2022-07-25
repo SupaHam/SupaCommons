@@ -9,10 +9,9 @@ import com.google.common.base.Preconditions;
 import com.supaham.commons.Uuidable;
 import com.supaham.commons.bukkit.language.Message;
 import com.supaham.commons.bukkit.title.Title;
-import com.supaham.commons.bukkit.utils.ChatUtils;
 
-import net.kyori.text.Component;
-
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 
 import java.lang.ref.WeakReference;
@@ -79,10 +78,17 @@ public class CommonPlayer implements Uuidable {
     }
   }
 
-  public void message(@Nonnull Component component) {
-    Preconditions.checkNotNull(component, "component tcannot be null.");
+  public void message(@Nonnull BaseComponent component) {
+    Preconditions.checkNotNull(component, "component cannot be null.");
     if (getPlayer() != null) {
-      ChatUtils.sendComponent(getPlayer(), component);
+      getPlayer().spigot().sendMessage(component);
+    }
+  }
+
+  public void message(@Nonnull BaseComponent[] components) {
+    Preconditions.checkNotNull(components, "component cannot be null.");
+    if (getPlayer() != null) {
+      getPlayer().spigot().sendMessage(components);
     }
   }
 
@@ -138,37 +144,46 @@ public class CommonPlayer implements Uuidable {
   }
 
   /**
-   * @see Title#sendActionBarMessage(Player, Component)
+   * @see Title#sendActionBarMessage(Player, BaseComponent)
+   * @deprecated Use the Spigot API.
    */
-  public void sendActionBar(@Nonnull Component messagePart) {
-    Title.sendActionBarMessage(getPlayer(), messagePart);
+  public void sendActionBar(@Nonnull BaseComponent messagePart) {
+    getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, messagePart);
   }
 
   /**
    * @see Title#sendTimes(Player, int, int, int)
+   * @deprecated Use the Spigot API.
    */
   public void sendTitleTimes(int fadeIn, int stay, int fadeOut) {
     Title.sendTimes(getPlayer(), fadeIn, stay, fadeOut);
   }
 
   /**
-   * @see Title#sendTitle(Player, Component)
+   * @see Title#sendTitle(Player, BaseComponent)
+   * @deprecated Use the Spigot API.
    */
-  public void sendTitle(@Nonnull Component title) {
+  public void sendTitle(@Nonnull BaseComponent title) {
     Title.sendTitle(getPlayer(), title);
   }
 
+  public void sendTitle(@Nonnull BaseComponent title, @Nonnull BaseComponent subtitle, int fadeIn, int stay, int fadeOut) {
+      getPlayer().sendTitle(title.toLegacyText(), subtitle.toLegacyText(), fadeIn, stay, fadeOut);
+  }
+
   /**
-   * @see Title#sendSubtitle(Player, Component)
+   * @see Title#sendSubtitle(Player, BaseComponent)
+   * @deprecated Use the Spigot API.
    */
-  public void sendSubtitle(@Nonnull Component subtitle) {
+  public void sendSubtitle(@Nonnull BaseComponent subtitle) {
     Title.sendSubtitle(getPlayer(), subtitle);
   }
 
   /**
-   * @see Title#sendSubtitle(Player, Component, Component)
+   * @see Title#sendSubtitle(Player, BaseComponent, BaseComponent)
+   * @deprecated Use the Spigot API.
    */
-  public void sendSubtitle(@Nonnull Component title, @Nonnull Component subtitle) {
+  public void sendSubtitle(@Nonnull BaseComponent title, @Nonnull BaseComponent subtitle) {
     Title.sendSubtitle(getPlayer(), title, subtitle);
   }
 }

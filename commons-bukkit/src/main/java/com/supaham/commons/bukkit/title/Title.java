@@ -7,8 +7,7 @@ import com.supaham.commons.bukkit.chat.ChatMessageType;
 import com.supaham.commons.bukkit.utils.ChatUtils;
 import com.supaham.commons.bukkit.utils.ReflectionUtils;
 
-import net.kyori.text.Component;
-
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Constructor;
@@ -25,21 +24,22 @@ import static com.supaham.commons.bukkit.chat.ChatMessageType.chatMessageTypeCla
  * class.
  * <p />
  * <b>Note:</b> As of 1.8, subtitles do not appear without the title. This means that in order for
- * a {@link #sendSubtitle(Player, Component)} to visually display for the player,
- * {@link #sendTitle(Player, Component)} must be sent immediately before or after the subtitle.
+ * a {@link #sendSubtitle(Player, BaseComponent)} to visually display for the player,
+ * {@link #sendTitle(Player, BaseComponent)} must be sent immediately before or after the subtitle.
  *
  * @see #sendTimes(Player, int, int, int)
- * @see #sendSubtitle(Player, Component)
- * @see #sendTitle(Player, Component)
+ * @see #sendSubtitle(Player, BaseComponent)
+ * @see #sendTitle(Player, BaseComponent)
  */
 public class Title {
 
+  // PacketPlayOutTitle does not appear to be present in later versions (also easier to use the newer title api methods)
   private static Class<?> packetClass = ReflectionUtils.getNMSClass("PacketPlayOutTitle");
-  private static Class<?> chatPacket = ReflectionUtils.getNMSClass("PacketPlayOutChat");
+  private static Class<?> chatPacket = ReflectionUtils.getNMSClass("network.protocol.game","PacketPlayOutChat");
   
   private static Class<? extends Enum> packetActionClass = ((Class<? extends Enum>) ReflectionUtils
       .getNMSClass("PacketPlayOutTitle$EnumTitleAction"));
-  private static Class<?> chatComponentClass = ReflectionUtils.getNMSClass("IChatBaseComponent");
+  private static Class<?> chatComponentClass = ReflectionUtils.getNMSClass("network.chat", "IChatBaseComponent");
   private static Constructor ctor1, ctor3;
 
 
@@ -73,9 +73,9 @@ public class Title {
    * @param subtitle subtitle to send
    *
    * @see #sendTimes(Player, int, int, int)
-   * @see #sendTitle(Player, Component)
+   * @see #sendTitle(Player, BaseComponent)
    */
-  public static void sendSubtitle(@Nonnull Player player, @Nullable Component subtitle) {
+  public static void sendSubtitle(@Nonnull Player player, @Nullable BaseComponent subtitle) {
     Preconditions.checkNotNull(subtitle, "subtitle cannot be null.");
     sendTitle(player, null, null, null, null, subtitle);
   }
@@ -87,10 +87,10 @@ public class Title {
    * @param subtitle subtitle to send
    *
    * @see #sendTimes(Player, int, int, int)
-   * @see #sendTitle(Player, Component)
+   * @see #sendTitle(Player, BaseComponent)
    */
-  public static void sendSubtitle(@Nonnull Player player, @Nonnull Component title,
-                                  @Nullable Component subtitle) {
+  public static void sendSubtitle(@Nonnull Player player, @Nonnull BaseComponent title,
+                                  @Nullable BaseComponent subtitle) {
     Preconditions.checkNotNull(title, "title cannot be null.");
     Preconditions.checkNotNull(subtitle, "subtitle cannot be null.");
     sendTitle(player, null, null, null, title, subtitle);
@@ -103,16 +103,16 @@ public class Title {
    * @param title title to send
    *
    * @see #sendTimes(Player, int, int, int)
-   * @see #sendSubtitle(Player, Component)
+   * @see #sendSubtitle(Player, BaseComponent)
    */
-  public static void sendTitle(@Nonnull Player player, @Nonnull Component title) {
+  public static void sendTitle(@Nonnull Player player, @Nonnull BaseComponent title) {
     Preconditions.checkNotNull(title, "title cannot be null.");
     sendTitle(player, null, null, null, title, null);
   }
 
   private static void sendTitle(@Nonnull Player player,
                                 Integer fadeIn, Integer stay, Integer fadeOut,
-                                @Nullable Component title, @Nullable Component subtitle) {
+                                @Nullable BaseComponent title, @Nullable BaseComponent subtitle) {
     Preconditions.checkNotNull(player, "player cannot be null.");
     try {
       if (fadeIn != null && stay != null && fadeOut != null) {
@@ -138,7 +138,7 @@ public class Title {
     }
   }
 
-  public static void sendActionBarMessage(@Nonnull Player player, @Nonnull Component component) {
+  public static void sendActionBarMessage(@Nonnull Player player, @Nonnull BaseComponent component) {
     Preconditions.checkNotNull(player, "player cannot be null.");
     Preconditions.checkNotNull(component, "component cannot be null.");
     try {

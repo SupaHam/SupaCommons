@@ -13,8 +13,8 @@ import java.util.UUID;
 public enum ChatMessageType {
   CHAT, SYSTEM, GAME_INFO;
 
-  public static final Class<?> chatComponentClass = ReflectionUtils.getNMSClass("IChatBaseComponent");
-  public static final Class<?> chatPacket = ReflectionUtils.getNMSClass("PacketPlayOutChat");
+  public static final Class<?> chatComponentClass = ReflectionUtils.getNMSClass("network.chat", "IChatBaseComponent");
+  public static final Class<?> chatPacket = ReflectionUtils.getNMSClass("network.protocol.game", "PacketPlayOutChat");
   public static Class<? extends Enum> chatMessageTypeClass;
   private static Constructor ctor1;
   private final Object nmsMessageType;
@@ -43,7 +43,7 @@ public enum ChatMessageType {
 
   private static Class<? extends Enum> getChatMessageTypeClass() {
     if (chatMessageTypeClass == null) {
-      chatMessageTypeClass = (Class<? extends Enum>) ReflectionUtils.getNMSClass("ChatMessageType");
+      chatMessageTypeClass = (Class<? extends Enum>) ReflectionUtils.getNMSClass("network.chat", "ChatMessageType");
     }
     return chatMessageTypeClass;
   }

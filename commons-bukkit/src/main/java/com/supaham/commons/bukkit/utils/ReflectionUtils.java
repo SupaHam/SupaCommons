@@ -1,6 +1,8 @@
 package com.supaham.commons.bukkit.utils;
 
+import net.minecraft.network.protocol.Packet;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -33,20 +35,20 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     PackageType nms = PackageType.MINECRAFT_SERVER;
     PackageType obc = PackageType.CRAFTBUKKIT;
 
-    classes.put("entityPlayer", nms.getClassSafe("EntityPlayer"));
-    fields.put("playerConnection", getField(classes.get("entityPlayer"), "playerConnection"));
-    methods.put("sendPacket", getMethod(fields.get("playerConnection").getType(), "sendPacket"));
+    classes.put("entityPlayer", nms.getClassSafe("server.level", "EntityPlayer"));
+//    fields.put("playerConnection", getField(classes.get("entityPlayer"), "playerConnection"));  // TODO: This might now need to be updated every time... :'(
+//    methods.put("sendPacket", getMethod(fields.get("playerConnection").getType(), "sendPacket"));
 
-    Class<?> clazz = nms.getClassSafe("Vec3D");
+    Class<?> clazz = nms.getClassSafe("world.phys", "Vec3D");
     classes.put("Vec3D", clazz);
     constructors.put("Vec3D",
                      clazz.getDeclaredConstructor(double.class, double.class, double.class));
-    fields.put("Vec3Dx", getField(clazz, "x"));
-    fields.put("Vec3Dy", getField(clazz, "y"));
-    fields.put("Vec3Dz", getField(clazz, "z"));
+//    fields.put("Vec3Dx", getField(clazz, "x")); TODO: If you want the raytracing to work, fix these.
+//    fields.put("Vec3Dy", getField(clazz, "y"));
+//    fields.put("Vec3Dz", getField(clazz, "z"));
 
-    classes.put("BlockPosition", nms.getClassSafe("BlockPosition"));
-    clazz = nms.getClassSafe("BaseBlockPosition");
+    classes.put("BlockPosition", nms.getClassSafe("core", "BlockPosition"));
+    clazz = nms.getClassSafe("core", "BaseBlockPosition");
     fields.put("BaseBlockPositionx", getField(clazz, "a"));
     fields.put("BaseBlockPositiony", getField(clazz, "b"));
     fields.put("BaseBlockPositionz", getField(clazz, "c"));
@@ -56,16 +58,17 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
   }
 
   public static void sendPacket(Player player, Object object) {
-    try {
-      Object connection = fields.get("playerConnection").get(getHandle(player));
-      methods.get("sendPacket").invoke(connection, object);
-    } catch (IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
-    }
+    ((CraftPlayer) player).getHandle().connection.send((Packet) object);
+//    try {
+//      Object connection = fields.get("playerConnection").get(getHandle(player));
+//      methods.get("sendPacket").invoke(connection, object);
+//    } catch (IllegalAccessException | InvocationTargetException e) {
+//      e.printStackTrace();
+//    }
   }
 
   public static Object toNMSVec3D(Vector vector) {
-    Class<?> vec3D = PackageType.MINECRAFT_SERVER.getClassSafe("Vec3D");
+    Class<?> vec3D = PackageType.MINECRAFT_SERVER.getClassSafe("world.phys", "Vec3D");
     try {
       Constructor<?> ctor = constructors.get("Vec3D");
       return ctor.newInstance(vector.getX(), vector.getY(), vector.getZ());
@@ -76,7 +79,7 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
   }
 
   public static Vector fromNMSVec3D(Object object) {
-    if (!object.getClass().equals(PackageType.MINECRAFT_SERVER.getClassSafe("Vec3D"))) {
+    if (!object.getClass().equals(PackageType.MINECRAFT_SERVER.getClassSafe("world.phys","Vec3D"))) {
       return null;
     }
     try {
@@ -91,7 +94,7 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
   }
 
   public static Vector fromNMSBlockPosition(Object object) {
-    if (!object.getClass().equals(PackageType.MINECRAFT_SERVER.getClassSafe("BlockPosition"))) {
+    if (!object.getClass().equals(PackageType.MINECRAFT_SERVER.getClassSafe("core", "BlockPosition"))) {
       return null;
     }
     try {
@@ -113,7 +116,7 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
       return null;
     }
   }
-  
+
   public static String getInventoryTitle(Inventory inventory) {
     if (inventory != null) {
       try {
@@ -130,6 +133,18 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     return null;
   }
 
+  public static String getRootNMSPackage() {
+    if (getServerMajorVersion() <= 16) {
+      return "net.minecraft.server." + getServerVersion();
+    } else {
+      return "net.minecraft";
+    }
+  }
+
+  public static Integer getServerMajorVersion() {
+    return Integer.parseInt(getServerVersion().split("_")[1]);
+  }
+
   public static String getServerVersion() {
     // org.bukkit.craftbukkit.v1_7_R4.entity
     // org.bukkit.craftbukkit.v1_8_R2.entity;
@@ -143,6 +158,10 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
 
   public static Class<?> getNMSClass(String className) {
     return PackageType.MINECRAFT_SERVER.getClassSafe(className);
+  }
+
+  public static Class<?> getNMSClass(String betterNMSPath, String className) {
+    return PackageType.MINECRAFT_SERVER.getClassSafe(betterNMSPath, className);
   }
 
   public static Class<?> getOBCClass(String className) {
@@ -166,7 +185,7 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     /**
      * {@code net.minecraft.server.server_version} package.
      */
-    MINECRAFT_SERVER("net.minecraft.server." + getServerVersion()),
+    MINECRAFT_SERVER(getRootNMSPackage()),
     /**
      * {@code org.bukkit.craftbukkit.server_version} package.
      */
@@ -194,10 +213,30 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     public Class<?> getClass(String className) throws ClassNotFoundException {
       return Class.forName(this + "." + className);
     }
+    public Class<?> getClass(String betterNMSPath, String className) throws ClassNotFoundException {
+      if (getServerMajorVersion() <= 16) {
+        return Class.forName(this + "." + className);
+      } else {
+        return Class.forName(this + "." + betterNMSPath + "." + className);
+      }
+    }
 
     public Class<?> getClassSafe(String className) {
       try {
         return Class.forName(this + "." + className);
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+        return null;
+      }
+    }
+
+    public Class<?> getClassSafe(String betterNMSPath, String className) {
+      try {
+        if (getServerMajorVersion() <= 16) {
+          return Class.forName(this + "." + className);
+        } else {
+          return Class.forName(this + "." + betterNMSPath + "." + className);
+        }
       } catch (ClassNotFoundException e) {
         e.printStackTrace();
         return null;

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
 
 import java.util.concurrent.Future;
 
@@ -34,7 +35,7 @@ public class CommonFutures {
       }
 
       @Override public void onFailure(Throwable t) {}
-    });
+    }, MoreExecutors.newDirectExecutorService());
     return future;
   }
 
@@ -49,7 +50,7 @@ public class CommonFutures {
       @Override public void onFailure(@Nonnull Throwable t) {
         callback.failure(t);
       }
-    });
+    }, MoreExecutors.newDirectExecutorService());
     return future;
   }
 
