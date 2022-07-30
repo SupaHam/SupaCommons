@@ -29,9 +29,10 @@ public class RayTracing {
 
   static {
     PackageType nms = PackageType.MINECRAFT_SERVER;
-    Class<?> worldClazz = nms.getClassSafe("World");
-    rayTraceMethod = ReflectionUtils.getMethod(worldClazz, "rayTrace", nms.getClassSafe("Vec3D"),
-                                               nms.getClassSafe("Vec3D"), nms.getClassSafe("FluidCollisionOption"),
+    Class<?> worldClazz = nms.getClassSafe("world.level", "World");
+    rayTraceMethod = ReflectionUtils.getMethod(worldClazz, "rayTrace", nms.getClassSafe("world.phys", "Vec3D"),
+                                               nms.getClassSafe("world.phys","Vec3D"),
+                                               nms.getClassSafe("world.level","FluidCollisionOption"),
                                                boolean.class, boolean.class);
   }
 
@@ -126,7 +127,7 @@ public class RayTracing {
 
     FluidCollisionOption() {
       Class<? extends Enum> clazz = (Class<? extends Enum>) PackageType.MINECRAFT_SERVER
-          .getClassSafe("FluidCollisionOption");
+          .getClassSafe("world.level","FluidCollisionOption");
       nmsEnum = Enum.valueOf(clazz, name());
     }
   }

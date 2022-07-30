@@ -36,7 +36,7 @@ public final class StringUtils extends org.apache.commons.lang.StringUtils {
    * @return whether the {@code string} is ASCII only
    */
   public static boolean isASCII(@Nonnull String string) {
-    return CharMatcher.ASCII.matchesAllOf(checkNotNull(string, "string cannot be null."));
+    return CharMatcher.ascii().matchesAllOf(checkNotNull(string, "string cannot be null."));
   }
 
   /**

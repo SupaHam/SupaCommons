@@ -16,6 +16,8 @@ import net.kyori.text.format.TextColor;
 import net.kyori.text.format.TextDecoration;
 import net.kyori.text.serializer.ComponentSerializers;
 
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -36,11 +38,11 @@ public class ChatUtils {
   public static final TextComponent NEW_LINE = TextComponent.of("\n");
 
   protected static Class<?> nmsIChatBaseComponent = PackageType.MINECRAFT_SERVER
-      .getClassSafe("IChatBaseComponent");
+      .getClassSafe("network.chat", "IChatBaseComponent");
   protected static Class<?> nmsPacketPlayOutChat = PackageType.MINECRAFT_SERVER
-      .getClassSafe("PacketPlayOutChat");
+      .getClassSafe("network.protocol.game", "PacketPlayOutChat");
   protected static Class<?> nmsChatMessageType = PackageType.MINECRAFT_SERVER
-          .getClassSafe("ChatMessageType");
+          .getClassSafe("network.chat", "ChatMessageType");
   protected static Class<?> nmsChatSerializer;
   private static Constructor nmsPacketPlayOutChatCtor;
   private static Method nmsChatSerializerSerialize;
@@ -50,7 +52,7 @@ public class ChatUtils {
       nmsPacketPlayOutChatCtor = nmsPacketPlayOutChat.getConstructor(nmsIChatBaseComponent, nmsChatMessageType, UUID.class);
 
       if (ReflectionUtils.isServer18OrHigher()) {
-        nmsChatSerializer = PackageType.MINECRAFT_SERVER.getClassSafe("IChatBaseComponent$ChatSerializer");
+        nmsChatSerializer = PackageType.MINECRAFT_SERVER.getClassSafe("network.chat","IChatBaseComponent$ChatSerializer");
       } else {
         nmsChatSerializer = PackageType.MINECRAFT_SERVER.getClassSafe("ChatSerializer");
       }
@@ -205,8 +207,8 @@ public class ChatUtils {
     }
   }
 
-  public static Object nmsFromComponent(Component component) {
-    return nmsFromJson(ComponentSerializers.JSON.serialize(component));
+  public static Object nmsFromComponent(BaseComponent component) {
+    return nmsFromJson(ComponentSerializer.toString(component));
   }
 
   public static Object nmsFromJson(String json) {
