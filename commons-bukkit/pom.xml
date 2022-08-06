@@ -12,7 +12,7 @@
     <artifactId>commons-bukkit</artifactId>
 
     <properties>
-        <spigot.version>1.19.1-R0.1-SNAPSHOT</spigot.version>
+        <spigot.version>1.19.2-R0.1-SNAPSHOT</spigot.version>
         <squirrelid-version>0.1.0</squirrelid-version>
         <text.version>1.12-1.6.5</text.version>
         <acf-bukkit.version>0.5.0-SNAPSHOT</acf-bukkit.version>
