@@ -14,7 +14,7 @@
     <name>Commons-Minecraft</name>
 
     <properties>
-        <acf-core.version>0.5.0-SNAPSHOT</acf-core.version>
+        <acf-core.version>0.5.1-SNAPSHOT</acf-core.version>
     </properties>
 
     <repositories>
