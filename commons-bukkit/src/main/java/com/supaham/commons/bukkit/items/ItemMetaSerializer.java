@@ -6,7 +6,6 @@ import com.google.common.collect.Iterables;
 import com.supaham.commons.bukkit.ItemBuilder;
 import com.supaham.commons.bukkit.serializers.ItemEnchantmentSerializer;
 import com.supaham.commons.bukkit.utils.ChatColorUtils;
-import com.supaham.commons.bukkit.utils.EnchantmentUtils;
 import com.supaham.commons.bukkit.utils.OBCUtils;
 import com.supaham.commons.bukkit.utils.SerializationUtils;
 
@@ -146,7 +145,7 @@ public class ItemMetaSerializer {
       map.put("lore", result.size() == 1 ? result.get(0) : result);
     }
 
-    if (im.hasEnchant(EnchantmentUtils.GLOW_ENCHANTMENT)) {
+    if (im.getEnchantmentGlintOverride()) {
       map.put("glow", true);
     }
 

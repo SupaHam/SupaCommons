@@ -3,7 +3,6 @@ package com.supaham.commons.bukkit;
 import com.google.common.base.Preconditions;
 
 import com.supaham.commons.bukkit.items.ItemEnchantment;
-import com.supaham.commons.bukkit.utils.EnchantmentUtils;
 import com.supaham.commons.bukkit.utils.MaterialUtils;
 
 import org.bukkit.Color;
@@ -452,11 +451,8 @@ public class ItemBuilder {
    * @return this item builder instance, for chaining
    */
   public ItemBuilder glow(boolean glow) {
-    if (glow) {
-      return enchant(EnchantmentUtils.GLOW_ENCHANTMENT, 1, true);
-    } else {
-      return removeEnchant(EnchantmentUtils.GLOW_ENCHANTMENT);
-    }
+    itemMeta.setEnchantmentGlintOverride(glow);
+    return this;
   }
 
   /**
@@ -1355,27 +1351,27 @@ public class ItemBuilder {
       return PotionType.NIGHT_VISION;
     } else if (type == PotionEffectType.INVISIBILITY) {
       return PotionType.INVISIBILITY;
-    } else if (type == PotionEffectType.JUMP) {
-      return PotionType.JUMP;
+    } else if (type == PotionEffectType.JUMP_BOOST) {
+      return PotionType.LEAPING;
     } else if (type == PotionEffectType.FIRE_RESISTANCE) {
       return PotionType.FIRE_RESISTANCE;
     } else if (type == PotionEffectType.SPEED) {
-      return PotionType.SPEED;
-    } else if (type == PotionEffectType.SLOW) {
+      return PotionType.SWIFTNESS;
+    } else if (type == PotionEffectType.SLOWNESS) {
       return PotionType.SLOWNESS;
     } else if (type == PotionEffectType.WATER_BREATHING) {
       return PotionType.WATER_BREATHING;
     } else if (type == PotionEffectType.HEALTH_BOOST) {
-      return PotionType.INSTANT_HEAL;
-    } else if (type == PotionEffectType.HARM) {
-      return PotionType.INSTANT_DAMAGE;
-    } else if (type == PotionEffectType.HARM) {
-      return PotionType.INSTANT_DAMAGE;
+      return PotionType.HEALING;
+    } else if (type == PotionEffectType.INSTANT_DAMAGE) {
+      return PotionType.HARMING;
+    } else if (type == PotionEffectType.INSTANT_DAMAGE) {
+      return PotionType.HARMING;
     } else if (type == PotionEffectType.POISON) {
       return PotionType.POISON;
     } else if (type == PotionEffectType.REGENERATION) {
-      return PotionType.REGEN;
-    } else if (type == PotionEffectType.INCREASE_DAMAGE) {
+      return PotionType.REGENERATION;
+    } else if (type == PotionEffectType.STRENGTH) {
       return PotionType.STRENGTH;
     } else if (type == PotionEffectType.WEAKNESS) {
       return PotionType.WEAKNESS;

@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * </tr>
  * <tr><td>a</td><td>{@link DyeColor#BLACK}</td></tr>
  * <tr><td>i</td><td>{@link DyeColor#GRAY}</td></tr>
- * <tr><td>h</td><td>{@link DyeColor#SILVER}</td></tr>
+ * <tr><td>h</td><td>{@link DyeColor#LIGHT_GRAY}</td></tr>
  * <tr><td>p</td><td>{@link DyeColor#WHITE}</td></tr>
  * <tr><td>j</td><td>{@link DyeColor#PINK}</td></tr>
  * <tr><td>n</td><td>{@link DyeColor#MAGENTA}</td></tr>
@@ -55,17 +55,17 @@ import javax.annotation.Nonnull;
  * <tr><td>K</td><td>{@link PatternType#GRADIENT_UP}</td></tr>
  * <tr><td>e</td><td>{@link PatternType#BRICKS}</td></tr>
  * <tr><td>q</td><td>{@link PatternType#HALF_HORIZONTAL}</td></tr>
- * <tr><td>L</td><td>{@link PatternType#HALF_HORIZONTAL_MIRROR}</td></tr>
+ * <tr><td>L</td><td>{@link PatternType#HALF_HORIZONTAL_BOTTOM}</td></tr>
  * <tr><td>H</td><td>{@link PatternType#HALF_VERTICAL}</td></tr>
- * <tr><td>M</td><td>{@link PatternType#HALF_VERTICAL_MIRROR}</td></tr>
+ * <tr><td>M</td><td>{@link PatternType#HALF_VERTICAL_RIGHT}</td></tr>
  * <tr><td>E</td><td>{@link PatternType#STRIPE_TOP}</td></tr>
  * <tr><td>f</td><td>{@link PatternType#STRIPE_BOTTOM}</td></tr>
  * <tr><td>s</td><td>{@link PatternType#STRIPE_LEFT}</td></tr>
  * <tr><td>y</td><td>{@link PatternType#STRIPE_RIGHT}</td></tr>
  * <tr><td>r</td><td>{@link PatternType#DIAGONAL_LEFT}</td></tr>
- * <tr><td>J</td><td>{@link PatternType#DIAGONAL_RIGHT_MIRROR}</td></tr>
- * <tr><td>I</td><td>{@link PatternType#DIAGONAL_LEFT_MIRROR}</td></tr>
- * <tr><td>x</td><td>{@link PatternType#DIAGONAL_RIGHT}</td></tr>
+ * <tr><td>J</td><td>{@link PatternType#DIAGONAL_RIGHT}</td></tr>
+ * <tr><td>I</td><td>{@link PatternType#DIAGONAL_UP_LEFT}</td></tr>
+ * <tr><td>x</td><td>{@link PatternType#DIAGONAL_UP_RIGHT}</td></tr>
  * <tr><td>j</td><td>{@link PatternType#CROSS}</td></tr>
  * <tr><td>m</td><td>{@link PatternType#STRIPE_DOWNLEFT}</td></tr>
  * <tr><td>n</td><td>{@link PatternType#STRIPE_DOWNRIGHT}</td></tr>
@@ -78,11 +78,11 @@ import javax.annotation.Nonnull;
  * <tr><td>d</td><td>{@link PatternType#SQUARE_BOTTOM_RIGHT}</td></tr>
  * <tr><td>F</td><td>{@link PatternType#TRIANGLE_TOP}</td></tr>
  * <tr><td>g</td><td>{@link PatternType#TRIANGLE_BOTTOM}</td></tr>
- * <tr><td>v</td><td>{@link PatternType#RHOMBUS_MIDDLE}</td></tr>
- * <tr><td>t</td><td>{@link PatternType#CIRCLE_MIDDLE}</td></tr>
+ * <tr><td>v</td><td>{@link PatternType#RHOMBUS}</td></tr>
+ * <tr><td>t</td><td>{@link PatternType#CIRCLE}</td></tr>
  * <tr><td>h</td><td>{@link PatternType#TRIANGLES_BOTTOM}</td></tr>
  * <tr><td>G</td><td>{@link PatternType#TRIANGLES_TOP}</td></tr>
- * <tr><td>B</td><td>{@link PatternType#STRIPE_SMALL}</td></tr>
+ * <tr><td>B</td><td>{@link PatternType#SMALL_STRIPES}</td></tr>
  * <tr><td>c</td><td>{@link PatternType#BORDER}</td></tr>
  * <tr><td>i</td><td>{@link PatternType#CURLY_BORDER}</td></tr>
  * <tr><td>o</td><td>{@link PatternType#FLOWER}</td></tr>
@@ -127,17 +127,17 @@ public class MNCSBannerGenerator {
     PATTERN_CODES.put('K', PatternType.GRADIENT_UP);
     PATTERN_CODES.put('e', PatternType.BRICKS);
     PATTERN_CODES.put('q', PatternType.HALF_HORIZONTAL);
-    PATTERN_CODES.put('L', PatternType.HALF_HORIZONTAL_MIRROR);
+    PATTERN_CODES.put('L', PatternType.HALF_HORIZONTAL_BOTTOM);
     PATTERN_CODES.put('H', PatternType.HALF_VERTICAL);
-    PATTERN_CODES.put('M', PatternType.HALF_VERTICAL_MIRROR);
+    PATTERN_CODES.put('M', PatternType.HALF_VERTICAL_RIGHT);
     PATTERN_CODES.put('E', PatternType.STRIPE_TOP);
     PATTERN_CODES.put('f', PatternType.STRIPE_BOTTOM);
     PATTERN_CODES.put('s', PatternType.STRIPE_LEFT);
     PATTERN_CODES.put('y', PatternType.STRIPE_RIGHT);
     PATTERN_CODES.put('r', PatternType.DIAGONAL_LEFT);
-    PATTERN_CODES.put('J', PatternType.DIAGONAL_RIGHT_MIRROR);
-    PATTERN_CODES.put('I', PatternType.DIAGONAL_LEFT_MIRROR);
-    PATTERN_CODES.put('x', PatternType.DIAGONAL_RIGHT);
+    PATTERN_CODES.put('J', PatternType.DIAGONAL_RIGHT);
+    PATTERN_CODES.put('I', PatternType.DIAGONAL_UP_LEFT);
+    PATTERN_CODES.put('x', PatternType.DIAGONAL_UP_RIGHT);
     PATTERN_CODES.put('j', PatternType.CROSS);
     PATTERN_CODES.put('m', PatternType.STRIPE_DOWNLEFT);
     PATTERN_CODES.put('n', PatternType.STRIPE_DOWNRIGHT);
@@ -150,11 +150,11 @@ public class MNCSBannerGenerator {
     PATTERN_CODES.put('d', PatternType.SQUARE_BOTTOM_RIGHT);
     PATTERN_CODES.put('F', PatternType.TRIANGLE_TOP);
     PATTERN_CODES.put('g', PatternType.TRIANGLE_BOTTOM);
-    PATTERN_CODES.put('v', PatternType.RHOMBUS_MIDDLE);
-    PATTERN_CODES.put('t', PatternType.CIRCLE_MIDDLE);
+    PATTERN_CODES.put('v', PatternType.RHOMBUS);
+    PATTERN_CODES.put('t', PatternType.CIRCLE);
     PATTERN_CODES.put('h', PatternType.TRIANGLES_BOTTOM);
     PATTERN_CODES.put('G', PatternType.TRIANGLES_TOP);
-    PATTERN_CODES.put('B', PatternType.STRIPE_SMALL);
+    PATTERN_CODES.put('B', PatternType.SMALL_STRIPES);
     PATTERN_CODES.put('c', PatternType.BORDER);
     PATTERN_CODES.put('i', PatternType.CURLY_BORDER);
     PATTERN_CODES.put('o', PatternType.FLOWER);
