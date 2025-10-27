@@ -82,9 +82,16 @@
                                     <include>com.supaham.minecraft.pluginbase:Logging</include>
                                     <include>com.supaham.minecraft.pluginbase:Messaging</include>
                                     <include>com.supaham.minecraft.pluginbase:Serializable-Config</include>
+                                    <include>org.yaml:snakeyaml</include>
                                 </includes>
                             </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.yaml.snakeyaml</pattern>
+                                    <shadedPattern>com.supaham.commons.internal.snakeyaml</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
