@@ -14,7 +14,7 @@
     <properties>
         <hikaricp.version>2.7.4</hikaricp.version>
         <spring-jdbc.version>5.2.8.RELEASE</spring-jdbc.version>
-        <sqlite-jdbc.version>3.7.2</sqlite-jdbc.version>
+        <sqlite-jdbc.version>3.41.2.2</sqlite-jdbc.version>
         <mysql-connector-java.version>8.0.28</mysql-connector-java.version>
     </properties>
 
