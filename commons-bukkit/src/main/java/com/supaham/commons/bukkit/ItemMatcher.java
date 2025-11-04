@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.Objects;
 
+import org.bukkit.block.banner.Pattern;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BannerMeta;
 import org.bukkit.inventory.meta.BookMeta;
@@ -147,7 +148,8 @@ public class ItemMatcher {
   /**
    * This predicate checks whether two banners have the same base color.
    *
-   * @see BannerMeta#getBaseColor()
+   * @see BannerMeta#getPattern
+   * @see Pattern#getColor()
    */
   public static final ItemMatcherPredicate BANNER_COLOR_PREDICATE = new BannerColorPredicate();
   /**
@@ -570,8 +572,8 @@ public class ItemMatcher {
       }
       if (item1.getItemMeta() instanceof BannerMeta
           && item2.getItemMeta() instanceof BannerMeta) {
-        return ((BannerMeta) item1.getItemMeta()).getBaseColor()
-            .equals(((BannerMeta) item2.getItemMeta()).getBaseColor());
+        return ((BannerMeta) item1.getItemMeta()).getPattern(0).getColor()
+            .equals(((BannerMeta) item2.getItemMeta()).getPattern(0).getColor());
       }
       return false;
     }

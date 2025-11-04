@@ -5,7 +5,7 @@
     <parent>
         <artifactId>commons-parent</artifactId>
         <groupId>com.supaham.commons</groupId>
-        <version>0.4.1-SNAPSHOT</version>
+        <version>0.4.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <version>${commons-version}</version>
@@ -14,7 +14,7 @@
     <name>Commons-Minecraft</name>
 
     <properties>
-        <acf-core.version>0.5.0-SNAPSHOT</acf-core.version>
+        <acf-core.version>0.5.1-SNAPSHOT</acf-core.version>
     </properties>
 
     <repositories>

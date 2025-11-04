@@ -2,7 +2,7 @@ package com.supaham.commons.bukkit.utils;
 
 import net.minecraft.network.protocol.Packet;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_21_R6.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

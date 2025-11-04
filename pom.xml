@@ -7,7 +7,7 @@
     <groupId>com.supaham.commons</groupId>
     <artifactId>commons-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.4.1-SNAPSHOT</version>
+    <version>0.4.2-SNAPSHOT</version>
     <modules>
         <module>commons-bukkit</module>
         <module>commons-bungee</module>
@@ -16,7 +16,7 @@
         <module>commons-minecraft</module>
     </modules>
     <properties>
-        <commons-version>0.9.2-SNAPSHOT</commons-version>
+        <commons-version>0.9.3-SNAPSHOT</commons-version>
     </properties>
 
     <repositories>
@@ -29,8 +29,16 @@
             <url>https://ci.ender.zone/plugin/repository/everything/</url>
         </repository>
         <repository>
-            <id>onarandombox</id>
-            <url>http://repo.onarandombox.com/content/repositories/thirdparty-dev/</url>
+            <id>codemc</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>dumptruckman</id>
+            <url>https://repo.dumptruckman.com/public/</url>
+        </repository>
+        <repository>
+            <id>dumptruckman-releases</id>
+            <url>https://repo.dumptruckman.com/dumptruckman-releases/</url>
         </repository>
     </repositories>
     

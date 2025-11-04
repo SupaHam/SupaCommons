@@ -5,7 +5,7 @@
     <parent>
         <artifactId>commons-parent</artifactId>
         <groupId>com.supaham.commons</groupId>
-        <version>0.4.1-SNAPSHOT</version>
+        <version>0.4.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <version>${commons-version}</version>
@@ -82,9 +82,16 @@
                                     <include>com.supaham.minecraft.pluginbase:Logging</include>
                                     <include>com.supaham.minecraft.pluginbase:Messaging</include>
                                     <include>com.supaham.minecraft.pluginbase:Serializable-Config</include>
+                                    <include>org.yaml:snakeyaml</include>
                                 </includes>
                             </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.yaml.snakeyaml</pattern>
+                                    <shadedPattern>com.supaham.commons.internal.snakeyaml</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
