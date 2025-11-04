@@ -12,7 +12,7 @@
     <artifactId>commons-core</artifactId>
 
     <properties>
-        <guava.version>31.0.1-jre</guava.version>
+        <guava.version>32.0.0-jre</guava.version>
         <gson.version>2.8.9</gson.version>
         <json-simple.version>1.1.1</json-simple.version>
         <commons-lang.version>2.6</commons-lang.version>
