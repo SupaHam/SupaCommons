@@ -137,7 +137,7 @@ public final class MaterialUtils {
     dyeToBanner.put(DyeColor.RED, Material.RED_BANNER);
     dyeToBanner.put(DyeColor.BLACK, Material.BLACK_BANNER);
 
-    dyeToItem.put(DyeColor.WHITE, Material.BONE_MEAL);
+    dyeToItem.put(DyeColor.WHITE, Material.WHITE_DYE);
     dyeToItem.put(DyeColor.ORANGE, Material.ORANGE_DYE);
     dyeToItem.put(DyeColor.MAGENTA, Material.MAGENTA_DYE);
     dyeToItem.put(DyeColor.LIGHT_BLUE, Material.LIGHT_BLUE_DYE);
@@ -148,11 +148,11 @@ public final class MaterialUtils {
     dyeToItem.put(DyeColor.LIGHT_GRAY, Material.LIGHT_GRAY_DYE);
     dyeToItem.put(DyeColor.CYAN, Material.CYAN_DYE);
     dyeToItem.put(DyeColor.PURPLE, Material.PURPLE_DYE);
-    dyeToItem.put(DyeColor.BLUE, Material.LAPIS_LAZULI);
-    dyeToItem.put(DyeColor.BROWN, Material.COCOA_BEANS);
+    dyeToItem.put(DyeColor.BLUE, Material.BLUE_DYE);
+    dyeToItem.put(DyeColor.BROWN, Material.BROWN_DYE);
     dyeToItem.put(DyeColor.GREEN, Material.GREEN_DYE);
     dyeToItem.put(DyeColor.RED, Material.RED_DYE);
-    dyeToItem.put(DyeColor.BLACK, Material.INK_SAC);
+    dyeToItem.put(DyeColor.BLACK, Material.BLACK_DYE);
 
     itemWallableMapping.put(Material.WHITE_BANNER, Material.WHITE_WALL_BANNER);
     itemWallableMapping.put(Material.ORANGE_BANNER, Material.ORANGE_WALL_BANNER);

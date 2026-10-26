@@ -119,6 +119,8 @@ public class InventoryUtils {
       return 0;
     }
     int initialAmount = amount;
+
+    // First try the held item (if it exists)
     if (inventory instanceof PlayerInventory) {
       int heldItemSlot = ((PlayerInventory) inventory).getHeldItemSlot();
       ItemStack held = inventory.getItem(heldItemSlot);
@@ -137,15 +139,9 @@ public class InventoryUtils {
         }
       }
     }
-    ItemStack[] contents = inventory.getContents();
-    
-    // Try deduct from the held item first
-    if (inventory instanceof PlayerInventory) {
-      int heldItemSlot = ((PlayerInventory) inventory).getHeldItemSlot();
-      ItemStack[] held = new ItemStack[]{inventory.getItem(heldItemSlot)};
-      contents = (ItemStack[]) ArrayUtils.addAll(held, contents);
-    }
-    
+
+    // Then try all items in the inventory.
+    ItemStack[] contents = inventory.getContents();  // Contains every slot of the inventory, empty slots are null.
     for (int slot = 0; slot < contents.length; slot++) {
       ItemStack is = contents[slot];
       if (is != null && is.getType() == type) {

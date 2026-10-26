@@ -2,7 +2,7 @@ package com.supaham.commons.bukkit.utils;
 
 import net.minecraft.network.protocol.Packet;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_21_R6.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -35,11 +35,16 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     PackageType nms = PackageType.MINECRAFT_SERVER;
     PackageType obc = PackageType.CRAFTBUKKIT;
 
-    classes.put("entityPlayer", nms.getClassSafe("server.level", "EntityPlayer"));
+//    classes.put("entityPlayer", nms.getClassSafe("server.level", "EntityPlayer"));
 //    fields.put("playerConnection", getField(classes.get("entityPlayer"), "playerConnection"));  // TODO: This might now need to be updated every time... :'(
 //    methods.put("sendPacket", getMethod(fields.get("playerConnection").getType(), "sendPacket"));
 
-    Class<?> clazz = nms.getClassSafe("world.phys", "Vec3D");
+    Class <?> clazz;
+    if (getServerMajorVersion() <= 21) {
+      clazz = nms.getClassSafe("world.phys", "Vec3D");
+    } else {
+      clazz = nms.getClassSafe("world.phys", "Vec3");
+    }
     classes.put("Vec3D", clazz);
     constructors.put("Vec3D",
                      clazz.getDeclaredConstructor(double.class, double.class, double.class));
@@ -47,11 +52,11 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
 //    fields.put("Vec3Dy", getField(clazz, "y"));
 //    fields.put("Vec3Dz", getField(clazz, "z"));
 
-    classes.put("BlockPosition", nms.getClassSafe("core", "BlockPosition"));
-    clazz = nms.getClassSafe("core", "BaseBlockPosition");
-    fields.put("BaseBlockPositionx", getField(clazz, "a"));
-    fields.put("BaseBlockPositiony", getField(clazz, "b"));
-    fields.put("BaseBlockPositionz", getField(clazz, "c"));
+//    classes.put("BlockPosition", nms.getClassSafe("core", "BlockPosition"));
+//    clazz = nms.getClassSafe("core", "BaseBlockPosition");
+//    fields.put("BaseBlockPositionx", getField(clazz, "a"));
+//    fields.put("BaseBlockPositiony", getField(clazz, "b"));
+//    fields.put("BaseBlockPositionz", getField(clazz, "c"));
 
     clazz = obc.getClassSafe("inventory.CraftInventoryCustom");
     classes.put("CraftInventoryCustom", clazz);
@@ -68,7 +73,7 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
   }
 
   public static Object toNMSVec3D(Vector vector) {
-    Class<?> vec3D = PackageType.MINECRAFT_SERVER.getClassSafe("world.phys", "Vec3D");
+    Class<?> vec3D = classes.get("Vec3D");
     try {
       Constructor<?> ctor = constructors.get("Vec3D");
       return ctor.newInstance(vector.getX(), vector.getY(), vector.getZ());
@@ -79,7 +84,7 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
   }
 
   public static Vector fromNMSVec3D(Object object) {
-    if (!object.getClass().equals(PackageType.MINECRAFT_SERVER.getClassSafe("world.phys","Vec3D"))) {
+    if (!object.getClass().equals(classes.get("Vec3D"))) {
       return null;
     }
     try {
@@ -141,14 +146,37 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     }
   }
 
+  public static String getRootCraftbukkitPackage() {
+    if (getServerMajorVersion() <= 21) {
+      return "org.bukkit.craftbukkit." + getServerVersion();
+    } else {
+      return "org.bukkit.craftbukkit";
+    }
+  }
+
   public static Integer getServerMajorVersion() {
-    return Integer.parseInt(getServerVersion().split("_")[1]);
+      // Old versions would have e.g. 1_21...  new has e.g. 26.1... so turn it into _
+      String serverVersion = getServerVersion().replace('.', '_').replace('-', '_');
+      int major = Integer.parseInt(serverVersion.split("_")[0]);
+      int minor = Integer.parseInt(serverVersion.split("_")[1]);
+
+      if (major == 1) {
+          return minor;
+      } else {
+          return major;
+      }
   }
 
   public static String getServerVersion() {
     // org.bukkit.craftbukkit.v1_7_R4.entity
     // org.bukkit.craftbukkit.v1_8_R2.entity;
-    return Bukkit.getServer().getClass().getPackage().getName().substring(23);
+    String packageName = Bukkit.getServer().getClass().getPackage().getName();
+
+    if (packageName.length() > 22) {
+      return packageName.substring(23);
+    } else {
+      return Bukkit.getServer().getBukkitVersion();
+    }
   }
 
   public static boolean isServer18OrHigher() {
@@ -189,7 +217,7 @@ public class ReflectionUtils extends com.supaham.commons.utils.ReflectionUtils {
     /**
      * {@code org.bukkit.craftbukkit.server_version} package.
      */
-    CRAFTBUKKIT("org.bukkit.craftbukkit." + getServerVersion()),;
+    CRAFTBUKKIT(getRootCraftbukkitPackage()),;
 
     private final String path;
 
